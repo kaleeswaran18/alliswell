@@ -1,5 +1,6 @@
 const { Adminaccountmodel, Customeraccountmodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
 const moment = require('moment');
