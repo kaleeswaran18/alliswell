@@ -1107,32 +1107,40 @@ if(req.body.role=='executeofficer'){
         const expiresInMinutes = 30
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
         let obj={
-          status:200,
-          phone:a[0]['phoneNo'],
-          email:a[0]['Email'],
-          statusCode:200,
-          phoneOtp:2341,
-          statuscode:200,
-          userId: a[0]['_id'],
-          username: a[0]['userName'],
-          role: a[0]['role'],
-          profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
+          status:true,
           message: 'logging  Success fully!',
+          data:{
+            phone:a[0]['phoneNo'],
+            email:a[0]['Email'],
+            
+            phoneOtp:"2341",
+           
+            userId: a[0]['_id'],
+            username: a[0]['userName'],
+            role: a[0]['role'],
+            profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
+            
+            token
+          }
         }
   console.log(obj,"findcheck")
         res.status(200).json({
-          status:200,
-          phone:a[0]['phoneNo'],
-          email:a[0]['Email'],
-          statusCode:200,
-          phoneOtp:"2341",
-          statuscode:200,
-          userId: a[0]['_id'],
-          username: a[0]['userName'],
-          role: a[0]['role'],
-          profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
+          status:true,
           message: 'logging  Success fully!',
-          token
+          data:{
+            phone:a[0]['phoneNo'],
+            email:a[0]['Email'],
+            
+            phoneOtp:"2341",
+           
+            userId: a[0]['_id'],
+            username: a[0]['userName'],
+            role: a[0]['role'],
+            profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
+            
+            token
+          }
+          
         });
       }
       else{
