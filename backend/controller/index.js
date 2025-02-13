@@ -1111,7 +1111,7 @@ if(req.body.role=='executeofficer'){
           phone:a[0]['phoneNo'],
           email:a[0]['Email'],
           statusCode:200,
-          phoneOtp:"2341",
+          phoneOtp:2341,
           statuscode:200,
           userId: a[0]['_id'],
           username: a[0]['userName'],
