@@ -1109,13 +1109,16 @@ if(req.body.role=='executeofficer'){
   console.log(a,"findcheck")
         res.status(200).json({
           status:200,
+          phone:a[0]['phoneNo'],
+          email:a[0]['Email'],
           statusCode:200,
+          phoneOtp:"2341",
           statuscode:200,
           userId: a[0]['_id'],
           username: a[0]['userName'],
           role: a[0]['role'],
           profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
-          msg: 'logged In Successfully!',
+          message: 'logging  Success fully!',
           token
         });
       }
