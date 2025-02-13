@@ -1125,21 +1125,14 @@ if(req.body.role=='executeofficer'){
         }
   console.log(obj,"findcheck")
         res.status(200).json({
-          status:true,
-          message: 'logging  Success fully!',
-          data:{
-            phone:a[0]['phoneNo'],
-            email:a[0]['Email'],
-            
-            phoneOtp:"2341",
-           
-            userId: a[0]['_id'],
-            username: a[0]['userName'],
-            role: a[0]['role'],
-            profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
-            
-            token
-          }
+         "status": true,
+    "responsecode": 201,
+    "message": "OTP generated successfully",
+    "data": {
+        "phone": "6380319587",
+        "email": "mansoor@1998gmail.com",
+         "phoneOtp": "2341"
+    }
           
         });
       }
