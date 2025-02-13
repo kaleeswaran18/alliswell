@@ -1031,6 +1031,7 @@ if(req.body.role=='executeofficer'){
     try {
       const { Email, password } = req.body;
       const phoneNo= req.body.phone
+      console.log(phoneNo,"find")
       let a=""
       let b=""
      if(req.body.Email){
@@ -1083,24 +1084,25 @@ if(req.body.role=='executeofficer'){
        
      }
     else{
+      console.log("check")
       a=await Adminaccountmodel.find({phoneNo: phoneNo})
       b=await Customeraccountmodel.find({phoneNo:phoneNo})
       
       if(a.length==0&&b.length==0){
         return res.status(201).json({ status: false, msg: 'Invalid Phoneno please check ' })
       }
-      if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-       const passwordMatch= await bcrypt.compare(password, b[0].password);
-        if (!passwordMatch) {
-        return res.status(401).json({ status: false, msg: 'Invalid password' })
-      }
-      }
-      else{
-        const passwordMatch= await bcrypt.compare(password, a[0].password);
-        if (!passwordMatch) {
-          return res.status(401).json({ status: false, msg: 'Invalid password' })
-        }
-      }
+      // if(a[0]?.role=="customer"||b[0]?.role=="customer"){
+      //  const passwordMatch= await bcrypt.compare(password, b[0].password);
+      //   if (!passwordMatch) {
+      //   return res.status(401).json({ status: false, msg: 'Invalid password' })
+      // }
+      // }
+      // else{
+      //   const passwordMatch= await bcrypt.compare(password, a[0].password);
+      //   if (!passwordMatch) {
+      //     return res.status(401).json({ status: false, msg: 'Invalid password' })
+      //   }
+      // }
       if(a.length>0){
         const expiresInMinutes = 30
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
