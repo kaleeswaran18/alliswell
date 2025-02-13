@@ -1108,6 +1108,7 @@ if(req.body.role=='executeofficer'){
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
   console.log(a,"checkalll")
         res.status(200).json({
+          status:true,
           userId: a[0]['_id'],
           username: a[0]['userName'],
           role: a[0]['role'],
@@ -1121,6 +1122,7 @@ if(req.body.role=='executeofficer'){
         const token = jwt.sign({ b }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
   
         res.status(200).json({
+          status:true,
           userId: b[0]['_id'],
           username: b[0]['customerName'],
           role: b[0]['role'],
