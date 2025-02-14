@@ -1123,7 +1123,7 @@ if(req.body.role=='executeofficer'){
     "data": {
         "phone": "6380319587",
         "email": "mansoor@1998gmail.com",
-         "phoneOtp": "2341"
+         "phoneOtp": "234176"
     }
           
         });
