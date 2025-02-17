@@ -319,8 +319,13 @@ console.log(currentFormatted,req.body.startdate)
       console.log(currentFormatted, "currentFormatted")
 let data=""
 if(req.body.role=="Superadmin"){
+  if(req.body.branchid==''){
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
+  }
+  else{
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.body.branchid})
+  }
   
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
 }
 if(req.body.role=="admin"){
   console.log("admin")
@@ -329,12 +334,21 @@ if(req.body.role=="admin"){
 if(req.body.role=='executeofficer'){
   data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.body.branchid,executeofficerId:req.body.executeofficerId})
 }
-
+const todayfullAmount = data.reduce((sum, customer) => sum + customer.customerdueamount, 0);
+const todayreceivedAmount = data
+    .filter(customer => customer.status === "paid")
+    .reduce((sum, customer) => sum + customer.customerpayamount, 0);
+const todaypendingAmount = data
+    .filter(customer => customer.status === "unpaid")
+    .reduce((sum, customer) => sum + customer.customerdueamount, 0);
       
       res.status(200).send({
         data: data,
        
-        message: "All customer listed Successfully!"
+        message: "All customer listed Successfully!",
+        todayfullAmount:todayfullAmount,
+        todayreceivedAmount:todayreceivedAmount,
+        todaypendingAmount:todaypendingAmount
       })
     }
     catch (err) {
