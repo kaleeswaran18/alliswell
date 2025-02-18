@@ -1281,8 +1281,8 @@ const todaypendingAmount = data
     try {
       const adminUsers = await Adminaccountmodel.find({branchid:req.query.id});
       console.log(req.query.id,adminUsers,"adminUsersall")
-      if(adminUsers.length!=0){
-        return res.status(200).json({ error: 'the branchname already here' });
+      if(adminUsers.length==0){
+        return res.status(200).json({ error: 'the branchname doesnot here' });
       }
      
       res.status(200).send({
