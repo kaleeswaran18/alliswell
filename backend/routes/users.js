@@ -43,6 +43,7 @@ router.post('/createcustomer',upload.single("profilePicture"), adminaccountContr
 router.get('/customersList', verifyToken, adminaccountController.customersUsersList)
 
 router.post('/createbranch', adminaccountController.createbranch)
+router.post('/getexecuteofficer', adminaccountController.getexecuteofficer)
 router.post('/createrateofinterest', adminaccountController.createrateofinterest)
 router.get('/getrateofinterest', adminaccountController.getrateofinterest)
 router.get('/getbranchName', adminaccountController.getbranchName)

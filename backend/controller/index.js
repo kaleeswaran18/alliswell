@@ -1276,6 +1276,26 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
+  
+  const getexecuteofficer=async(req,res)=>{
+    try {
+      const adminUsers = await Adminaccountmodel.find({_id:req.body.id});
+      if(adminUsers.length!=0){
+        return res.status(200).json({ error: 'the branchname already here' });
+      }
+     
+      res.status(200).send({
+        data: adminUsers,
+        // message: `${req.body.name}branch created Successfully!`
+      })
+     
+     
+    }
+    catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+    }
+  }
   const createform=async(req,res)=>{
     const adminUsers = await Customeraccountmodel.find({phoneNo:req.body.phoneNo});
     const adminUsers1 = await Customeraccountmodel.find({Email:req.body.Email});
@@ -1902,6 +1922,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     createrateofinterest,
     getrateofinterest,
     getbranchName,
+    getexecuteofficer,
     createform,
     updateform,
     changepassword,
