@@ -1279,8 +1279,8 @@ const todaypendingAmount = data
   
   const getexecuteofficer=async(req,res)=>{
     try {
-      const adminUsers = await Adminaccountmodel.find({_id:req.query.id});
-      console.log(req.query.id,adminUsers,"adminUsers")
+      const adminUsers = await Adminaccountmodel.find({branchid:req.query.id});
+      console.log(req.query.id,adminUsers,"adminUsersall")
       if(adminUsers.length!=0){
         return res.status(200).json({ error: 'the branchname already here' });
       }
