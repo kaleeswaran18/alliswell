@@ -220,17 +220,34 @@ console.log(currentFormatted,req.body.startdate)
         if(req.body.closeoldaccount=="true"){
           console.log("hello")
           req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-          const existingUser = await Customeraccountmodel.find({ _id: req.body.id });
-          // const existingUser1 = await Addextracustomeraccountmodel.find({ customer_id: req.body.id });
-          // console.log(existingUser1,'existingUser1')
-          const result = await Customerpaylist.aggregate([
-            { $match: { customer_id: req.body.id, status: "paid" } },
-            { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
+          const existingUser = await Customeraccountmodel.find({_id: req.body.id ,amountclose:false});
+          const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:false});
+          let mainamount=0
+          let mainamount1=0
+          if(existingUser.length!=0){
+            let amount=existingUser[0].amount
+            const result1 = await Customerpaylist.aggregate([
+              { $match: { customer_id: req.body.id, status: "paid" } },
+              { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
+            ]);
+            mainamount=amount
+          }
+          
+         if(existingUser1.length!=0){
+          const result1 = await Addextracustomeraccountmodel.aggregate([
+            { $match: { customer_id: req.body.id} },
+            { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } }
           ]);
-          console.log(result,"result")
-          req.body.givenamount=req.body.givenamount-existingUser[0].amount+result[0].totalPaidAmount
-          await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { isactive:true }, { new: true })
-          console.log("hello",req.body.givenamount)
+         mainamount=mainamount+result1[0].totalAmount
+
+          }
+         
+          
+         
+          // console.log(result,"result")
+          // req.body.givenamount=req.body.givenamount-existingUser[0].amount+result[0].totalPaidAmount
+          // await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { isactive:true }, { new: true })
+          // console.log("hello",req.body.givenamount)
 
         }
         // req.body.duedate=
@@ -1317,7 +1334,7 @@ const todaypendingAmount = data
       })
       res.status(200).send({
         data: value,
-        message: `${req.body.name}branch created Successfully!`
+        message: `${req.body.Name} customer waitting for approvel!`
       })
   }
   const updateform=async(req,res)=>{
@@ -1340,31 +1357,61 @@ const todaypendingAmount = data
     })
 
   }
+  const verificationapprovel=async(req,res)=>{
+    const value = await Formverification.findOneAndUpdate(
+      { _id: req.body.id }, 
+      { isapprove: "true" }, 
+      { new: true }
+  );
+  
+  if (!value) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+  }
+  
+  console.log("Updated record:", value);
+  
+   
+    res.status(200).send({
+      
+      message: "update Successfully!"
+    })
+  }
+  
+  const approvelaccount=async(req,res)=>{
+    try {
+      const adminUsers=""
+        if(req.body.role=="Superadmin"){
+           adminUsers = await Formverification.find({isapprove:'true'})
+        }
+        else{
+           adminUsers = await Formverification.find({branchid:req.body.id,isapprove:'true'})
+        }
+      
+        res.status(200).send({
+        data: adminUsers,
+        message: "get all verfication  account Successfully!"
+      })
+     
+     
+    }
+    catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+    }
+  }
   const verification=async(req,res)=>{
     try {
-      if(req.body.phoneNo){
-        const adminUsers = await Formverification.find({phoneNo:req.body.phoneNo,isapprove:'true'})
-        if(adminUsers.length==0){
-          return  res.status(200).send({
-            data: adminUsers,
-            message: "your form is inprogress!"
-          })
+      const adminUsers=""
+        if(req.body.role=="Superadmin"){
+           adminUsers = await Formverification.find({isapprove:'false'})
         }
-      }
-      else{
-        const adminUsers = await Formverification.find({Email:req.body.Email,isapprove:'true'})
-        if(adminUsers.length==0){
-          return  res.status(200).send({
-            data: adminUsers,
-            message: "your form is inprogress!"
-          })
+        else{
+           adminUsers = await Formverification.find({verficationofficer:req.body.id,isapprove:'false'})
         }
-      }
-     
-     
-      res.status(200).send({
+      
+        res.status(200).send({
         data: adminUsers,
-        message: "your account approve Successfully!"
+        message: "get all verfication  account Successfully!"
       })
      
      
@@ -1933,7 +1980,9 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     updatecheet,
     createcheet,
     verification,
+    verificationapprovel,
     dailyupdate,
+    approvelaccount
   }
 }
 module.exports = adminaccountSchema()
