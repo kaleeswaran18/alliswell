@@ -66,7 +66,7 @@ const addextracustomeraccountmodel = new mongoose.Schema({
     startdate: { type: String },
     enddate: { type: String },
     amountclose: { type: String },
-    amountclose: { type: String },
+   
     isactive: { type: Boolean, default: true },
     isextraplan: { type: String },
     profilePicture: { type: String }

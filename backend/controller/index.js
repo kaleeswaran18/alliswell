@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
 const moment = require('moment');
 const mongoose = require("mongoose")
+const ObjectId = mongoose.Types.ObjectId;
 require('dotenv').config();
 
 const adminaccountSchema = () => {
@@ -208,6 +209,7 @@ console.log(currentFormatted,req.body.startdate)
       req.body.dueamount = ''
       req.body.duedate = ''
       req.body.nextduedate = ''
+      let givenamount=''
       if (req.body.scheme == "daily") {
         console.log("daily",typeof(req.body.closeoldaccount))
 
@@ -216,38 +218,102 @@ console.log(currentFormatted,req.body.startdate)
         req.body.duedate = dueDate.format('YYYY-MM-DD');
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 100
-        req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+        givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
         if(req.body.closeoldaccount=="true"){
-          console.log("hello")
-          req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-          const existingUser = await Customeraccountmodel.find({_id: req.body.id ,amountclose:false});
-          const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:false});
+          console.log("hello",req.body.givenamount)
+          
+          // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+          const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
+          const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:"false"});
           let mainamount=0
           let mainamount1=0
+          console.log(existingUser.length,existingUser1.length,"find")
           if(existingUser.length!=0){
             let amount=existingUser[0].amount
             const result1 = await Customerpaylist.aggregate([
               { $match: { customer_id: req.body.id, status: "paid" } },
               { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
             ]);
-            mainamount=amount
+            mainamount=amount-result1[0].totalPaidAmount
+            // console.log("result1",result1,mainamount)
+            if(mainamount<=givenamount){
+              givenamount=givenamount-mainamount
+              await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
+              mainamount=0
+        
+            }
+             
           }
           
          if(existingUser1.length!=0){
           const result1 = await Addextracustomeraccountmodel.aggregate([
-            { $match: { customer_id: req.body.id} },
-            { $group: { _id: "$customer_id", totalAmount: { $sum: "$amount" } } }
+            { $match: {customer_id: req.body.id,amountclose:"false"} },
+            { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
           ]);
-         mainamount=mainamount+result1[0].totalAmount
+          let findall=[]
+          if(result1.length!=0){
+            let index=0
+            for (const val of result1) { 
+              
+             
+              const resufind=await Customerpaylist.find({customer_id:result1[index]._id, status: "paid"})
+              
+              
+             
+              if(resufind.length==0){
+                // console.log("vaa")
+                let b=await Customerpaylist.find({customer_id: val._id})
+                
+                if(b.length!=0){
+                  findall.push({ _id: val._id, totalPaidAmount: 0})
+                }
+              }
+              else{
+                const totalPaidAmount = resufind.reduce((sum, item) => sum + (item.customerpayamount || 0), 0);
+                findall.push({ _id: val._id, totalPaidAmount: totalPaidAmount})
+              }
+
+             index=index+1
+
+
+            }
+          }
+          // console.log(findall,result1,'okay')
+          const bMap = new Map(findall.map(item => [item._id.toString(), item.totalPaidAmount]));
+
+// Merge arrays and calculate pending amount
+const result = result1.map(item => {
+  const totalPaidAmount = bMap.get(item._id.toString()) || 0;
+  return {
+    _id: item._id,
+    totalPaidAmount,
+    totalAmount: item.totalAmount,
+    pendingamount: item.totalAmount - totalPaidAmount
+  };
+
+});
+
+console.log(givenamount,"before",)
+for (const value of result) {
+  // console.log("fine")
+  if(givenamount>=value.pendingamount){
+    let a=await Addextracustomeraccountmodel.findByIdAndUpdate({_id:value._id},{amountclose:"true"},{new:true})
+    // console.log(req.body.givenamount-value.pendingamount,"before",)
+    givenamount=givenamount-value.pendingamount
+    console.log(givenamount,"after",)
+
+  }
+  
+}
+
+          // return res.status(400).json({ error: 'id doesnot match' });
+        
 
           }
          
           
          
-          // console.log(result,"result")
-          // req.body.givenamount=req.body.givenamount-existingUser[0].amount+result[0].totalPaidAmount
-          // await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { isactive:true }, { new: true })
-          // console.log("hello",req.body.givenamount)
+         
 
         }
         // req.body.duedate=
@@ -259,11 +325,102 @@ console.log(currentFormatted,req.body.startdate)
         req.body.duedate = dueDate.format('YYYY-MM-DD');
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 10
-        if(req.body.closeoldaccount==true){
-          req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-          const existingUser = await Customeraccountmodel.find({ _id: req.body.id });
-          req.body.givenamount=req.body.givenamount-existingUser[0].amount
-          await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { isactive:false }, { new: true })
+        givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+        if(req.body.closeoldaccount=="true"){
+          console.log("hello",givenamount)
+          
+          // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+          const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
+          const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:"false"});
+          let mainamount=0
+          let mainamount1=0
+          console.log(existingUser.length,existingUser1.length,"find")
+          if(existingUser.length!=0){
+            let amount=existingUser[0].amount
+            const result1 = await Customerpaylist.aggregate([
+              { $match: { customer_id: req.body.id, status: "paid" } },
+              { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
+            ]);
+            mainamount=amount-result1[0].totalPaidAmount
+            // console.log("result1",result1,mainamount)
+            if(mainamount<=givenamount){
+              givenamount=givenamount-mainamount
+              await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
+              mainamount=0
+        
+            }
+             
+          }
+          
+         if(existingUser1.length!=0){
+          const result1 = await Addextracustomeraccountmodel.aggregate([
+            { $match: {customer_id: req.body.id,amountclose:"false"} },
+            { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
+          ]);
+          let findall=[]
+          if(result1.length!=0){
+            let index=0
+            for (const val of result1) { 
+              
+             
+              const resufind=await Customerpaylist.find({customer_id:result1[index]._id, status: "paid"})
+              
+              
+             
+              if(resufind.length==0){
+                // console.log("vaa")
+                let b=await Customerpaylist.find({customer_id: val._id})
+                
+                if(b.length!=0){
+                  findall.push({ _id: val._id, totalPaidAmount: 0})
+                }
+              }
+              else{
+                const totalPaidAmount = resufind.reduce((sum, item) => sum + (item.customerpayamount || 0), 0);
+                findall.push({ _id: val._id, totalPaidAmount: totalPaidAmount})
+              }
+
+             index=index+1
+
+
+            }
+          }
+          // console.log(findall,result1,'okay')
+          const bMap = new Map(findall.map(item => [item._id.toString(), item.totalPaidAmount]));
+
+// Merge arrays and calculate pending amount
+const result = result1.map(item => {
+  const totalPaidAmount = bMap.get(item._id.toString()) || 0;
+  return {
+    _id: item._id,
+    totalPaidAmount,
+    totalAmount: item.totalAmount,
+    pendingamount: item.totalAmount - totalPaidAmount
+  };
+
+});
+
+console.log(givenamount,"before",)
+for (const value of result) {
+  // console.log("fine")
+  if(givenamount>=value.pendingamount){
+    let a=await Addextracustomeraccountmodel.findByIdAndUpdate({_id:value._id},{amountclose:"true"},{new:true})
+    // console.log(req.body.givenamount-value.pendingamount,"before",)
+    givenamount=givenamount-value.pendingamount
+    console.log(givenamount,"after",)
+
+  }
+  
+}
+
+          // return res.status(400).json({ error: 'id doesnot match' });
+        
+
+          }
+         
+          
+         
+         
 
         }
        
@@ -271,11 +428,12 @@ console.log(currentFormatted,req.body.startdate)
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
-      console.log(req.body.duedate, req.body.nextduedate, 'add')
+      console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
       var value = await Addextracustomeraccountmodel.create({
         customerName: req.body.customerName,
+
         customer_id: req.body.id,
-        givenamount:req.body.givenamount,
+        givenamount:givenamount,
         // Email: req.body.Email,
         // phoneNo: req.body.phoneNo,
         scheme: req.body.scheme,
@@ -293,6 +451,7 @@ console.log(currentFormatted,req.body.startdate)
         amountclose: 'false',
 
       })
+      console.log("finish")
       res.status(200).send({
         data: value,
         message: "extraplanCustomer account created Successfully!"
@@ -302,7 +461,126 @@ console.log(currentFormatted,req.body.startdate)
       console.log("Something went wrong  post!!!", err)
     }
   }
+const extraaccountbalance=async (req,res)=>{
+  
+    let givenamount=''
+    givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+    const existingUsername = await Customeraccountmodel.find({_id: req.body.id});
+    // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
+    const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
+    const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:"false"});
+    let mainamount=0
+    
+    let finalcheck=[]
+    console.log(existingUser.length,existingUser1.length,"find")
+    if(existingUser.length!=0){
+      let amount=existingUser[0].amount
+      const result1 = await Customerpaylist.aggregate([
+        { $match: { customer_id: req.body.id, status: "paid" } },
+        { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
+      ]);
+      mainamount=amount-result1[0].totalPaidAmount
+      finalcheck.push({_id:req.body.id,pendingamount:mainamount})
+      // console.log("result1",result1,mainamount)
+      if(mainamount<=givenamount){
+        givenamount=givenamount-mainamount
+        //await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
+        mainamount=0
+  
+      }
+       
+    }
+    
+   if(existingUser1.length!=0){
+    const result1 = await Addextracustomeraccountmodel.aggregate([
+      { $match: {customer_id: req.body.id,amountclose:"false"} },
+      { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
+    ]);
+    let findall=[]
+    if(result1.length!=0){
+      let index=0
+      for (const val of result1) { 
+        
+       
+        const resufind=await Customerpaylist.find({customer_id:result1[index]._id, status: "paid"})
+        
+        
+       
+        if(resufind.length==0){
+          // console.log("vaa")
+          let b=await Customerpaylist.find({customer_id: val._id})
+          
+          if(b.length!=0){
+            findall.push({ _id: val._id, totalPaidAmount: 0})
+          }
+        }
+        else{
+          const totalPaidAmount = resufind.reduce((sum, item) => sum + (item.customerpayamount || 0), 0);
+          findall.push({ _id: val._id, totalPaidAmount: totalPaidAmount})
+        }
 
+       index=index+1
+
+
+      }
+    }
+    // console.log(findall,result1,'okay')
+    const bMap = new Map(findall.map(item => [item._id.toString(), item.totalPaidAmount]));
+
+// Merge arrays and calculate pending amount
+const result = result1.map(item => {
+const totalPaidAmount = bMap.get(item._id.toString()) || 0;
+return {
+_id: item._id,
+totalPaidAmount,
+totalAmount: item.totalAmount,
+pendingamount: item.totalAmount - totalPaidAmount
+};
+
+});
+
+console.log(givenamount,"before",)
+for (const value of result) {
+// console.log("fine")
+if(givenamount>=value.pendingamount){
+  finalcheck.push({_id:value._id,pendingamount:value.pendingamount})
+//let a=await Addextracustomeraccountmodel.findByIdAndUpdate({_id:value._id},{amountclose:"true"},{new:true})
+// console.log(req.body.givenamount-value.pendingamount,"before",)
+givenamount=givenamount-value.pendingamount
+console.log(givenamount,"after",)
+
+}
+
+}
+
+  
+
+    }
+    const customerName = existingUsername[0].customerName;
+   if(existingUser1.length==0&&existingUser1.length==0){
+    res.status(200).send({
+      
+      
+      message:  `${customerName}, you have no pending amounts. Proceeding to the next process.`
+    });
+   }
+    const totalPendingAmount = finalcheck.reduce((sum, item) => sum + item.pendingamount, 0);
+const pendingAmounts = finalcheck.map(item => item.pendingamount).join(',');
+// const customerName = existingUser[0].customerName || "Customer";
+const givenAmount = givenamount // assuming givenAmount is defined elsewhere
+
+const message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
+   
+    
+    res.status(200).send({
+      
+      
+      message: message
+    });
+    
+
+  
+}
   const createscheme = async (req, res) => {
     console.log("1")
     try {
@@ -404,7 +682,7 @@ const todaypendingAmount = data
     }
   }
   const customerdetails = async (req, res) => {
-    // console.log("*********>>>>>><<<<<<", req.body)
+    console.log("*********>>>>>><<<<<<", req.body)
     try {
       const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
       if (existingUsers[0].extraplan == 'true') {
@@ -420,7 +698,7 @@ const todaypendingAmount = data
         })
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body._id })
+        const existingUser = await Customerpaylist.find({ _id: req.body.id })
         console.log(existingUser, "customr paylist .....*******&&&&&&")
 
         pendingamount = findone[0].amount - payedamount
@@ -465,7 +743,7 @@ const todaypendingAmount = data
 
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body._id })
+        const existingUser = await Customerpaylist.find({ _id: req.body.id })
 
         pendingamount = findone[0].amount - payedamount
         console.log(payedamount, pendingamount, "existingUser")
@@ -636,7 +914,7 @@ const todaypendingAmount = data
     try {
       const currentDate = moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-      const existingUser = await Customerpaylist.find({ _id: req.body._id });
+      const existingUser = await Customerpaylist.find({ _id: req.body.id });
       console.log(existingUser, "exist---")
       if (existingUser[0].extraplan == 'true') {
         if (existingUser[0].alreadypayment == 'true') {
@@ -658,7 +936,7 @@ const todaypendingAmount = data
         }
 
 
-        const existingUser1 = await Customerpaylist.find({ _id: req.body._id });
+        const existingUser1 = await Customerpaylist.find({ _id: req.body.id });
         console.log("existingUser1", existingUser1)
 
         let extrapayment = 2 * existingUser1[0].customerdueamount
@@ -819,7 +1097,7 @@ const todaypendingAmount = data
             }
           }
         }
-        const checkingstatus = await Customerpaylist.find({ _id: req.body._id });
+        const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
         const checkingvalue = await Addextracustomeraccountmodel.find({ _id: checkingstatus[0].customer_id })
         console.log(checkingvalue, "checkingvalue")
         const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
@@ -859,7 +1137,7 @@ const todaypendingAmount = data
         }
 
 
-        const existingUser1 = await Customerpaylist.find({ _id: req.body._id });
+        const existingUser1 = await Customerpaylist.find({ _id: req.body.id });
         console.log("existingUser1", existingUser1)
 
         let extrapayment = 2 * existingUser1[0].customerdueamount
@@ -1026,7 +1304,7 @@ const todaypendingAmount = data
             }
           }
         }
-        const checkingstatus = await Customerpaylist.find({ _id: req.body._id });
+        const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
         const checkingvalue = await Customeraccountmodel.find({ _id: checkingstatus[0].customer_id })
         console.log(checkingvalue, "checkingvalue")
         const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
@@ -1974,6 +2252,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     createform,
     updateform,
     changepassword,
+    extraaccountbalance,
     deleteemployee,
     deletecheet,
     getallcheet,
