@@ -1792,7 +1792,7 @@ const todaypendingAmount = data
         console.log("3",data)
       }
       if(req.body.branchid=='All' && req.body.status!="All" && req.body.startdate!=null){
-        data = await Customerpaylist.find({status:req.body.status,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.startdate }})
+        data = await Customerpaylist.find({status:req.body.status,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.enddate }})
         console.log("4",data)
       }
       if(req.body.branchid !='All' && req.body.status=="All" && req.body.startdate==null){
@@ -1804,7 +1804,7 @@ const todaypendingAmount = data
         console.log("5",data)
       }
       if(req.body.branchid !='All' && req.body.status!="All" && req.body.startdate==null){
-        data = await Customerpaylist.find({status:req.body.status,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.startdate }})
+        data = await Customerpaylist.find({status:req.body.status,branchid:req.body.branchid})
         console.log("6",data)
       }
       if(req.body.branchid !='All' && req.body.status!="All" && req.body.startdate!=null){
