@@ -558,9 +558,10 @@ console.log(givenamount,"after",)
     }
     const customerName = existingUsername[0].customerName;
    if(existingUser1.length==0&&existingUser1.length==0){
-    res.status(200).send({
+    const existingUser = await Customeraccountmodel.find({_id: req.body.id});
+   return res.status(200).send({
       
-      
+      data:existingUser,
       message:  `${customerName}, you have no pending amounts. Proceeding to the next process.`
     });
    }
@@ -570,10 +571,10 @@ const pendingAmounts = finalcheck.map(item => item.pendingamount).join(',');
 const givenAmount = givenamount // assuming givenAmount is defined elsewhere
 
 const message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
-   
+const existingUser3 = await Customeraccountmodel.find({_id: req.body.id});
     
     res.status(200).send({
-      
+      data:existingUser3,
       
       message: message
     });
