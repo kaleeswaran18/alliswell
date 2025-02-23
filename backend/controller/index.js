@@ -613,6 +613,7 @@ const existingUser3 = await Customeraccountmodel.find({_id: req.body.id});
       const currentDate = moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
       console.log(currentFormatted, "currentFormatted")
+      req.query.branchid=req.query.branchid==undefined?" ":req.query.branchid
 let data=""
 if(req.query.role=="Superadmin"){
   if(req.query.branchid==''){
