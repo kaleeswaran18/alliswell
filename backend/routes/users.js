@@ -68,6 +68,7 @@ router.put('/updatecheet', adminaccountController.updatecheet)
 router.get('/getallcheet',adminaccountController.getallcheet)
 router.delete('/deletecheet',adminaccountController.deletecheet)
 router.post('/transationhistroy', adminaccountController.transationhistroy)
+router.post('/transationcreate',adminaccountController.transationhistroy)
 module.exports = router;
 
 

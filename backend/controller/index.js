@@ -1417,22 +1417,15 @@ const todaypendingAmount = data
         const expiresInMinutes = 30
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
        
-  console.log({
-    "status": true,
-    "responsecode": 201,
-    "message": "OTP generated successfully",
-    "data": {
-        "phone": "6380319587",
-        "email": "mansoor@1998gmail.com",
-         "phoneOtp": "234176"
-  }},"findcheck")
+
         res.status(200).json({
          "status": true,
     "responsecode": 201,
     "message": "OTP generated successfully",
     "data": {
-        "phone": "6380319587",
-        "email": "mansoor@1998gmail.com",
+      a,
+        "phone": a[0].phoneNo,
+        "email": a[0].Email,
          "phoneOtp": "234176"
     }
           
