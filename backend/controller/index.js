@@ -609,26 +609,26 @@ const existingUser3 = await Customeraccountmodel.find({_id: req.body.id});
     console.log("1")
     try {
       console.log("12")
-      console.log(req.body.branchid,req.body.role, "body")
+      console.log(req.query.branchid,req.query.role, "body")
       const currentDate = moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
       console.log(currentFormatted, "currentFormatted")
 let data=""
-if(req.body.role=="Superadmin"){
-  if(req.body.branchid==''){
+if(req.query.role=="Superadmin"){
+  if(req.query.branchid==''){
     data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
   }
   else{
-    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.body.branchid})
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
   }
   
 }
-if(req.body.role=="admin"){
+if(req.query.role=="admin"){
   console.log("admin")
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.body.branchid})
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
 }
-if(req.body.role=='executeofficer'){
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.body.branchid,executeofficerId:req.body.executeofficerId})
+if(req.query.role=='executeofficer'){
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.query.branchid,executeofficerId:req.query.executeofficerId})
 }
 const todayfullAmount = data.reduce((sum, customer) => sum + customer.customerdueamount, 0);
 const todayreceivedAmount = data
