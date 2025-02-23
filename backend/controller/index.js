@@ -44,7 +44,7 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
-        profilePicture:req.file.originalname?`http://localhost:5000/${req.file.originalname}`:null,
+        profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
       })
       res.status(200).send({
@@ -144,7 +144,7 @@ console.log(currentFormatted,req.body.startdate)
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
-        profilePicture:req.file.originalname?`http://localhost:5000/${req.file.originalname}`:null,
+        profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
