@@ -1661,7 +1661,16 @@ const todaypendingAmount = data
         else{
            adminUsers = await Formverification.find({branchid:req.query.id,isapprove:'true'})
         }
-      
+        if(adminUsers.length!=0){
+          let branchname=await Branchschememodel.find({_id:adminUsers[0].branchid})
+          let executeofficer=await Adminaccountmodel.find({_id:adminUsers[0].executeofficerId})
+          
+            adminUsers = adminUsers.map(user => ({
+              ...user,
+              branchname: branchname,
+              executeofficer: executeofficer
+            }));
+          }
         res.status(200).send({
         data: adminUsers,
         message: "get all verfication  account Successfully!"
@@ -1684,7 +1693,17 @@ const todaypendingAmount = data
         else{
            adminUsers = await Formverification.find({verficationofficer:req.body.id,isapprove:'false'})
         }
-      
+        if(adminUsers.length!=0){
+        let branchname=await Branchschememodel.find({_id:adminUsers[0].branchid})
+        let executeofficer=await Adminaccountmodel.find({_id:adminUsers[0].executeofficerId})
+        
+          adminUsers = adminUsers.map(user => ({
+            ...user,
+            branchname: branchname,
+            executeofficer: executeofficer
+          }));
+        }
+       
         res.status(200).send({
         data: adminUsers,
         message: "get all verfication  account Successfully!"
