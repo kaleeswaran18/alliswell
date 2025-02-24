@@ -1633,7 +1633,7 @@ const todaypendingAmount = data
   }
   const verificationapprovel=async(req,res)=>{
     const value = await Formverification.findOneAndUpdate(
-      { _id: req.body.id }, 
+      { _id: req.query.id }, 
       { isapprove: "true" }, 
       { new: true }
   );
@@ -1658,7 +1658,7 @@ const todaypendingAmount = data
            adminUsers = await Formverification.find({isapprove:'true'})
         }
         else{
-           adminUsers = await Formverification.find({branchid:req.body.id,isapprove:'true'})
+           adminUsers = await Formverification.find({branchid:req.query.id,isapprove:'true'})
         }
       
         res.status(200).send({
@@ -1676,7 +1676,7 @@ const todaypendingAmount = data
   const verification=async(req,res)=>{
     try {
       const adminUsers=""
-        if(req.body.role=="Superadmin"){
+        if(req.query.role=="Superadmin"){
            adminUsers = await Formverification.find({isapprove:'false'})
         }
         else{
