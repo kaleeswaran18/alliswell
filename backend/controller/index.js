@@ -1657,20 +1657,15 @@ const todaypendingAmount = data
       let adminUsers=""
         if(req.query.role=="Superadmin"){
            adminUsers = await Formverification.find({isapprove:'true'})
+           .populate("verficationofficer") // Populating from Adminaccount
+           .populate("branchid"); // Populating from Branchschememodel
         }
         else{
            adminUsers = await Formverification.find({branchid:req.query.id,isapprove:'true'})
+           .populate("verficationofficer") // Populating from Adminaccount
+           .populate("branchid"); // Populating from Branchschememodel
         }
-        if(adminUsers.length!=0){
-          let branchname=await Branchschememodel.find({_id:adminUsers[0].branchid})
-          let executeofficer=await Adminaccountmodel.find({_id:adminUsers[0].executeofficerId})
-          
-            adminUsers = adminUsers.map(user => ({
-              ...user,
-              branchname: branchname,
-              executeofficer: executeofficer
-            }));
-          }
+      
         res.status(200).send({
         data: adminUsers,
         message: "get all verfication  account Successfully!"
@@ -1683,39 +1678,32 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
-  const verification=async(req,res)=>{
+  const verification = async (req, res) => {
     try {
-      console.log(req.query.role,"req.query.role")
-      let adminUsers=""
-        if(req.query.role=="Superadmin"){
-           adminUsers = await Formverification.find({isapprove:'false'})
+        console.log(req.query.role, "req.body.role");
+        let adminUsers = "";
+
+        if (req.query.role == "Superadmin") {
+            adminUsers = await Formverification.find({ isapprove: "false" })
+                .populate("verficationofficer") // Populating from Adminaccount
+                .populate("branchid"); // Populating from Branchschememodel
+        } else {
+            adminUsers = await Formverification.find({ verficationofficer: req.query.id, isapprove: "false" })
+                .populate("verficationofficer") 
+                .populate("branchid"); 
         }
-        else{
-           adminUsers = await Formverification.find({verficationofficer:req.body.id,isapprove:'false'})
-        }
-        if(adminUsers.length!=0){
-        let branchname=await Branchschememodel.find({_id:adminUsers[0].branchid})
-        let executeofficer=await Adminaccountmodel.find({_id:adminUsers[0].executeofficerId})
-        
-          adminUsers = adminUsers.map(user => ({
-            ...user,
-            branchname: branchname,
-            executeofficer: executeofficer
-          }));
-        }
-       
+
         res.status(200).send({
-        data: adminUsers,
-        message: "get all verfication  account Successfully!"
-      })
-     
-     
+            data: adminUsers,
+            message: "Get all verification accounts successfully!"
+        });
+
+    } catch (err) {
+        console.log('Something went wrong', err);
+        res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
-    catch (err) {
-      console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
-    }
-  }
+};
+
   const getbranchName=async(req,res)=>{
     try {
       const adminUsers = await Branchschememodel.find();

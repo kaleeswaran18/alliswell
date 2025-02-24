@@ -124,8 +124,8 @@ const customerpaylist = new mongoose.Schema({
 const formverification = new mongoose.Schema({
     Name: { type: String },
     location: { type: String },
-    branchid: { type: String },
-    verficationofficer: { type: String },
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    verficationofficer: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" }, 
     isapprove:{ type: String ,default:"false"},
     phoneNo:{ type: String },
     Email: { type: String },
