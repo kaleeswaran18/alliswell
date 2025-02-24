@@ -1653,8 +1653,9 @@ const todaypendingAmount = data
   
   const approvelaccount=async(req,res)=>{
     try {
-      const adminUsers=""
-        if(req.body.role=="Superadmin"){
+      console.log(req.query.role,"check")
+      let adminUsers=""
+        if(req.query.role=="Superadmin"){
            adminUsers = await Formverification.find({isapprove:'true'})
         }
         else{
@@ -1675,7 +1676,8 @@ const todaypendingAmount = data
   }
   const verification=async(req,res)=>{
     try {
-      const adminUsers=""
+      console.log(req.query.role,"req.query.role")
+      let adminUsers=""
         if(req.query.role=="Superadmin"){
            adminUsers = await Formverification.find({isapprove:'false'})
         }
