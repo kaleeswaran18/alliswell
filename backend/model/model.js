@@ -38,8 +38,10 @@ const customeraccountmodel = new mongoose.Schema({
     enddate: { type: String },
     amountclose: { type: String },
     givenamount:{ type: Number },
-    branchid:{type: String},
-    executeofficerId:{type: String},
+    // branchid:{type: String},
+    // executeofficerId:{type: String},
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     isactive: { type: Boolean, default: true },
     isextraplan: { type: String },
     createdAt: {

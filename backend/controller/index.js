@@ -2042,7 +2042,8 @@ const getstafftranstionlist=async(req,res)=>{
 
   const customersUsersList = async (req, res) => {
     try {
-      const adminUsers = await Customeraccountmodel.find();
+      const adminUsers = await Customeraccountmodel.find().populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
 
       res.status(200).json({
         data: adminUsers,
