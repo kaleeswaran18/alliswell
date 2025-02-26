@@ -79,19 +79,21 @@ const adminaccountSchema = () => {
 
       // Format the dates as desired
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-console.log(currentFormatted,req.body.startdate)
+console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.enddate")
 
 
       if (currentFormatted <= req.body.startdate) {
 
       }
       else {
+        console.log("hellochennai")
         return res.status(400).json({ error: 'please enter current start date' });
       }
       if (req.body.startdate < req.body.enddate) {
 
       }
       else {
+        console.log("hellomadurai")
         return res.status(400).json({ error: 'please enter current end date' });
       }
       console.log("12")
