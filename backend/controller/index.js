@@ -1570,6 +1570,7 @@ const todaypendingAmount = data
   
   const getexecuteofficer=async(req,res)=>{
     try {
+      console.log(req.query.id,"check")
       const adminUsers = await Adminaccountmodel.find({branchid:req.query.id,role:"executeofficer"});
       console.log(req.query.id,adminUsers,"adminUsersall")
       if(adminUsers.length==0){
