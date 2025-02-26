@@ -59,21 +59,21 @@ const adminaccountSchema = () => {
   
  
   const createcustomeraccount = async (req, res) => {
-    console.log("1", req.body)
+    console.log("find1", req.body)
     try {
       // console.log(req.files,"reqqq")
 
 
       // Get the current date
       const currentDate = moment();
-      req.body.startdate=req.body.startdate.format('YYYY-MM-DD')
+      req.body.startdate=moment(req.body.startdate).format('YYYY-MM-DD')
       if(req.body.scheme=='daily'){
         req.body.enddate= moment(req.body.startdate).add(100, 'days');
-        req.body.duedate = req.body.enddate.format('YYYY-MM-DD');
+        req.body.duedate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       else{
         req.body.enddate= moment(req.body.startdate).add(70, 'days');
-        req.body.duedate = req.body.enddate.format('YYYY-MM-DD');
+        req.body.duedate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       // Calculate the date after 7 days
 
