@@ -59,7 +59,7 @@ const adminaccountSchema = () => {
   
  
   const createcustomeraccount = async (req, res) => {
-    console.log(req.file.originalname,"find1",req.body)
+    //console.log(req.file,"find1",req.body)
     try {
       // console.log(req.files,"reqqq")
 
@@ -154,7 +154,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
-        profilePicture:req.file.originalname!=undefined?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
+        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
