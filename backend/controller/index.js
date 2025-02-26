@@ -66,7 +66,7 @@ const adminaccountSchema = () => {
 
       // Get the current date
       const currentDate = moment();
-      req.body.startdate=req.body.startdate.format(YYYY-MM-DD)
+      req.body.startdate=req.body.startdate.format('YYYY-MM-DD')
       if(req.body.scheme=='daily'){
         req.body.enddate= moment(req.body.startdate).add(100, 'days');
         req.body.duedate = req.body.enddate.format('YYYY-MM-DD');
