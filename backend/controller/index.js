@@ -474,11 +474,11 @@ for (const value of result) {
 const extraaccountbalance=async (req,res)=>{
   
     let givenamount=''
-    givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-    const existingUsername = await Customeraccountmodel.find({_id: req.body.id});
+    givenamount= req.query.amount-(req.query.amount*req.query.interest/100)
+    const existingUsername = await Customeraccountmodel.find({_id: req.query.id});
     // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-    const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
-    const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:"false"});
+    const existingUser = await Customeraccountmodel.find({_id: req.query.id,amountclose:"false"});
+    const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.query.id,amountclose:"false"});
     let mainamount=0
     
     let finalcheck=[]
@@ -486,11 +486,11 @@ const extraaccountbalance=async (req,res)=>{
     if(existingUser.length!=0){
       let amount=existingUser[0].amount
       const result1 = await Customerpaylist.aggregate([
-        { $match: { customer_id: req.body.id, status: "paid" } },
+        { $match: { customer_id: req.query.id, status: "paid" } },
         { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
       ]);
       mainamount=amount-result1[0].totalPaidAmount
-      finalcheck.push({_id:req.body.id,pendingamount:mainamount})
+      finalcheck.push({_id:req.query.id,pendingamount:mainamount})
       // console.log("result1",result1,mainamount)
       if(mainamount<=givenamount){
         givenamount=givenamount-mainamount
@@ -503,7 +503,7 @@ const extraaccountbalance=async (req,res)=>{
     
    if(existingUser1.length!=0){
     const result1 = await Addextracustomeraccountmodel.aggregate([
-      { $match: {customer_id: req.body.id,amountclose:"false"} },
+      { $match: {customer_id: req.query.id,amountclose:"false"} },
       { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
     ]);
     let findall=[]
@@ -568,7 +568,7 @@ console.log(givenamount,"after",)
     }
     const customerName = existingUsername[0].customerName;
    if(existingUser1.length==0&&existingUser1.length==0){
-    const existingUser = await Customeraccountmodel.find({_id: req.body.id});
+    const existingUser = await Customeraccountmodel.find({_id: req.query.id});
    return res.status(200).send({
       
       data:existingUser,
@@ -581,7 +581,7 @@ const pendingAmounts = finalcheck.map(item => item.pendingamount).join(',');
 const givenAmount = givenamount // assuming givenAmount is defined elsewhere
 
 const message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
-const existingUser3 = await Customeraccountmodel.find({_id: req.body.id});
+const existingUser3 = await Customeraccountmodel.find({_id: req.query.id});
     
     res.status(200).send({
       data:existingUser3,
