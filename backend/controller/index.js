@@ -444,6 +444,7 @@ for (const value of result) {
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
+      let valueverify=await Customeraccountmodel.find(req.body.id)
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
       var value = await Addextracustomeraccountmodel.create({
         customerName: req.body.customerName,
@@ -454,7 +455,7 @@ for (const value of result) {
         // phoneNo: req.body.phoneNo,
         scheme: req.body.scheme,
         amount: req.body.amount,
-        LandMark: req.body.LandMark,
+        LandMark:valueverify[0].LandMark,
         startdate: req.body.startdate,
         enddate: req.body.enddate,
         dueamount: req.body.dueamount,
