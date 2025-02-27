@@ -22,7 +22,7 @@ router.get('/filterbasecustomer', adminaccountController.filterbasecustomer)
 router.put('/todaycustomerupdate', adminaccountController.todaycustomerupdate)
 router.put('/todayindividualcustomerupdate', adminaccountController.todayindividualcustomerupdate)
 router.get('/customerdetails', adminaccountController.customerdetails)
-router.get('/',adminaccountController.extraaccountbalance)
+router.get('/extraaccountbalance',adminaccountController.extraaccountbalance)
 
 // router.post('/fileUpload', verifyToken, upload.fields([{
 //   name: 'image', maxCount: 1

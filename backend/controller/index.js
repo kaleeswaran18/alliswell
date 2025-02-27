@@ -472,7 +472,7 @@ for (const value of result) {
     }
   }
 const extraaccountbalance=async (req,res)=>{
-  
+    console.log(req.query.amount,req.query.interest,req.query.id)
     let givenamount=''
     givenamount= req.query.amount-(req.query.amount*req.query.interest/100)
     const existingUsername = await Customeraccountmodel.find({_id: req.query.id});
