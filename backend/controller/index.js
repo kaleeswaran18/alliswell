@@ -16,26 +16,26 @@ const adminaccountSchema = () => {
       console.log(req.body, "body")
 
 
-      const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName, isactive: true });
+      const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName });
       if (existingUser) {
         return res.status(400).json({ error: 'name already exists' });
       }
-      const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email, isactive: true });
+      const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email });
       if (existingEmail) {
         return res.status(400).json({ error: 'email already exists' });
       }
-      const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo, isactive: true });
+      const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo });
       if (existingphone) {
         return res.status(400).json({ error: 'phonenumber already exists' });
       }
-      if(req.body.branchid!='All'){
-        const existingbranch = await Adminaccountmodel.findOne({ _id: req.body.branchid });
-        if (existingbranch) {
-          return res.status(400).json({ error: 'branchname not here' });
-        }
-      }
+      // if(req.body.branchid!='All'){
+        // const existingbranch = await Adminaccountmodel.findOne({ _id: req.body.branchid });
+        // if (existingbranch) {
+        //   return res.status(400).json({ error: 'branchname not here' });
+        // }
+      // }
     
-      console.log(req.file)
+      // console.log(req.file)
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       var value = await Adminaccountmodel.create({
         userName: req.body.userName,
@@ -44,7 +44,7 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
-        profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
+        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
       })
       res.status(200).send({
@@ -59,7 +59,7 @@ const adminaccountSchema = () => {
   
  
   const createcustomeraccount = async (req, res) => {
-    //console.log(req.file,"find1",req.body)
+    // console.log(req.file,"find1",req.body)
     try {
       // console.log(req.files,"reqqq")
 
