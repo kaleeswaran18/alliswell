@@ -189,16 +189,22 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
 
 
       // Get the current date
+    
       const currentDate = moment();
+      req.body.startdate=moment(req.body.startdate).format('YYYY-MM-DD')
+      if(req.body.scheme=='daily'){
+        req.body.enddate= moment(req.body.startdate).add(100, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
+      else{
+        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
+      // Calculate the date after 7 days
 
-      
-     
-
-
+      // Format the dates as desired
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-      console.log(currentFormatted,req.body.startdate)
-      
-      
+console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.enddate")  
             if (currentFormatted <= req.body.startdate) {
       
             }
