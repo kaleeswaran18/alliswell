@@ -1565,7 +1565,8 @@ const todaypendingAmount = data
   const createbranch=async(req,res)=>{
     try {
       const adminUsers = await Branchschememodel.find({Name:req.body.name});
-      if(adminUsers.length!=0){
+      console.log(adminUsers,"check")
+      if(adminUsers.length>0){
         return res.status(200).json({ error: 'the branchname already here' });
       }
       var value = await Branchschememodel.create({
