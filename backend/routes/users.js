@@ -53,6 +53,7 @@ router.get('/particularcustomerallaccount', adminaccountController.particularcus
 router.get('/viewallhistroy', adminaccountController.viewallhistroy)
 
 router.get('/carddetails', adminaccountController.carddetails)
+router.get('/notificationlist', adminaccountController.notificationlist)
 router.get('/transationhistroy', adminaccountController.transationhistroy)
 router.post('/dailycollectionamountandfilter', adminaccountController.dailycollectionamountandfilter)
 router.post('/allduedashboardview', adminaccountController.allduedashboardview)

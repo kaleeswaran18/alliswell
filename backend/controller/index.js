@@ -1587,6 +1587,48 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
+  const notificationlist = async (req, res) => {
+    try {
+      const moment = require("moment");
+      const currentDate = moment();
+      const currentFormatted = currentDate.format("YYYY-MM-DD");
+  
+      console.log(currentFormatted, "currentFormatted");
+  
+      // Step 1: Fetch unpaid customers with past due dates, sorted in descending order
+      const adminUsers = await Customerpaylist.find(
+        { coustomerduedate: { $lt: currentFormatted }, status: "unpaid" }
+      ).sort({ coustomerduedate: -1 }); // Sorting by descending due date
+  
+      // Step 2: Group customers by dueDate
+      const dueDateGroups = {};
+  
+      adminUsers.forEach((customer) => {
+        const dueDate = customer.coustomerduedate;
+  
+        if (!dueDateGroups[dueDate]) {
+          dueDateGroups[dueDate] = [];
+        }
+  
+        dueDateGroups[dueDate].push(customer);
+      });
+  
+      // Step 3: Convert to sorted array (optional)
+      const sortedDueDateGroups = Object.keys(dueDateGroups)
+        .sort((a, b) => new Date(b) - new Date(a)) // Sort descending
+        .reduce((obj, key) => {
+          obj[key] = dueDateGroups[key];
+          return obj;
+        }, {});
+  
+      res.status(200).send({
+        data: sortedDueDateGroups,
+      });
+    } catch (err) {
+      console.log("Something went wrong", err);
+      res.status(500).json({ status: false, msg: "Internal Server Error" });
+    }
+  };
   
   const getexecuteofficer=async(req,res)=>{
     try {
@@ -2250,6 +2292,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
   
     createaccount,
     // loginaccount,
+    notificationlist,
     createcustomeraccount,
     createscheme,
     todayallcustomer,

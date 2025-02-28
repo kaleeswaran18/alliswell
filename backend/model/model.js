@@ -120,7 +120,8 @@ const customerpaylist = new mongoose.Schema({
     maincustomer_id: { type: String },
     extraplan: { type: String },
     adminname: { type: String },
-    admin_id: { type: String }
+    admin_id: { type: String },
+    telecallerstatus:{type: String}
 
 })
 const formverification = new mongoose.Schema({
