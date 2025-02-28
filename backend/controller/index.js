@@ -1763,7 +1763,7 @@ const todaypendingAmount = data
       const adminUsers = await Rateofinterestschememodel.find({interest:req.body.interest});
 
       if(adminUsers.length!=0){
-        return res.status(200).json({ error: 'the rateofinterest already here' });
+        return res.status(200).json({ message: 'the rateofinterest already here' });
       }
       var value = await Rateofinterestschememodel.create({
         interest: req.body.interest,
@@ -1771,7 +1771,7 @@ const todaypendingAmount = data
       })
       res.status(200).send({
         data: value,
-        message: `${req.body.name}% rateofinterest created Successfully!`
+        message: `${req.body.interest}% rateofinterest created Successfully!`
       })
 
     }
