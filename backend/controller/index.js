@@ -742,7 +742,7 @@ const todaypendingAmount = data
         result["pendingamount"] = pendingamount
         result["Dueamount"] = payedamount + pendingamount;
         result["Landmark"] = existingUser[0].LandMark;
-        result["Profile_pic"] = existingUser[0].picture;
+        result["profilePicture"] = existingUser[0].profilePicture;
         goodresult.push(result)
 
         res.status(200).send({
@@ -784,7 +784,7 @@ const todaypendingAmount = data
         result["pendingamount"] = pendingamount
         result["Dueamount"] = payedamount + pendingamount;
         result["Landmark"] = existingUser[0].LandMark;
-        result["Profile_pic"] = existingUser[0].picture;
+        result["profilePicture"] = existingUser[0].profilePicture;
 
         goodresult.push(result)
 
