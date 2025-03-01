@@ -782,9 +782,9 @@ const todaypendingAmount = data
         result["extraplan"] = "false"
         result["payedamount"] = payedamount
         result["pendingamount"] = pendingamount
-        result["Dueamount"] = payedamount + pendingamount;
-        result["Landmark"] = existingUser[0].LandMark;
-        result["profilePicture"] = existingUser[0].profilePicture;
+        result["Dueamount"] = payedamount + pendingamount
+        result["Landmark"] = existingUser[0].LandMark
+       result["profilePicture"] = existingUser[0].profilePicture;
 
         goodresult.push(result)
 
