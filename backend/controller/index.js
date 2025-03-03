@@ -702,7 +702,7 @@ const todaypendingAmount = data
     }
   }
   const customerdetails = async (req, res) => {
-    console.log("*********>>>>>><<<<<<", req.query)
+    console.log("*********>>>>>><<<<<<", req.body)
     try {
       const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
       if (existingUsers[0].extraplan == 'true') {
@@ -718,7 +718,7 @@ const todaypendingAmount = data
         })
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.query.customer_id })
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
         console.log(existingUser, "customr paylist .....*******&&&&&&")
 
         pendingamount = findone[0].amount - payedamount
@@ -763,7 +763,7 @@ const todaypendingAmount = data
 
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.query.customer_id })
+        const existingUser = await Customerpaylist.find({ _id: '67c1bae43c664cabf069bc79' })
 
         pendingamount = findone[0].amount - payedamount
         console.log(payedamount, pendingamount, "existingUser")
