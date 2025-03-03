@@ -108,8 +108,8 @@ const customerpaylist = new mongoose.Schema({
     alreadypayment: { type: String },
     customername: { type: String },
     profilePicture:{ type: String },
-    branchid:{type: String},
-    executeofficerId:{type: String},
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     LandMark: { type: String },
     // Dueamount:{type:String},
     customerphonenumber: { type: String },
@@ -119,8 +119,8 @@ const customerpaylist = new mongoose.Schema({
     customerpayamount: { type: Number },
     maincustomer_id: { type: String },
     extraplan: { type: String },
-    adminname: { type: String },
-    admin_id: { type: String },
+    // adminname: { type: String },
+    // admin_id: { type: String },
     telecallerstatus:{type: String}
 
 })

@@ -1896,12 +1896,14 @@ const todaypendingAmount = data
     req.query.role="Superadmin"
       if(req.query.role=='Superadmin'){
         
-        data=await Customerpaylist.find()
+        data=await Customerpaylist.find().populate("executeofficerId") // Populating from Adminaccount
+        .populate("branchid"); // Populating from Branchschememodel;
         
         
       }
      else{
-      data=await Customerpaylist.find({branchid:req.query.id})
+      data=await Customerpaylist.find({branchid:req.query.id}).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
      }
       
       console.log(data,'heloo')
