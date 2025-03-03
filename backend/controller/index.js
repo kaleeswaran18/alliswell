@@ -1889,6 +1889,56 @@ const todaypendingAmount = data
   //     console.log("Something went wrong  post!!!", err)
   //   }
   // }
+
+  const transationfind = async (req, res) => {
+    try {
+        let query = {};
+
+        // Check role
+        req.query.role = "Superadmin";
+        if (req.query.role !== "Superadmin") {
+            query.branchid = req.query.id;
+        }
+
+        // Apply filters if provided
+        if (req.query.branchid) {
+            query.branchid = req.query.branchid;
+        }
+        if (req.query.status) {
+            query.status = req.query.status;
+        }
+        if (req.query.startdate && req.query.enddate) {
+            query.coustomerduedate = {
+                $gte: new Date(req.query.startdate), // Greater than or equal to start date
+                $lte: new Date(req.query.enddate),   // Less than or equal to end date
+            };
+        } else if (req.query.startdate) {
+            query.coustomerduedate = { $gte: new Date(req.query.startdate) };
+        } else if (req.query.enddate) {
+            query.coustomerduedate = { $lte: new Date(req.query.enddate) };
+        }
+
+        // Fetch data with filters
+        const data = await Customerpaylist.find(query)
+            .populate("executeofficerId") // Populating from Adminaccount
+            .populate("branchid");        // Populating from Branchschememodel
+
+        console.log(data, 'Filtered Transactions');
+        
+        res.status(200).send({
+            data: data,
+            message: "Filtered customer transactions listed successfully!",
+        });
+
+    } catch (err) {
+        console.log("Something went wrong!", err);
+        res.status(500).send({
+            message: "Internal Server Error",
+            error: err,
+        });
+    }
+};
+
    const transationhistroy = async (req, res) => {
     try {
      
@@ -2358,7 +2408,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     verification,
     verificationapprovel,
     dailyupdate,
-    approvelaccount
+    approvelaccount,
+    transationfind
   }
 }
 module.exports = adminaccountSchema()

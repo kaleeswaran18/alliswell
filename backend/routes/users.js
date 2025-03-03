@@ -47,6 +47,7 @@ router.get('/getexecuteofficer', adminaccountController.getexecuteofficer)
 router.post('/createrateofinterest', adminaccountController.createrateofinterest)
 router.get('/getrateofinterest', adminaccountController.getrateofinterest)
 router.get('/getbranchName', adminaccountController.getbranchName)
+router.get('/transationfind', adminaccountController.transationfind)
 
 router.post('/addextracustomerplan',upload.single("profilePicture"),adminaccountController.addextracustomerplan)
 router.get('/particularcustomerallaccount', adminaccountController.particularcustomerallaccount) //plan api
