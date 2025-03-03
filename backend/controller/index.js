@@ -1897,33 +1897,31 @@ const todaypendingAmount = data
         // Check role
         req.query.role = "Superadmin";
         if (req.query.role !== "Superadmin") {
-            query.branchid = req.query.id;
+            query.branchid = new mongoose.Types.ObjectId(req.query.id);
         }
 
         // Apply filters if provided
         if (req.query.branchid) {
-            query.branchid = req.query.branchid;
+            query.branchid = new mongoose.Types.ObjectId(req.query.branchid);
         }
         if (req.query.status) {
-            query.status = req.query.status;
+            query.status =req.query.status
         }
-        if (req.query.startdate && req.query.enddate) {
-            query.coustomerduedate = {
-                $gte: new Date(req.query.startdate), // Greater than or equal to start date
-                $lte: new Date(req.query.enddate),   // Less than or equal to end date
-            };
-        } else if (req.query.startdate) {
-            query.coustomerduedate = { $gte: new Date(req.query.startdate) };
-        } else if (req.query.enddate) {
-            query.coustomerduedate = { $lte: new Date(req.query.enddate) };
-        }
+        // if (req.query.startdate && req.query.enddate) {
+        //     query.coustomerduedate = {
+        //         $gte: new Date(req.query.startdate),
+        //         $lte: new Date(req.query.enddate),
+        //     };
+        // } 
+
+        console.log("Final Query:", JSON.stringify(query, null, 2));
 
         // Fetch data with filters
         const data = await Customerpaylist.find(query)
-            .populate("executeofficerId") // Populating from Adminaccount
-            .populate("branchid");        // Populating from Branchschememodel
+            .populate("executeofficerId")
+            .populate("branchid");
 
-        console.log(data, 'Filtered Transactions');
+        console.log("Filtered Transactions:", data);
         
         res.status(200).send({
             data: data,
@@ -1931,7 +1929,7 @@ const todaypendingAmount = data
         });
 
     } catch (err) {
-        console.log("Something went wrong!", err);
+        console.error("Something went wrong!", err);
         res.status(500).send({
             message: "Internal Server Error",
             error: err,
