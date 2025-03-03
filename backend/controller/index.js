@@ -1773,44 +1773,68 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
-  const transationhistroy = async (req, res) => {
+  // const transationhistroy = async (req, res) => {
+  //   try {
+     
+  //   let data=""
+  //     if(req.query.branchid=='All' && req.query.status=="All" && req.query.startdate==null){
+        
+  //       data=await Customerpaylist.find()
+  //       console.log("1",data)
+        
+  //     }
+  //     if(req.query.branchid=='All' && req.query.status=="All" && req.query.startdate!=null){
+  //       data = await Customerpaylist.find({coustomerduedate: { $gte: req.query.startdate, $lte: req.query.enddate }})
+  //       console.log("2",data)
+  //     }
+  //     if(req.query.branchid=='All' && req.query.status!="All" && req.query.startdate==null){
+  //       data = await Customerpaylist.find({status:req.query.status})
+  //       console.log("3",data)
+  //     }
+  //     if(req.query.branchid=='All' && req.query.status!="All" && req.query.startdate!=null){
+  //       data = await Customerpaylist.find({status:req.query.status,coustomerduedate: { $gte: req.query.startdate, $lte: req.query.enddate }})
+  //       console.log("4",data)
+  //     }
+  //     if(req.query.branchid !='All' && req.query.status=="All" && req.query.startdate==null){
+  //       data = await Customerpaylist.find({branchid:req.query.branchid})
+  //       console.log("extra",data)
+  //     }
+  //     if(req.query.branchid !='All' && req.query.status=="All" && req.query.startdate!=null){
+  //       data = await Customerpaylist.find({branchid:req.query.branchid,coustomerduedate: { $gte: req.query.startdate, $lte: req.query.enddate }})
+  //       console.log("5",data)
+  //     }
+  //     if(req.query.branchid !='All' && req.query.status!="All" && req.query.startdate==null){
+  //       data = await Customerpaylist.find({status:req.query.status,branchid:req.query.branchid})
+  //       console.log("6",data)
+  //     }
+  //     if(req.query.branchid !='All' && req.query.status!="All" && req.query.startdate!=null){
+  //       data = await Customerpaylist.find({branchid:req.query.branchid,status:req.query.status,coustomerduedate: { $gte: req.query.startdate, $lte: req.query.enddate }})
+  //       console.log("7",data)
+  //     }
+  //     console.log(data,'heloo')
+  //     res.status(200).send({
+  //       data: data,
+  //       message: "all customer listed Successfully!"
+  //     })
+  //   }
+  //   catch (err) {
+  //     console.log("Something went wrong  post!!!", err)
+  //   }
+  // }
+   const transationhistroy = async (req, res) => {
     try {
      
     let data=""
-      if(req.body.branchid=='All' && req.body.status=="All" && req.body.startdate==null){
+      if(req.query.role=='Superadmin'){
         
         data=await Customerpaylist.find()
-        console.log("1",data)
+        
         
       }
-      if(req.body.branchid=='All' && req.body.status=="All" && req.body.startdate!=null){
-        data = await Customerpaylist.find({coustomerduedate: { $gte: req.body.startdate, $lte: req.body.enddate }})
-        console.log("2",data)
-      }
-      if(req.body.branchid=='All' && req.body.status!="All" && req.body.startdate==null){
-        data = await Customerpaylist.find({status:req.body.status})
-        console.log("3",data)
-      }
-      if(req.body.branchid=='All' && req.body.status!="All" && req.body.startdate!=null){
-        data = await Customerpaylist.find({status:req.body.status,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.enddate }})
-        console.log("4",data)
-      }
-      if(req.body.branchid !='All' && req.body.status=="All" && req.body.startdate==null){
-        data = await Customerpaylist.find({branchid:req.body.branchid})
-        console.log("extra",data)
-      }
-      if(req.body.branchid !='All' && req.body.status=="All" && req.body.startdate!=null){
-        data = await Customerpaylist.find({branchid:req.body.branchid,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.enddate }})
-        console.log("5",data)
-      }
-      if(req.body.branchid !='All' && req.body.status!="All" && req.body.startdate==null){
-        data = await Customerpaylist.find({status:req.body.status,branchid:req.body.branchid})
-        console.log("6",data)
-      }
-      if(req.body.branchid !='All' && req.body.status!="All" && req.body.startdate!=null){
-        data = await Customerpaylist.find({branchid:req.body.branchid,status:req.body.status,coustomerduedate: { $gte: req.body.startdate, $lte: req.body.enddate }})
-        console.log("7",data)
-      }
+     else{
+      data=await Customerpaylist.find({branchid:req.query.id})
+     }
+      
       console.log(data,'heloo')
       res.status(200).send({
         data: data,
