@@ -1892,36 +1892,44 @@ const todaypendingAmount = data
 
   const transationfind = async (req, res) => {
     try {
-        let query = {};
-
-        // Check role
-        req.query.role = "Superadmin";
-        if (req.query.role !== "Superadmin") {
-            query.branchid = new mongoose.Types.ObjectId(req.query.id);
+       console.log(req.query,'check')
+       if(req.query.branchid!=''){
+        if(req.query.status!=''&&res.query.startdate!=''){
+          console.log("1")
+          const data = await Customerpaylist.find({branchid:req.query.branchid, 
+            status:req.query.status,
+            coustomerduedate: {
+                $gte: req.query.startdate, // Greater than or equal to startdate
+                $lte: req.query.enddate,   // Less than or equal to enddate
+            }
+        })
+          .populate("executeofficerId")
+          .populate("branchid");
         }
-
-        // Apply filters if provided
-        if (req.query.branchid) {
-            query.branchid = new mongoose.Types.ObjectId(req.query.branchid);
+        else if(req.query.status!=''&&res.query.startdate==''){
+          console.log("2")
+          const data = await Customerpaylist.find({branchid:req.query.branchid, 
+            status:req.query.status,
+           
+        })
+          .populate("executeofficerId")
+          .populate("branchid");
         }
-        if (req.query.status) {
-            query.status =req.query.status
+        else if(req.query.status==''&&res.query.startdate!=''){
+          console.log("3")
+          const data = await Customerpaylist.find({branchid:req.query.branchid, 
+            coustomerduedate: {
+              $gte: req.query.startdate, // Greater than or equal to startdate
+              $lte: req.query.enddate,   // Less than or equal to enddate
+          }
+           
+        })
+          .populate("executeofficerId")
+          .populate("branchid");
         }
-        // if (req.query.startdate && req.query.enddate) {
-        //     query.coustomerduedate = {
-        //         $gte: new Date(req.query.startdate),
-        //         $lte: new Date(req.query.enddate),
-        //     };
-        // } 
-
-        console.log("Final Query:", JSON.stringify(query, null, 2));
-
+       }
         // Fetch data with filters
-        const data = await Customerpaylist.find(query)
-            .populate("executeofficerId")
-            .populate("branchid");
-
-        console.log("Filtered Transactions:", data);
+      
         
         res.status(200).send({
             data: data,
