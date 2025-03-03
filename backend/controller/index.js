@@ -1893,6 +1893,7 @@ const todaypendingAmount = data
     try {
      
     let data=""
+    req.query.role="Superadmin"
       if(req.query.role=='Superadmin'){
         
         data=await Customerpaylist.find()
