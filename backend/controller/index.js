@@ -567,7 +567,7 @@ givenamount=givenamount-value.pendingamount
 console.log(givenamount,"after",)
 
 }
-
+/
 }
 
   
