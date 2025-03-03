@@ -704,11 +704,11 @@ const todaypendingAmount = data
   const customerdetails = async (req, res) => {
     console.log("*********>>>>>><<<<<<", req.body)
     try {
-      const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+      const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
       if (existingUsers[0].extraplan == 'true') {
-        let findone = await Addextracustomeraccountmodel.find({ _id: req.body.customer_id })
+        let findone = await Addextracustomeraccountmodel.find({ _id: req.query.customer_id })
         console.log(findone, "findone")
-        const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
         let payedamount = 0;
         let pendingamount = 0;
         existingUsers.forEach(val => {
@@ -718,7 +718,7 @@ const todaypendingAmount = data
         })
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body.id })
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
         console.log(existingUser, "customr paylist .....*******&&&&&&")
 
         pendingamount = findone[0].amount - payedamount
@@ -751,8 +751,8 @@ const todaypendingAmount = data
         })
       }
       else {
-        let findone = await Customeraccountmodel.find({ _id: req.body.customer_id })
-        const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+        let findone = await Customeraccountmodel.find({ _id: req.query.customer_id })
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
         let payedamount = 0;
         let pendingamount = 0;
         existingUsers.forEach(val => {
@@ -763,7 +763,7 @@ const todaypendingAmount = data
 
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body.id })
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
 
         pendingamount = findone[0].amount - payedamount
         console.log(payedamount, pendingamount, "existingUser")
