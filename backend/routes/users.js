@@ -53,6 +53,7 @@ router.get('/particularcustomerallaccount', adminaccountController.particularcus
 router.get('/viewallhistroy', adminaccountController.viewallhistroy)
 
 router.get('/carddetails', adminaccountController.carddetails)
+router.get('/notificationlist', adminaccountController.notificationlist)
 router.get('/transationhistroy', adminaccountController.transationhistroy)
 router.post('/dailycollectionamountandfilter', adminaccountController.dailycollectionamountandfilter)
 router.post('/allduedashboardview', adminaccountController.allduedashboardview)
@@ -67,8 +68,9 @@ router.post('/createcheet', adminaccountController.createcheet)
 router.put('/updatecheet', adminaccountController.updatecheet)
 router.get('/getallcheet',adminaccountController.getallcheet)
 router.delete('/deletecheet',adminaccountController.deletecheet)
-
+router.post('/transationhistroy', adminaccountController.transationhistroy)
+router.post('/transationcreate',adminaccountController.transationhistroy)
 module.exports = router;
 
-router.post('/transationhistroy', adminaccountController.transationhistroy)
+
 

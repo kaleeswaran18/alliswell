@@ -38,8 +38,10 @@ const customeraccountmodel = new mongoose.Schema({
     enddate: { type: String },
     amountclose: { type: String },
     givenamount:{ type: Number },
-    branchid:{type: String},
-    executeofficerId:{type: String},
+    // branchid:{type: String},
+    // executeofficerId:{type: String},
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     isactive: { type: Boolean, default: true },
     isextraplan: { type: String },
     createdAt: {
@@ -118,14 +120,15 @@ const customerpaylist = new mongoose.Schema({
     maincustomer_id: { type: String },
     extraplan: { type: String },
     adminname: { type: String },
-    admin_id: { type: String }
+    admin_id: { type: String },
+    telecallerstatus:{type: String}
 
 })
 const formverification = new mongoose.Schema({
     Name: { type: String },
     location: { type: String },
-    branchid: { type: String },
-    verficationofficer: { type: String },
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    verficationofficer: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" }, 
     isapprove:{ type: String ,default:"false"},
     phoneNo:{ type: String },
     Email: { type: String },

@@ -16,26 +16,26 @@ const adminaccountSchema = () => {
       console.log(req.body, "body")
 
 
-      const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName, isactive: true });
+      const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName });
       if (existingUser) {
         return res.status(400).json({ error: 'name already exists' });
       }
-      const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email, isactive: true });
+      const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email });
       if (existingEmail) {
         return res.status(400).json({ error: 'email already exists' });
       }
-      const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo, isactive: true });
+      const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo });
       if (existingphone) {
         return res.status(400).json({ error: 'phonenumber already exists' });
       }
-      if(req.body.branchid!='All'){
-        const existingbranch = await Adminaccountmodel.findOne({ _id: req.body.branchid });
-        if (existingbranch) {
-          return res.status(400).json({ error: 'branchname not here' });
-        }
-      }
+      // if(req.body.branchid!='All'){
+        // const existingbranch = await Adminaccountmodel.findOne({ _id: req.body.branchid });
+        // if (existingbranch) {
+        //   return res.status(400).json({ error: 'branchname not here' });
+        // }
+      // }
     
-      console.log(req.file)
+      // console.log(req.file)
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       var value = await Adminaccountmodel.create({
         userName: req.body.userName,
@@ -44,7 +44,7 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
-        profilePicture:req.file.originalname?`http://localhost:5000/${req.file.originalname}`:null,
+        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
       })
       res.status(200).send({
@@ -59,31 +59,41 @@ const adminaccountSchema = () => {
   
  
   const createcustomeraccount = async (req, res) => {
-    console.log("1", req.body)
+    // console.log(req.file,"find1",req.body)
     try {
       // console.log(req.files,"reqqq")
 
 
       // Get the current date
       const currentDate = moment();
-
+      req.body.startdate=moment(req.body.startdate).format('YYYY-MM-DD')
+      if(req.body.scheme=='daily'){
+        req.body.enddate= moment(req.body.startdate).add(100, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
+      else{
+        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
       // Calculate the date after 7 days
 
       // Format the dates as desired
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-console.log(currentFormatted,req.body.startdate)
+console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.enddate")
 
 
       if (currentFormatted <= req.body.startdate) {
 
       }
       else {
+        console.log("hellochennai")
         return res.status(400).json({ error: 'please enter current start date' });
       }
       if (req.body.startdate < req.body.enddate) {
 
       }
       else {
+        console.log("hellomadurai")
         return res.status(400).json({ error: 'please enter current end date' });
       }
       console.log("12")
@@ -144,7 +154,7 @@ console.log(currentFormatted,req.body.startdate)
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
-        profilePicture:req.file.originalname?`http://localhost:5000/${req.file.originalname}`:null,
+        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
@@ -179,16 +189,22 @@ console.log(currentFormatted,req.body.startdate)
 
 
       // Get the current date
+    
       const currentDate = moment();
+      req.body.startdate=moment(req.body.startdate).format('YYYY-MM-DD')
+      if(req.body.scheme=='daily'){
+        req.body.enddate= moment(req.body.startdate).add(100, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
+      else{
+        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
+      }
+      // Calculate the date after 7 days
 
-      
-     
-
-
+      // Format the dates as desired
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-      console.log(currentFormatted,req.body.startdate)
-      
-      
+console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.enddate")  
             if (currentFormatted <= req.body.startdate) {
       
             }
@@ -428,6 +444,7 @@ for (const value of result) {
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
+      let valueverify=await Customeraccountmodel.find(req.body.id)
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
       var value = await Addextracustomeraccountmodel.create({
         customerName: req.body.customerName,
@@ -438,7 +455,7 @@ for (const value of result) {
         // phoneNo: req.body.phoneNo,
         scheme: req.body.scheme,
         amount: req.body.amount,
-        LandMark: req.body.LandMark,
+        LandMark:valueverify[0].LandMark,
         startdate: req.body.startdate,
         enddate: req.body.enddate,
         dueamount: req.body.dueamount,
@@ -462,13 +479,13 @@ for (const value of result) {
     }
   }
 const extraaccountbalance=async (req,res)=>{
-  
+    console.log(req.query.amount,req.query.interest,req.query.id)
     let givenamount=''
-    givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-    const existingUsername = await Customeraccountmodel.find({_id: req.body.id});
+    givenamount= req.query.amount-(req.query.amount*req.query.interest/100)
+    const existingUsername = await Customeraccountmodel.find({_id: req.query.id});
     // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-    const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
-    const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.body.id,amountclose:"false"});
+    const existingUser = await Customeraccountmodel.find({_id: req.query.id,amountclose:"false"});
+    const existingUser1 = await Addextracustomeraccountmodel.find({customer_id: req.query.id,amountclose:"false"});
     let mainamount=0
     
     let finalcheck=[]
@@ -476,11 +493,11 @@ const extraaccountbalance=async (req,res)=>{
     if(existingUser.length!=0){
       let amount=existingUser[0].amount
       const result1 = await Customerpaylist.aggregate([
-        { $match: { customer_id: req.body.id, status: "paid" } },
+        { $match: { customer_id: req.query.id, status: "paid" } },
         { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
       ]);
       mainamount=amount-result1[0].totalPaidAmount
-      finalcheck.push({_id:req.body.id,pendingamount:mainamount})
+      finalcheck.push({_id:req.query.id,pendingamount:mainamount})
       // console.log("result1",result1,mainamount)
       if(mainamount<=givenamount){
         givenamount=givenamount-mainamount
@@ -493,7 +510,7 @@ const extraaccountbalance=async (req,res)=>{
     
    if(existingUser1.length!=0){
     const result1 = await Addextracustomeraccountmodel.aggregate([
-      { $match: {customer_id: req.body.id,amountclose:"false"} },
+      { $match: {customer_id: req.query.id,amountclose:"false"} },
       { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
     ]);
     let findall=[]
@@ -558,9 +575,10 @@ console.log(givenamount,"after",)
     }
     const customerName = existingUsername[0].customerName;
    if(existingUser1.length==0&&existingUser1.length==0){
-    res.status(200).send({
+    const existingUser = await Customeraccountmodel.find({_id: req.query.id});
+   return res.status(200).send({
       
-      
+      data:existingUser,
       message:  `${customerName}, you have no pending amounts. Proceeding to the next process.`
     });
    }
@@ -570,10 +588,10 @@ const pendingAmounts = finalcheck.map(item => item.pendingamount).join(',');
 const givenAmount = givenamount // assuming givenAmount is defined elsewhere
 
 const message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
-   
+const existingUser3 = await Customeraccountmodel.find({_id: req.query.id});
     
     res.status(200).send({
-      
+      data:existingUser3,
       
       message: message
     });
@@ -608,26 +626,28 @@ const message = `${customerName}, you currently have ${finalcheck.length} accoun
     console.log("1")
     try {
       console.log("12")
-      console.log(req.body.branchid,req.body.role, "body")
+      console.log(req.query.branchid,req.query.role, "body")
       const currentDate = moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
       console.log(currentFormatted, "currentFormatted")
+      req.query.branchid=req.query.branchid==undefined?'':req.query.branchid
 let data=""
-if(req.body.role=="Superadmin"){
-  if(req.body.branchid==''){
+if(req.query.role=="Superadmin"){
+  if(req.query.branchid==''){
+    console.log("checkall")
     data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
   }
   else{
-    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.body.branchid})
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
   }
   
 }
-if(req.body.role=="admin"){
+if(req.query.role=="admin"){
   console.log("admin")
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.body.branchid})
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
 }
-if(req.body.role=='executeofficer'){
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.body.branchid,executeofficerId:req.body.executeofficerId})
+if(req.query.role=='executeofficer'){
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.query.branchid,executeofficerId:req.query.executeofficerId})
 }
 const todayfullAmount = data.reduce((sum, customer) => sum + customer.customerdueamount, 0);
 const todayreceivedAmount = data
@@ -684,11 +704,11 @@ const todaypendingAmount = data
   const customerdetails = async (req, res) => {
     console.log("*********>>>>>><<<<<<", req.body)
     try {
-      const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+      const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
       if (existingUsers[0].extraplan == 'true') {
-        let findone = await Addextracustomeraccountmodel.find({ _id: req.body.customer_id })
+        let findone = await Addextracustomeraccountmodel.find({ _id: req.query.customer_id })
         console.log(findone, "findone")
-        const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
         let payedamount = 0;
         let pendingamount = 0;
         existingUsers.forEach(val => {
@@ -698,7 +718,7 @@ const todaypendingAmount = data
         })
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body.id })
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
         console.log(existingUser, "customr paylist .....*******&&&&&&")
 
         pendingamount = findone[0].amount - payedamount
@@ -722,7 +742,7 @@ const todaypendingAmount = data
         result["pendingamount"] = pendingamount
         result["Dueamount"] = payedamount + pendingamount;
         result["Landmark"] = existingUser[0].LandMark;
-        result["Profile_pic"] = existingUser[0].picture;
+        result["profilePicture"] = existingUser[0].profilePicture;
         goodresult.push(result)
 
         res.status(200).send({
@@ -731,8 +751,8 @@ const todaypendingAmount = data
         })
       }
       else {
-        let findone = await Customeraccountmodel.find({ _id: req.body.customer_id })
-        const existingUsers = await Customerpaylist.find({ customer_id: req.body.customer_id });
+        let findone = await Customeraccountmodel.find({ _id: req.query.customer_id })
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
         let payedamount = 0;
         let pendingamount = 0;
         existingUsers.forEach(val => {
@@ -743,7 +763,7 @@ const todaypendingAmount = data
 
 
 
-        const existingUser = await Customerpaylist.find({ _id: req.body.id })
+        const existingUser = await Customerpaylist.find({ _id: '67c1bae43c664cabf069bc79' })
 
         pendingamount = findone[0].amount - payedamount
         console.log(payedamount, pendingamount, "existingUser")
@@ -762,9 +782,9 @@ const todaypendingAmount = data
         result["extraplan"] = "false"
         result["payedamount"] = payedamount
         result["pendingamount"] = pendingamount
-        result["Dueamount"] = payedamount + pendingamount;
-        result["Landmark"] = existingUser[0].LandMark;
-        result["Profile_pic"] = existingUser[0].picture;
+        result["Dueamount"] = payedamount + pendingamount
+        result["Landmark"] = existingUser[0].LandMark
+       result["profilePicture"] = existingUser[0].profilePicture;
 
         goodresult.push(result)
 
@@ -1416,22 +1436,15 @@ const todaypendingAmount = data
         const expiresInMinutes = 30
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
        
-  console.log({
-    "status": true,
-    "responsecode": 201,
-    "message": "OTP generated successfully",
-    "data": {
-        "phone": "6380319587",
-        "email": "mansoor@1998gmail.com",
-         "phoneOtp": "234176"
-  }},"findcheck")
+
         res.status(200).json({
          "status": true,
     "responsecode": 201,
     "message": "OTP generated successfully",
     "data": {
-        "phone": "6380319587",
-        "email": "mansoor@1998gmail.com",
+      a,
+        "phone": a[0].phoneNo,
+        "email": a[0].Email,
          "phoneOtp": "234176"
     }
           
@@ -1551,12 +1564,15 @@ const todaypendingAmount = data
   }
   const createbranch=async(req,res)=>{
     try {
+      console.log(req.body)
       const adminUsers = await Branchschememodel.find({Name:req.body.name});
-      if(adminUsers.length!=0){
-        return res.status(200).json({ error: 'the branchname already here' });
+      console.log(adminUsers.length,"check")
+      if(adminUsers.length>0){
+        return res.status(200).json({ message: 'the branchname already here' });
       }
       var value = await Branchschememodel.create({
         Name: req.body.name,
+        totalinvestmentamount:req.body.totalInvestmentAmount
        
       })
       res.status(200).send({
@@ -1571,9 +1587,52 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
+  const notificationlist = async (req, res) => {
+    try {
+      const moment = require("moment");
+      const currentDate = moment();
+      const currentFormatted = currentDate.format("YYYY-MM-DD");
+  
+      console.log(currentFormatted, "currentFormatted");
+  
+      // Step 1: Fetch unpaid customers with past due dates, sorted in descending order
+      const adminUsers = await Customerpaylist.find(
+        { coustomerduedate: { $lt: currentFormatted }, status: "unpaid" }
+      ).sort({ coustomerduedate: -1 }); // Sorting by descending due date
+  
+      // Step 2: Group customers by dueDate
+      const dueDateGroups = {};
+  
+      adminUsers.forEach((customer) => {
+        const dueDate = customer.coustomerduedate;
+  
+        if (!dueDateGroups[dueDate]) {
+          dueDateGroups[dueDate] = [];
+        }
+  
+        dueDateGroups[dueDate].push(customer);
+      });
+  
+      // Step 3: Convert to sorted array (optional)
+      const sortedDueDateGroups = Object.keys(dueDateGroups)
+        .sort((a, b) => new Date(b) - new Date(a)) // Sort descending
+        .reduce((obj, key) => {
+          obj[key] = dueDateGroups[key];
+          return obj;
+        }, {});
+  
+      res.status(200).send({
+        data: sortedDueDateGroups,
+      });
+    } catch (err) {
+      console.log("Something went wrong", err);
+      res.status(500).json({ status: false, msg: "Internal Server Error" });
+    }
+  };
   
   const getexecuteofficer=async(req,res)=>{
     try {
+      console.log(req.query.id,"check")
       const adminUsers = await Adminaccountmodel.find({branchid:req.query.id,role:"executeofficer"});
       console.log(req.query.id,adminUsers,"adminUsersall")
       if(adminUsers.length==0){
@@ -1637,7 +1696,7 @@ const todaypendingAmount = data
   }
   const verificationapprovel=async(req,res)=>{
     const value = await Formverification.findOneAndUpdate(
-      { _id: req.body.id }, 
+      { _id: req.query.id }, 
       { isapprove: "true" }, 
       { new: true }
   );
@@ -1657,12 +1716,17 @@ const todaypendingAmount = data
   
   const approvelaccount=async(req,res)=>{
     try {
-      const adminUsers=""
-        if(req.body.role=="Superadmin"){
+      console.log(req.query.role,"check")
+      let adminUsers=""
+        if(req.query.role=="Superadmin"){
            adminUsers = await Formverification.find({isapprove:'true'})
+           .populate("verficationofficer") // Populating from Adminaccount
+           .populate("branchid"); // Populating from Branchschememodel
         }
         else{
-           adminUsers = await Formverification.find({branchid:req.body.id,isapprove:'true'})
+           adminUsers = await Formverification.find({branchid:req.query.id,isapprove:'true'})
+           .populate("verficationofficer") // Populating from Adminaccount
+           .populate("branchid"); // Populating from Branchschememodel
         }
       
         res.status(200).send({
@@ -1677,28 +1741,32 @@ const todaypendingAmount = data
       res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
   }
-  const verification=async(req,res)=>{
+  const verification = async (req, res) => {
     try {
-      const adminUsers=""
-        if(req.body.role=="Superadmin"){
-           adminUsers = await Formverification.find({isapprove:'false'})
+        console.log(req.query.role, "req.body.role");
+        let adminUsers = "";
+
+        if (req.query.role == "Superadmin") {
+            adminUsers = await Formverification.find({ isapprove: "false" })
+                .populate("verficationofficer") // Populating from Adminaccount
+                .populate("branchid"); // Populating from Branchschememodel
+        } else {
+            adminUsers = await Formverification.find({ verficationofficer: req.query.id, isapprove: "false" })
+                .populate("verficationofficer") 
+                .populate("branchid"); 
         }
-        else{
-           adminUsers = await Formverification.find({verficationofficer:req.body.id,isapprove:'false'})
-        }
-      
+
         res.status(200).send({
-        data: adminUsers,
-        message: "get all verfication  account Successfully!"
-      })
-     
-     
+            data: adminUsers,
+            message: "Get all verification accounts successfully!"
+        });
+
+    } catch (err) {
+        console.log('Something went wrong', err);
+        res.status(500).json({ status: false, msg: 'Internal Server Error' });
     }
-    catch (err) {
-      console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
-    }
-  }
+};
+
   const getbranchName=async(req,res)=>{
     try {
       const adminUsers = await Branchschememodel.find();
@@ -1737,7 +1805,7 @@ const todaypendingAmount = data
       const adminUsers = await Rateofinterestschememodel.find({interest:req.body.interest});
 
       if(adminUsers.length!=0){
-        return res.status(200).json({ error: 'the rateofinterest already here' });
+        return res.status(200).json({ message: 'the rateofinterest already here' });
       }
       var value = await Rateofinterestschememodel.create({
         interest: req.body.interest,
@@ -1745,7 +1813,7 @@ const todaypendingAmount = data
       })
       res.status(200).send({
         data: value,
-        message: `${req.body.name}% rateofinterest created Successfully!`
+        message: `${req.body.interest}% rateofinterest created Successfully!`
       })
 
     }
@@ -2061,7 +2129,8 @@ const getstafftranstionlist=async(req,res)=>{
 
   const customersUsersList = async (req, res) => {
     try {
-      const adminUsers = await Customeraccountmodel.find({ isactive: true });
+      const adminUsers = await Customeraccountmodel.find().populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
 
       res.status(200).json({
         data: adminUsers,
@@ -2247,6 +2316,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
   
     createaccount,
     // loginaccount,
+    notificationlist,
     createcustomeraccount,
     createscheme,
     todayallcustomer,
