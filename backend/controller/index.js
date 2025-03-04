@@ -1479,7 +1479,7 @@ const todaypendingAmount = data
   }
   const particularcustomerallaccount = async (req, res) => {
     try {
-      var customerId = req.body.id
+      var customerId = req.query.id
       const checkingvalue = await Customeraccountmodel.find({ _id: customerId })
       const checking = await Addextracustomeraccountmodel.find({ customer_id: checkingvalue[0]._id })
       let finalvalue = [...checkingvalue, ...checking]
@@ -1892,58 +1892,28 @@ const todaypendingAmount = data
 
   const transationfind = async (req, res) => {
     try {
-       console.log(req.query,'check')
-       if(req.query.branchid!=''){
-        if(req.query.status!=''&&res.query.startdate!=''){
-          console.log("1")
-          const data = await Customerpaylist.find({branchid:req.query.branchid, 
-            status:req.query.status,
-            coustomerduedate: {
-                $gte: req.query.startdate, // Greater than or equal to startdate
-                $lte: req.query.enddate,   // Less than or equal to enddate
-            }
-        })
-          .populate("executeofficerId")
-          .populate("branchid");
-        }
-        else if(req.query.status!=''&&res.query.startdate==''){
-          console.log("2")
-          const data = await Customerpaylist.find({branchid:req.query.branchid, 
-            status:req.query.status,
-           
-        })
-          .populate("executeofficerId")
-          .populate("branchid");
-        }
-        else if(req.query.status==''&&res.query.startdate!=''){
-          console.log("3")
-          const data = await Customerpaylist.find({branchid:req.query.branchid, 
-            coustomerduedate: {
-              $gte: req.query.startdate, // Greater than or equal to startdate
-              $lte: req.query.enddate,   // Less than or equal to enddate
-          }
-           
-        })
-          .populate("executeofficerId")
-          .populate("branchid");
-        }
-       }
-        // Fetch data with filters
-      
+        console.log("Received Query Params:", req.query);
+
         
-        res.status(200).send({
+
+        // Fetch data with converted ObjectId
+        let data = await Customerpaylist.find({_id:req.body._id,branchid:"67b2cfd91f685ad505c8864f"});
+
+        res.status(200).json({
             data: data,
             message: "Filtered customer transactions listed successfully!",
         });
 
     } catch (err) {
         console.error("Something went wrong!", err);
-        res.status(500).send({
+        res.status(500).json({
             message: "Internal Server Error",
-            error: err,
+            error: err.message,
         });
     }
 };
+
+
 
    const transationhistroy = async (req, res) => {
     try {
