@@ -707,9 +707,9 @@ const todaypendingAmount = data
      
       // console.log(currentFormatted, "currentFormatted")
       // const existingUser = await Customerpaylist.find({duedate: currentFormatted });\
-      let existingUser=''
+       
      
-         existingUser = await Customerpaylist.find({customer_id:req.query.id});
+       let existingUser = await Customerpaylist.find({customer_id:req.query.id});
     
       
       
