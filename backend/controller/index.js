@@ -701,6 +701,30 @@ const todaypendingAmount = data
       console.log("Something went wrong  post!!!", err)
     }
   }
+  const particularcustomertransaction = async (req, res) => {
+    console.log("1")
+    try {
+     
+      // console.log(currentFormatted, "currentFormatted")
+      // const existingUser = await Customerpaylist.find({duedate: currentFormatted });\
+      let existingUser=''
+      if(req.body.branchid=="All"){
+         existingUser = await Customerpaylist.find({  customer_id:req.query.id  });
+      }
+      
+      
+     
+
+
+      res.status(200).send({
+        data: existingUser,
+        message: "all customer listed Successfully!"
+      })
+    }
+    catch (err) {
+      console.log("Something went wrong  post!!!", err)
+    }
+  }
   const customerdetails = async (req, res) => {
     console.log("*********>>>>>><<<<<<", req.body)
     try {
@@ -2386,7 +2410,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     verificationapprovel,
     dailyupdate,
     approvelaccount,
-    transationfind
+    transationfind,
+    particularcustomertransaction
   }
 }
 module.exports = adminaccountSchema()

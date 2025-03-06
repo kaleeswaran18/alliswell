@@ -52,7 +52,7 @@ router.get('/transationfind', adminaccountController.transationfind)
 router.post('/addextracustomerplan',upload.single("profilePicture"),adminaccountController.addextracustomerplan)
 router.get('/particularcustomerallaccount', adminaccountController.particularcustomerallaccount) //plan api
 router.get('/viewallhistroy', adminaccountController.viewallhistroy)
-
+router.get('/particularcustomertransaction', adminaccountController.particularcustomertransaction) //plan api
 router.get('/carddetails', adminaccountController.carddetails)
 router.get('/notificationlist', adminaccountController.notificationlist)
 router.get('/transationhistroy', adminaccountController.transationhistroy)
