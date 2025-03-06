@@ -1480,7 +1480,8 @@ const todaypendingAmount = data
   const particularcustomerallaccount = async (req, res) => {
     try {
       var customerId = req.query.id
-      const checkingvalue = await Customeraccountmodel.find({ _id: customerId })
+      const checkingvalue = await Customeraccountmodel.find({ _id: customerId }).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
       const checking = await Addextracustomeraccountmodel.find({ customer_id: checkingvalue[0]._id })
       let finalvalue = [...checkingvalue, ...checking]
       

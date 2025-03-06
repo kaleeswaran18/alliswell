@@ -54,8 +54,8 @@ const addextracustomeraccountmodel = new mongoose.Schema({
     customerName: { type: String },
 
     customer_id: { type: String },
-    branchid:{type: String},
-    executeofficerId:{type: String},
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
+    executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     
  givenamount:{type: String},
     scheme: { type: String },
