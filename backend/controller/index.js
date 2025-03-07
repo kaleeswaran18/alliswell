@@ -18,24 +18,28 @@ const adminaccountSchema = () => {
 
       const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName });
       if (existingUser) {
-        return res.status(400).json({ error: 'name already exists' });
+        return res.status(200).send({
+        
+          message: "name already exists"
+        })
+        
       }
       const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email });
       if (existingEmail) {
-        return res.status(400).json({ error: 'email already exists' });
+        return res.status(200).send({
+        
+          message: "email already exists"
+        })
       }
       const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo });
       if (existingphone) {
-        return res.status(400).json({ error: 'phonenumber already exists' });
+        return res.status(200).send({
+        
+          message: "phonenumber already exists"
+        })
+        
       }
-      // if(req.body.branchid!='All'){
-        // const existingbranch = await Adminaccountmodel.findOne({ _id: req.body.branchid });
-        // if (existingbranch) {
-        //   return res.status(400).json({ error: 'branchname not here' });
-        // }
-      // }
-    
-      // console.log(req.file)
+      
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       var value = await Adminaccountmodel.create({
         userName: req.body.userName,
@@ -87,20 +91,20 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       }
       else {
         console.log("hellochennai")
-        return res.status(400).json({ error: 'please enter current start date' });
+        return res.status(200).send({ message: 'please enter current start date' });
       }
       if (req.body.startdate < req.body.enddate) {
 
       }
       else {
         console.log("hellomadurai")
-        return res.status(400).json({ error: 'please enter current end date' });
+        return res.status(200).send({ message: 'please enter current end date' });
       }
       console.log("12")
       console.log(req.body, "body")
       const existingUser = await Customeraccountmodel.findOne({ customerName: req.body.customerName });
       if (existingUser) {
-        return res.status(400).json({ error: 'name already exists' });
+        return res.status(200).send({ message: 'name already exists' });
       }
       // const existingEmail = await Customeraccountmodel.findOne({ Email: req.body.Email });
       // if (existingEmail) {
@@ -108,11 +112,11 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       // }
       const existingphone = await Customeraccountmodel.findOne({ phoneNo: req.body.phoneNo });
       if (existingphone) {
-        return res.status(400).json({ error: 'phonenumber already exists' });
+        return res.status(200).send({ message: 'phonenumber already exists' });
       }
       const existingemail = await Customeraccountmodel.findOne({ Email: req.body.Email });
       if (existingemail) {
-        return res.status(400).json({ error: 'Email already exists' });
+        return res.status(200).send({ message: 'Email already exists' });
       }
       //   dueamount:{type:String},
       //   duedate:{type:Date},
@@ -209,17 +213,17 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       
             }
             else {
-              return res.status(400).json({ error: 'please enter current start date' });
+              return res.status(200).send({ message: 'please enter current start date' });
             }
             if (req.body.startdate < req.body.enddate) {
       
             }
             else {
-              return res.status(400).json({ error: 'please enter current end date' });
+              return res.status(200).send({ message: 'please enter current end date' });
             }
       const existingUser = await Customeraccountmodel.find({ _id: req.body.id });
       if (existingUser.length == 0) {
-        return res.status(400).json({ error: 'id doesnot match' });
+        return res.status(200).send({ message: 'id doesnot match' });
       }
 
       req.body.dueamount = ''
@@ -606,7 +610,7 @@ const existingUser3 = await Customeraccountmodel.find({_id: req.query.id});
       console.log(req.body, "body")
       const existingUser = await Customerschememodel.findOne({ type: req.body.type });
       if (existingUser) {
-        return res.status(400).json({ error: 'scheme already exists' });
+        return res.status(200).send({ message: 'scheme already exists' });
       }
 
       var value = await Customerschememodel.create({
@@ -1394,7 +1398,7 @@ const todaypendingAmount = data
       b=await Customeraccountmodel.find({Email:Email})
       
       if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, msg: 'Invalid Email please check your gmail' })
+        return res.status(201).send({ status: false, message: 'Invalid Email please check your gmail' })
       }
       // if(a[0]?.role=="customer"||b[0]?.role=="customer"){
       //  const passwordMatch= await bcrypt.compare(password, b[0].password);
@@ -1417,7 +1421,7 @@ const todaypendingAmount = data
           username: a[0]['userName'],
           role: a[0]['role'],
           profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
-          msg: 'logged In Successfully!',
+          message: 'logged In Successfully!',
           token
         });
       }
@@ -1431,7 +1435,7 @@ const todaypendingAmount = data
           username: b[0]['customerName'],
           role: b[0]['role'],
           profilePicture: b[0]['profilePicture'] ? b[0]['profilePicture'] : null,
-          msg: 'logged In Successfully!',
+          message: 'logged In Successfully!',
           token
         });
       }
@@ -1443,7 +1447,7 @@ const todaypendingAmount = data
       b=await Customeraccountmodel.find({phoneNo:phoneNo})
       
       if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, msg: 'Invalid Phoneno please check ' })
+        return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
       }
       // if(a[0]?.role=="customer"||b[0]?.role=="customer"){
       //  const passwordMatch= await bcrypt.compare(password, b[0].password);
@@ -1485,7 +1489,7 @@ const todaypendingAmount = data
           username: b[0]['customerName'],
           role: b[0]['role'],
           profilePicture: b[0]['profilePicture'] ? b['profilePicture'] : null,
-          msg: 'logged In Successfully!',
+          message: 'logged In Successfully!',
           token
         });
       }
@@ -1499,7 +1503,7 @@ const todaypendingAmount = data
       
     } catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const particularcustomerallaccount = async (req, res) => {
@@ -1516,7 +1520,7 @@ const todaypendingAmount = data
       })
     } catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
 
@@ -1531,7 +1535,7 @@ const todaypendingAmount = data
       })
     } catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(200).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const LoginVerifyToken = async (req, res) => {
@@ -1543,7 +1547,7 @@ const todaypendingAmount = data
       } = req['body']
 
       if (!token)
-        return res.status(401).json({ error: "Access Denied!" })
+        return res.status(201).send({ message: "Access Denied!" })
 
       token = token.toString().replace(/^"(.*)"$/, '$1')
       const decodedToken = await hs.decodeToken(token)
@@ -1552,23 +1556,23 @@ const todaypendingAmount = data
       if (!decodedToken)
         return res
           .status(401)
-          .json({ status: false, msg: "Session out" });
+          .json({ status: false, message: "Session out" });
 
       if (decodedToken.status) {
         // delete decodedToken['status']
         res
           .status(200)
-          .json({ status: true, msg: "Token valid", data: decodedToken['data'] })
+          .json({ status: true, message: "Token valid", data: decodedToken['data'] })
       }
       else
         res
           .status(400)
-          .json({ status: false, msg: "Invalid Token" })
+          .json({ status: false, message: "Invalid Token" })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
 
@@ -1585,7 +1589,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('fileeee.......', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const createbranch=async(req,res)=>{
@@ -1610,7 +1614,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const notificationlist = async (req, res) => {
@@ -1652,7 +1656,7 @@ const todaypendingAmount = data
       });
     } catch (err) {
       console.log("Something went wrong", err);
-      res.status(500).json({ status: false, msg: "Internal Server Error" });
+      res.status(500).send({ status: false, message: "Internal Server Error" });
     }
   };
   
@@ -1662,7 +1666,7 @@ const todaypendingAmount = data
       const adminUsers = await Adminaccountmodel.find({branchid:req.query.id,role:"executeofficer"});
       console.log(req.query.id,adminUsers,"adminUsersall")
       if(adminUsers.length==0){
-        return res.status(200).json({ error: 'the branchname doesnot here' });
+        return res.status(200).send({ message: 'the branchname doesnot here' });
       }
      
       res.status(200).send({
@@ -1674,17 +1678,17 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const createform=async(req,res)=>{
     const adminUsers = await Customeraccountmodel.find({phoneNo:req.body.phoneNo});
     const adminUsers1 = await Customeraccountmodel.find({Email:req.body.Email});
       if(adminUsers.length!=0){
-        return res.status(200).json({ error: 'phoneNo already here' });
+        return res.status(200).send({ message: 'phoneNo already here' });
       }
       if(adminUsers1.length!=0){
-        return res.status(200).json({ error: 'Email already here' });
+        return res.status(200).send({ message: 'Email already here' });
       }
       var value = await Formverification.create({
         Name: req.body.Name,
@@ -1764,7 +1768,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const verification = async (req, res) => {
@@ -1789,7 +1793,7 @@ const todaypendingAmount = data
 
     } catch (err) {
         console.log('Something went wrong', err);
-        res.status(500).json({ status: false, msg: 'Internal Server Error' });
+        res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
 };
 
@@ -1806,7 +1810,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
 
@@ -1823,7 +1827,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const createrateofinterest=async(req,res)=>{
@@ -1845,7 +1849,7 @@ const todaypendingAmount = data
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const adminList = async (req, res) => {
@@ -1858,13 +1862,13 @@ const todaypendingAmount = data
       // })
       res.status(200).json({
         data: adminUsers,
-        msg: 'Admins Listed Successfully!'
+        message: 'Admins Listed Successfully!'
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   // const transationhistroy = async (req, res) => {
@@ -2148,19 +2152,19 @@ const getstafftranstionlist=async(req,res)=>{
 
       const existingUser = await Adminaccountmodel.findOne({ _id: { $ne: id }, userName, isactive: true });
       if (existingUser) {
-        return res.status(400).json({ error: 'name already exists' });
+        return res.status(200).send({ message: 'name already exists' });
       }
 
       if (Email) {
         const existingEmail = await Adminaccountmodel.findOne({ _id: { $ne: id }, Email, isactive: true });
         if (existingEmail) {
-          return res.status(400).json({ error: 'email already exists' });
+          return res.status(200).send({ message: 'email already exists' });
         }
       }
 
       const existingphone = await Adminaccountmodel.findOne({ _id: { $ne: id }, phoneNo, isactive: true });
       if (existingphone) {
-        return res.status(400).json({ error: 'phonenumber already exists' });
+        return res.status(200).send({ message: 'phonenumber already exists' });
       }
 
       const updatedAdminUsers = await Adminaccountmodel.findOneAndUpdate({ _id: id }, {
@@ -2170,13 +2174,13 @@ const getstafftranstionlist=async(req,res)=>{
       })
       res.status(200).json({
         data: updatedAdminUsers,
-        msg: `${userName} Updated Successfully!`
+        message: `${userName} Updated Successfully!`
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
 
@@ -2187,7 +2191,7 @@ const getstafftranstionlist=async(req,res)=>{
 
       const adminUserlist = await Adminaccountmodel.find({ _id: id })
       if (adminUserlist.length == 0) {
-        return res.status(400).json({ error: 'Invalid User' })
+        return res.status(200).send({ message: 'Invalid User' })
       }
 
       const updatedAdminUsers = await Adminaccountmodel.findOneAndUpdate({ _id: id }, {
@@ -2197,13 +2201,13 @@ const getstafftranstionlist=async(req,res)=>{
 
       res.status(200).json({
         data: updatedAdminUsers,
-        msg: `Deleted Successfully!`
+        message: `Deleted Successfully!`
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
 
@@ -2214,13 +2218,13 @@ const getstafftranstionlist=async(req,res)=>{
 
       res.status(200).json({
         data: adminUsers,
-        msg: 'Customers Listed Successfully!'
+        message: 'Customers Listed Successfully!'
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
   const changepassword=async(req,res)=>{
@@ -2234,7 +2238,7 @@ const getstafftranstionlist=async(req,res)=>{
       b=await Customeraccountmodel.find({Email:Email})
       
       if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, msg: 'Invalid Email please check your gmail' })
+        return res.status(201).json({ status: false, message: 'Invalid Email please check your gmail' })
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       if(a[0]?.role=="customer"||b[0]?.role=="customer"){
@@ -2260,7 +2264,7 @@ const getstafftranstionlist=async(req,res)=>{
       b=await Customeraccountmodel.find({phoneNo:phoneNo})
       
       if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, msg: 'Invalid Phoneno please check ' })
+        return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       if(a[0]?.role=="customer"||b[0]?.role=="customer"){
@@ -2284,13 +2288,13 @@ const getstafftranstionlist=async(req,res)=>{
 
     res.status(200).json({
       data: adminUsers,
-      msg: 'change password Successfully!'
+      message: 'change password Successfully!'
     })
 
       
     } catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
 
   }
@@ -2306,21 +2310,21 @@ const getstafftranstionlist=async(req,res)=>{
 
       res.status(200).json({
         // data: adminUsers,
-        msg: 'Customers Listed Successfully!'
+        message: 'Customers Listed Successfully!'
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).json({ status: false, message: 'Internal Server Error' });
     }
   }
   const deleteemployee=async(req,res)=>{
     // let check=await Adminaccountmodel.find()
     const deletedEmployee = await Adminaccountmodel.deleteOne({ _id:req.body.id });
-    res.status(200).json({
+    res.status(200).send({
       // data: adminUsers,
-      msg: 'delete Employee  Successfully!'
+      message: 'delete Employee  Successfully!'
     })
   }
   const allduedashboardview = async (req, res) => {
@@ -2355,16 +2359,16 @@ const getstafftranstionlist=async(req,res)=>{
 
 
 
-      res.status(200).json({
+      res.status(200).send({
         // data: adminUsers,
-        msg: 'Customers Listed Successfully!',
+        message: 'Customers Listed Successfully!',
         data:filtereddata
       })
 
     }
     catch (err) {
       console.log('Something went wrong', err);
-      res.status(500).json({ status: false, msg: 'Internal Server Error' });
+      res.status(500).json({ status: false, message: 'Internal Server Error' });
     }
   }
   const deletecheet=async()=>{
