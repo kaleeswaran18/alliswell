@@ -40,6 +40,9 @@ router.post('/delete', verifyToken, adminaccountController.superAdminsDeletesAdm
 
 //customers upload.single('profile_pic'),
 router.post('/createcustomer',upload.single("profilePicture"), adminaccountController.createcustomeraccount)
+router.post('/companyimage',upload.single("profilePicture"), adminaccountController.companyimage)
+
+router.get('/getcompanyimage',adminaccountController.getcompanyimage)
 router.get('/customersList',adminaccountController.customersUsersList)
 
 router.post('/createbranch', adminaccountController.createbranch)

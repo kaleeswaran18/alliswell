@@ -1,4 +1,4 @@
-const { Adminaccountmodel, Customeraccountmodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
+const { Adminaccountmodel, Customeraccountmodel,companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
@@ -62,8 +62,27 @@ const adminaccountSchema = () => {
       console.log("Something went wrong  post!!!", err)
     }
   }
-  
- 
+  const companyimage=async(req,res)=>{
+    var value = await companylogomodel.create({
+      
+      profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+: null,
+     
+      
+     
+    })
+     res.status(200).send({
+        
+      message: "companyimage upload sucessfully"
+    })
+  }
+ const getcompanyimage=async(req,res)=>{
+  var value = await companylogomodel.find({})
+  res.status(200).send({
+        data:value[value.length-1],
+    message: "companyimage get sucessfully"
+  })
+ }
   const createcustomeraccount = async (req, res) => {
     // console.log(req.file,"find1",req.body)
     try {
@@ -2448,7 +2467,9 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     stafftransationlist,
     particularcustomertransaction,
     approveltransationlist,
-    getstafftranstionlist
+    getstafftranstionlist,
+    companyimage,
+    getcompanyimage
   }
 }
 module.exports = adminaccountSchema()
