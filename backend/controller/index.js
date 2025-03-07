@@ -48,7 +48,7 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
-        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`
         : null,
         //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
@@ -65,7 +65,7 @@ const adminaccountSchema = () => {
   const companyimage=async(req,res)=>{
     var value = await Companylogomodel.create({
       
-      profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+      profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`
 : null,
      
       
@@ -180,7 +180,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
         //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
-        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`
   : null,
         scheme: req.body.scheme,
         amount: req.body.amount,
