@@ -10,7 +10,10 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 // const formData = require('express-form-data');
 // var superAdminRouter = require('./routes/superAdmin');
-
+// return res.status(200).send({
+        
+//   message: `currentAmount is only{check[0].currentAmount}`
+// })
 //import file in db connection 
 require('./utills/dbconnection')
 

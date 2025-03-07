@@ -1970,73 +1970,90 @@ const todaypendingAmount = data
   }
 const stafftransationlist=async(req,res)=>{
 
-  if(req.body.type=="manitransfer"&&req.body.role=="admin"){
+  
     var value = await Stufftranscation.create({
       branchid: req.body.branchid,
       type:req.body.type,
-      
+      authorid:req.body.authorid,
       amount:req.body.amount,
-     
+      reason:req.body.reason,
+      isapprove:req.body.role=='Superadmin'?"true":"false"
      
     })
-  }
-  if(req.body.type=="investment"&&req.body.role=="Superadmin"){
-    var value = await Stufftranscation.create({
-      branchid: req.body.branchid,
-      type:req.body.type,
-      isapprove: "true" ,
-      amount:req.body.amount,
-     
-     
-    })
-    let check=await Branchschememodel.find({_id: req.body.branchid})
-let balanceamount=check[0].currentAmount+req.body.amount
-const value1 = await Branchschememodel.findOneAndUpdate(
-  { _id:req.body.branchid }, 
-  { currentAmount: balanceamount }, 
-  { new: true }
-);
+  
+  if(value[0].isapprove=="Superadmin"){
+    if(value[0].type=="inverest"){
+      let check=await Branchschememodel.find({_id: req.body.branchid})
+      let balanceamount=check[0].currentAmount+req.body.amount
+      const value1 = await Branchschememodel.findOneAndUpdate(
+        { _id:req.body.branchid }, 
+        { currentAmount: balanceamount }, 
+        { new: true }
+      );
 
-console.log("Updated record:", value);
+      let updatebalance=await Stufftranscation.findOneAndUpdate(
+        { _id:value[0]._id }, 
+        { currentAmount: balanceamount }, 
+        { new: true }
+      );
+      let check1=await Branchschememodel.find({_id: req.body.branchid})
 
- 
-  res.status(200).send({
+      return res.status(200).send({
+        
+        message: `your currentAmount is ${check1[0].currentAmount}`
+      })
+    }
+    else{
+      let check=await Branchschememodel.find({_id: req.body.branchid})
+      if(check[0].currentAmount<req.body.amount){
+       return res.status(200).send({
+        
+          message: `currentAmount is only ${check[0].currentAmount}`
+        })
+      }
+      let balanceamount=check[0].currentAmount-req.body.amount
+      const value1 = await Branchschememodel.findOneAndUpdate(
+        { _id:req.body.branchid }, 
+        { currentAmount: balanceamount }, 
+        { new: true }
+      );
+
+      let updatebalance=await Stufftranscation.findOneAndUpdate(
+        { _id:value[0]._id }, 
+        { currentAmount: balanceamount }, 
+        { new: true }
+      );
+      let check1=await Branchschememodel.find({_id: req.body.branchid})
+
+      return res.status(200).send({
+        
+        message: `your currentAmount is ${check1[0].currentAmount}`
+      })
+    }
     
-    message: "update Successfully!"
-  })
-  }
-  if(req.body.type=="maintain"&&req.body.role=="admin"){
-    var value = await Stufftranscation.create({
-      branchid: req.body.branchid,
-      type:req.body.type,
-      
-      amount:req.body.amount,
-     
-     
-    })
-    let check=await Branchschememodel.find({_id:req.body.branchid})
-    let balanceamount=check[0].currentAmount-req.body.amount
-    const value1 = await Branchschememodel.findOneAndUpdate(
-      { _id:req.body.branchid }, 
-      { currentAmount: balanceamount }, 
-      { new: true }
-  );
-  }
- 
-  res.status(200).send({
     
-    message: "transcation create Successfully!"
-  })
+
+
+  }
+  
+  
+ 
+  
 }
 const approveltransationlist=async(req,res)=>{
+  
   const value = await Stufftranscation.findOneAndUpdate(
     { _id: req.body.id }, 
     { isapprove: req.body.isapprove }, 
+
     { new: true }
 );
 
 if (!value) {
-    return res.status(404).json({ success: false, message: "Record not found" });
+    return res.status(200).send({
+        
+      message: "Record not found"
+    })
 }
 let check=await Branchschememodel.find({_id: value.branchid})
 let balanceamount=check[0].currentAmount-value.amount
@@ -2045,17 +2062,25 @@ const value1 = await Branchschememodel.findOneAndUpdate(
   { currentAmount: balanceamount }, 
   { new: true }
 );
+let updatebalance=await Stufftranscation.findOneAndUpdate(
+  { _id:req.body.id }, 
+  { currentAmount: balanceamount }, 
+  { new: true }
+);
 
-console.log("Updated record:", value);
 
  
-  res.status(200).send({
-    
-    message: "update Successfully!"
-  })
+return res.status(200).send({
+        
+  message: `your currentAmount is ${check[0].currentAmount}`
+})
 }
 const getstafftranstionlist=async(req,res)=>{
-
+  let check=await Stufftranscation.find({isapprove:'false'})
+  return res.status(200).send({
+      data:check,  
+    message: `your currentAmount is ${check[0].currentAmount}`
+  })
 }
 
 
@@ -2412,7 +2437,10 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     dailyupdate,
     approvelaccount,
     transationfind,
-    particularcustomertransaction
+    stafftransationlist,
+    particularcustomertransaction,
+    approveltransationlist,
+    getstafftranstionlist
   }
 }
 module.exports = adminaccountSchema()

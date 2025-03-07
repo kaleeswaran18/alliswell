@@ -139,8 +139,11 @@ const formverification = new mongoose.Schema({
 const stufftranscation=new mongoose.Schema({
    
     branchid: { type: String },
+    authorid:{type: String},
     type:{ type: String },
     isapprove:{ type: String ,default:"false"},
+    reason:{ type: String},
+    currentAmount:{type: String},
    amount:{type: Number }
 })
 const Adminaccountmodel = mongoose.model("Admin", adminaccountmodel, "Admin")
