@@ -78,8 +78,10 @@ const adminaccountSchema = () => {
   }
  const getcompanyimage=async(req,res)=>{
   var value = await Companylogomodel.find()
+  let find=value[value.length-1]
+  let check=[find]
   res.status(200).send({
-        data:value[value.length-1],
+        data:check,
     message: "companyimage get sucessfully"
   })
  }
