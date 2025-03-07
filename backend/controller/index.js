@@ -158,7 +158,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
-        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
+        profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
@@ -1449,18 +1449,18 @@ const todaypendingAmount = data
       if(a.length==0&&b.length==0){
         return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
       }
-      // if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-      //  const passwordMatch= await bcrypt.compare(password, b[0].password);
-      //   if (!passwordMatch) {
-      //   return res.status(401).json({ status: false, msg: 'Invalid password' })
-      // }
-      // }
-      // else{
-      //   const passwordMatch= await bcrypt.compare(password, a[0].password);
-      //   if (!passwordMatch) {
-      //     return res.status(401).json({ status: false, msg: 'Invalid password' })
-      //   }
-      // }
+      if(a[0]?.role=="customer"||b[0]?.role=="customer"){
+       const passwordMatch= await bcrypt.compare(password, b[0].password);
+        if (!passwordMatch) {
+        return res.status(201).json({ status: false, message: 'Invalid password' })
+      }
+      }
+      else{
+        const passwordMatch= await bcrypt.compare(password, a[0].password);
+        if (!passwordMatch) {
+          return res.status(201).json({ status: false, message: 'Invalid password' })
+        }
+      }
       if(a.length>0){
         const expiresInMinutes = 30
         const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
