@@ -1606,7 +1606,7 @@ const todaypendingAmount = data
       console.log(req, "requst file upload")
       let base_url = 'http://localhost:5000'
       console.log(req.file.path, "req.file.path")
-
+       console.log(base_url + req.file['path'].replaceAll('public', ''))
       res.status(200).json({
         url: base_url + req.file['path'].replaceAll('public', '')
       })
