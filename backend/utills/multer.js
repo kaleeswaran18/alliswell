@@ -1,20 +1,18 @@
 const multer = require('multer');
 
-
-var multerStorage = multer.diskStorage({
+const multerStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/images')
+        cb(null, 'public/images');
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        cb(null, Date.now() + '-' + file.originalname); // Prevent duplicate filenames
     }
-})
+});
 
-//MULTER FILTER
+// Multer Filter
 const multerFilter = (req, file, cb) => {
-    //octet-stream
-    let fileextion = ["png", "jpg", "jpeg", "svg", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
-    if (fileextion.includes(file.mimetype.split("/")[1])) { //  file.mimetype.split("/")[1] === "png" ||
+    let allowedExtensions = ["png", "jpg", "jpeg", "svg", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+    if (allowedExtensions.includes(file.mimetype.split("/")[1])) {
         cb(null, true);
     } else {
         cb(new Error("Not a valid File!!"), false);
@@ -24,8 +22,7 @@ const multerFilter = (req, file, cb) => {
 const upload = multer({
     storage: multerStorage,
     fileFilter: multerFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // Set file size limit to 5MB
 });
 
-
-
-module.exports = upload
+module.exports = upload;
