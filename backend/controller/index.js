@@ -1,4 +1,4 @@
-const { Adminaccountmodel, Customeraccountmodel,companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
+const { Adminaccountmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
@@ -63,7 +63,7 @@ const adminaccountSchema = () => {
     }
   }
   const companyimage=async(req,res)=>{
-    var value = await companylogomodel.create({
+    var value = await Companylogomodel.create({
       
       profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
 : null,
@@ -77,7 +77,7 @@ const adminaccountSchema = () => {
     })
   }
  const getcompanyimage=async(req,res)=>{
-  var value = await companylogomodel.find({})
+  var value = await Companylogomodel.find({})
   res.status(200).send({
         data:value[value.length-1],
     message: "companyimage get sucessfully"
