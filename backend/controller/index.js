@@ -48,6 +48,8 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
+        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+        : null,
         //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
       })
@@ -158,7 +160,9 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
-        profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
+        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
+        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
+  : null,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
