@@ -203,13 +203,22 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       })
       if(value[0].id!=''){
         const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
-        let balanceamount=adminUsers[0].currentAmount-req.body.amount
+        let balanceamount=adminUsers[0].currentAmount-req.body.givenamount
         if(adminUsers.length!=0){
           const value1 = await Branchschememodel.findOneAndUpdate(
             { _id:req.body.branchid }, 
             { currentAmount: balanceamount }, 
             { new: true }
           );
+          var value = await Stufftranscation.create({
+            branchid: req.body.branchid,
+            type:"reduce",
+            authorid:req.body.admin_id,
+            amount:req.body.givenamount,
+            reason:"newcustomerCreate",
+            isapprove:"true"
+           
+          })
         }
 
       }
@@ -519,6 +528,15 @@ for (const value of result) {
             { currentAmount: balanceamount }, 
             { new: true }
           );
+          var value = await Stufftranscation.create({
+            branchid: req.body.branchid,
+            type:"reduce",
+            authorid:req.body.admin_id,
+            amount:req.body.givenamount,
+            reason:"newcustomerCreate",
+            isapprove:"true"
+           
+          })
         }
 
       }
