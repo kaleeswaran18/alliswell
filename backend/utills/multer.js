@@ -5,12 +5,14 @@ const multerStorage = multer.diskStorage({
         cb(null, 'public/images');
     },
     filename: function (req, file, cb) {
+        console.log(file.originalname,"file.originalname")
         cb(null, Date.now() + '-' + file.originalname); // Prevent duplicate filenames
     }
 });
 
 // Multer Filter
 const multerFilter = (req, file, cb) => {
+    console.log(req,file,"checkdata")
     let allowedExtensions = ["png", "jpg", "jpeg", "svg", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
     if (allowedExtensions.includes(file.mimetype.split("/")[1])) {
         cb(null, true);
