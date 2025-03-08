@@ -201,6 +201,18 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         role:"customer"
        
       })
+      if(value[0].id!=''){
+        const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
+        let balanceamount=adminUsers[0].currentAmount-req.body.amount
+        if(adminUsers.length!=0){
+          const value1 = await Branchschememodel.findOneAndUpdate(
+            { _id:req.body.branchid }, 
+            { currentAmount: balanceamount }, 
+            { new: true }
+          );
+        }
+
+      }
       res.status(200).send({
         data: value,
         message: "Customer account created Successfully!"
@@ -498,6 +510,18 @@ for (const value of result) {
 
       })
       console.log("finish")
+      if(value[0].id!=''){
+        const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
+        let balanceamount=adminUsers[0].currentAmount-req.body.amount
+        if(adminUsers.length!=0){
+          const value1 = await Branchschememodel.findOneAndUpdate(
+            { _id:req.body.branchid }, 
+            { currentAmount: balanceamount }, 
+            { new: true }
+          );
+        }
+
+      }
       res.status(200).send({
         data: value,
         message: "extraplanCustomer account created Successfully!"
