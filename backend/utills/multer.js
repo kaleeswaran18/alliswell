@@ -5,6 +5,7 @@ const multerStorage = multer.diskStorage({
         cb(null, 'public/images');
     },
     filename: function (req, file, cb) {
+        console.log(req,req.file,"multer")
         console.log(file.originalname,"file.originalname")
         cb(null, Date.now() + '-' + file.originalname); // Prevent duplicate filenames
     }

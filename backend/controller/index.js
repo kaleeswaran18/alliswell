@@ -86,7 +86,7 @@ const adminaccountSchema = () => {
   })
  }
   const createcustomeraccount = async (req, res) => {
-    // console.log(req.file,"find1",req.body)
+    console.log(req.file,"find1",req.body)
     try {
       // console.log(req.files,"reqqq")
 
@@ -1651,7 +1651,8 @@ const todaypendingAmount = data
       }
       var value = await Branchschememodel.create({
         Name: req.body.name,
-        totalinvestmentamount:req.body.totalInvestmentAmount
+        totalinvestmentamount:req.body.totalInvestmentAmount,
+        currentAmount:req.body.totalInvestmentAmount
        
       })
       res.status(200).send({
