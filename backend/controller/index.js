@@ -210,7 +210,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
             { currentAmount: balanceamount }, 
             { new: true }
           );
-          const currentDate = moment();
+          const currentDate =moment().tz("Asia/Kolkata");
           const currentFormatted = currentDate.format('YYYY-MM-DD');
           const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
           var value = await Stufftranscation.create({
@@ -535,7 +535,7 @@ for (const value of result) {
             { currentAmount: balanceamount }, 
             { new: true }
           );
-          const currentDate = moment();
+          const currentDate = moment().tz("Asia/Kolkata");
           const currentFormatted = currentDate.format('YYYY-MM-DD');
           const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
           var value = await Stufftranscation.create({
@@ -2056,7 +2056,7 @@ const todaypendingAmount = data
   }
 const stafftransationlist=async(req,res)=>{
 
-  const currentDate = moment();
+  const currentDate = moment().tz("Asia/Kolkata");
   const currentFormatted = currentDate.format('YYYY-MM-DD');
   const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
   
@@ -2134,7 +2134,7 @@ const stafftransationlist=async(req,res)=>{
   
 }
 const approveltransationlist=async(req,res)=>{
-  const currentDate = moment();
+  const currentDate = moment().tz("Asia/Kolkata");
   const currentFormatted = currentDate.format('YYYY-MM-DD');
   const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
  
