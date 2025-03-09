@@ -2053,7 +2053,7 @@ const stafftransationlist=async(req,res)=>{
      
     })
   
-  if(value[0].isapprove=="Superadmin"){
+  if(value[0].isapprove=="true"){
     if(value[0].type=="inverest"){
       let check=await Branchschememodel.find({_id: req.body.branchid})
       let balanceamount=check[0].currentAmount+req.body.amount
