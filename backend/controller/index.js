@@ -64,8 +64,13 @@ const adminaccountSchema = () => {
   }
   const getbrachbasedonexecuter=async(req,res)=>{
     const existingUser = await Adminaccountmodel.find(
-      { branchid: req.query.id, role: "executeofficer" }
+      { 
+        branchid: req.query.id, 
+        role: "executeofficer", 
+        executeid: { $ne: req.query.executeid } // Exclude matching executeid
+      }
     ).select("_id userName");
+    
     res.status(200).send({
         data:existingUser,
       message: "companyimage upload sucessfully"
