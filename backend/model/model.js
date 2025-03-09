@@ -140,6 +140,10 @@ const formverification = new mongoose.Schema({
     isapprove:{ type: String ,default:"false"},
     phoneNo:{ type: String },
     Email: { type: String },
+    requestdate:{type: String},
+   requesttime:{type: String},
+   approveldate:{type: String},
+   approveltime:{type: String},
     // Dueamount:{type:String},
    
 
@@ -152,7 +156,12 @@ const stufftranscation=new mongoose.Schema({
     isapprove:{ type: String ,default:"false"},
     reason:{ type: String},
     currentAmount:{type: String},
-   amount:{type: Number }
+   amount:{type: Number },
+   requestdate:{type: String},
+   requesttime:{type: String},
+   approveldate:{type: String},
+   approveltime:{type: String},
+
 })
 const Adminaccountmodel = mongoose.model("Admin", adminaccountmodel, "Admin")
 const Customerpaylist = mongoose.model("Customerpaylist", customerpaylist, "Customerpaylist")
