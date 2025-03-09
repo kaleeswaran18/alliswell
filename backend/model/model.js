@@ -151,7 +151,7 @@ const formverification = new mongoose.Schema({
 const stufftranscation=new mongoose.Schema({
    
     branchid: { type: String },
-    authorid:{type: String},
+    authorid:{ type: mongoose.Schema.Types.ObjectId, ref: "Admin" }, 
     type:{ type: String },
     isapprove:{ type: String ,default:"false"},
     reason:{ type: String},

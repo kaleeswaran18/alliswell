@@ -2173,7 +2173,7 @@ return res.status(200).send({
 })
 }
 const getstafftranstionlist=async(req,res)=>{
-  let check=await Stufftranscation.find({isapprove:'false'})
+  let check=await Stufftranscation.find({isapprove:'false'}).populate("authorid")
   return res.status(200).send({
       data:check,  
     message: `your currentAmount is ${check[0].currentAmount}`
