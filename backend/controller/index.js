@@ -2054,7 +2054,7 @@ const stafftransationlist=async(req,res)=>{
     })
   console.log(value,'check')
   if(value.isapprove=="true"){
-    if(value.type=="inverest"){
+    if(value.type=="investment"){
       let check=await Branchschememodel.find({_id: req.body.branchid})
       let balanceamount=check[0].currentAmount+req.body.amount
       const value1 = await Branchschememodel.findOneAndUpdate(
