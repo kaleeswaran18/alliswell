@@ -62,6 +62,15 @@ const adminaccountSchema = () => {
       console.log("Something went wrong  post!!!", err)
     }
   }
+  const getbrachbasedonexecuter=async(req,res)=>{
+    const existingUser = await Adminaccountmodel.find(
+      { branchid: req.query.id, role: "executeofficer" }
+    ).select("_id userName");
+    res.status(200).send({
+        data:existingUser,
+      message: "companyimage upload sucessfully"
+    })
+  }
   const companyimage=async(req,res)=>{
     var value = await Companylogomodel.create({
       
@@ -1862,10 +1871,15 @@ const todaypendingAmount = data
             adminUsers = await Formverification.find({ isapprove: "false" })
                 .populate("verficationofficer") // Populating from Adminaccount
                 .populate("branchid"); // Populating from Branchschememodel
-        } else {
-            adminUsers = await Formverification.find({ verficationofficer: req.query.id, isapprove: "false" })
-                .populate("verficationofficer") 
-                .populate("branchid"); 
+        } else if(req.query.role == "admin") {
+          adminUsers = await Formverification.find({ branchid: req.query.id, isapprove: "false" })
+          .populate("verficationofficer") 
+          .populate("branchid"); 
+           
+        }else{
+          adminUsers = await Formverification.find({ verficationofficer: req.query.id, isapprove: "false" })
+          .populate("verficationofficer") 
+          .populate("branchid"); 
         }
 
         res.status(200).send({
@@ -2540,7 +2554,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     approveltransationlist,
     getstafftranstionlist,
     companyimage,
-    getcompanyimage
+    getcompanyimage,
+    getbrachbasedonexecuter
   }
 }
 module.exports = adminaccountSchema()

@@ -77,9 +77,10 @@ router.delete('/deletecheet',adminaccountController.deletecheet)
 router.post('/transationhistroy', adminaccountController.transationhistroy)
 router.post('/transationhistroy', adminaccountController.approveltransationlist)
 router.get('/getstafftranstionlist',adminaccountController.getstafftranstionlist)
-
+router.get('/getbrachbasedonexecuter',adminaccountController.getbrachbasedonexecuter)
 router.post('/stafftransationlist', adminaccountController.stafftransationlist)
 router.post('/transationcreate',adminaccountController.transationhistroy)
+
 module.exports = router;
 
 
