@@ -210,14 +210,21 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
             { currentAmount: balanceamount }, 
             { new: true }
           );
+          const currentDate = moment();
+          const currentFormatted = currentDate.format('YYYY-MM-DD');
+          const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
             type:"reduce",
             authorid:req.body.admin_id,
             amount:req.body.givenamount,
             reason:"newcustomerCreate",
-            isapprove:"true"
-           
+            isapprove:"true",
+  
+  approveldate:currentFormatted,
+        approveltime:currentFormattedtime,  
+        requestdate:currentFormatted,
+        requesttime:currentFormattedtime
           })
         }
 
@@ -528,13 +535,20 @@ for (const value of result) {
             { currentAmount: balanceamount }, 
             { new: true }
           );
+          const currentDate = moment();
+          const currentFormatted = currentDate.format('YYYY-MM-DD');
+          const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
             type:"reduce",
             authorid:req.body.admin_id,
             amount:req.body.givenamount,
             reason:"addcustomerCreate",
-            isapprove:"true"
+            isapprove:"true",
+            approveldate:currentFormatted,
+            approveltime:currentFormattedtime,  
+            requestdate:currentFormatted,
+            requesttime:currentFormattedtime
            
           })
         }
@@ -2042,6 +2056,9 @@ const todaypendingAmount = data
   }
 const stafftransationlist=async(req,res)=>{
 
+  const currentDate = moment();
+  const currentFormatted = currentDate.format('YYYY-MM-DD');
+  const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
   
     var value = await Stufftranscation.create({
       branchid: req.body.branchid,
@@ -2049,8 +2066,10 @@ const stafftransationlist=async(req,res)=>{
       authorid:req.body.authorid,
       amount:req.body.amount,
       reason:req.body.reason,
-      isapprove:req.body.role=='Superadmin'?"true":"false"
-     
+      isapprove:req.body.role=='Superadmin'?"true":"false",
+      requestdate:currentFormatted,
+   requesttime:currentFormattedtime,
+   
     })
   console.log(value,'check')
   if(value.isapprove=="true"){
@@ -2065,7 +2084,8 @@ const stafftransationlist=async(req,res)=>{
 
       let updatebalance=await Stufftranscation.findOneAndUpdate(
         { _id:value._id }, 
-        { currentAmount: balanceamount }, 
+        { currentAmount: balanceamount,approveldate:currentFormatted,
+        approveltime:currentFormattedtime }, 
         { new: true }
       );
       let check1=await Branchschememodel.find({_id: req.body.branchid})
@@ -2092,7 +2112,8 @@ const stafftransationlist=async(req,res)=>{
 
       let updatebalance=await Stufftranscation.findOneAndUpdate(
         { _id:value._id }, 
-        { currentAmount: balanceamount }, 
+        { currentAmount: balanceamount,approveldate:currentFormatted,
+          approveltime:currentFormattedtime }, 
         { new: true }
       );
       let check1=await Branchschememodel.find({_id: req.body.branchid})
@@ -2113,7 +2134,10 @@ const stafftransationlist=async(req,res)=>{
   
 }
 const approveltransationlist=async(req,res)=>{
-  
+  const currentDate = moment();
+  const currentFormatted = currentDate.format('YYYY-MM-DD');
+  const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
+ 
   const value = await Stufftranscation.findOneAndUpdate(
     { _id: req.body.id }, 
     { isapprove: req.body.isapprove }, 
@@ -2136,7 +2160,8 @@ const value1 = await Branchschememodel.findOneAndUpdate(
 );
 let updatebalance=await Stufftranscation.findOneAndUpdate(
   { _id:req.body.id }, 
-  { currentAmount: balanceamount }, 
+  { currentAmount: balanceamount, approveldatedate:currentFormatted,
+    approveltime:currentFormattedtime, }, 
   { new: true }
 );
 
@@ -2454,7 +2479,8 @@ const getstafftranstionlist=async(req,res)=>{
 const dailyupdate=async()=>{
   const currentDate = moment();
   const currentFormatted = currentDate.format('YYYY-MM-DD');
-
+   
+  console.log(currentFormatted);
 if(req.body.role=="Superadmin"){
 
 data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
