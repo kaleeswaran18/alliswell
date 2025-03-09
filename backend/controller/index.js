@@ -201,7 +201,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         role:"customer"
        
       })
-      if(value[0].id!=''){
+      if(value.id!=''){
         const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
         let balanceamount=adminUsers[0].currentAmount-req.body.givenamount
         if(adminUsers.length!=0){
@@ -519,7 +519,7 @@ for (const value of result) {
 
       })
       console.log("finish")
-      if(value[0].id!=''){
+      if(value.id!=''){
         const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
         let balanceamount=adminUsers[0].currentAmount-req.body.amount
         if(adminUsers.length!=0){
@@ -533,7 +533,7 @@ for (const value of result) {
             type:"reduce",
             authorid:req.body.admin_id,
             amount:req.body.givenamount,
-            reason:"newcustomerCreate",
+            reason:"addcustomerCreate",
             isapprove:"true"
            
           })
@@ -2053,8 +2053,8 @@ const stafftransationlist=async(req,res)=>{
      
     })
   console.log(value,'check')
-  if(value[0].isapprove=="true"){
-    if(value[0].type=="inverest"){
+  if(value.isapprove=="true"){
+    if(value.type=="inverest"){
       let check=await Branchschememodel.find({_id: req.body.branchid})
       let balanceamount=check[0].currentAmount+req.body.amount
       const value1 = await Branchschememodel.findOneAndUpdate(
@@ -2064,7 +2064,7 @@ const stafftransationlist=async(req,res)=>{
       );
 
       let updatebalance=await Stufftranscation.findOneAndUpdate(
-        { _id:value[0]._id }, 
+        { _id:value._id }, 
         { currentAmount: balanceamount }, 
         { new: true }
       );
@@ -2091,7 +2091,7 @@ const stafftransationlist=async(req,res)=>{
       );
 
       let updatebalance=await Stufftranscation.findOneAndUpdate(
-        { _id:value[0]._id }, 
+        { _id:value._id }, 
         { currentAmount: balanceamount }, 
         { new: true }
       );
