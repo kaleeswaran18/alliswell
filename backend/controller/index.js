@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
-const moment = require('moment-timezone')
+const moment = require('moment');
+const mongoose = require("mongoose")
 const ObjectId = mongoose.Types.ObjectId;
 require('dotenv').config();
 
@@ -209,9 +210,9 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
             { currentAmount: balanceamount }, 
             { new: true }
           );
-          const currentDate =moment().tz("Asia/Kolkata");
+          const currentDate =moment();
           const currentFormatted = currentDate.format('YYYY-MM-DD');
-          const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
+          const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
             type:"reduce",
@@ -534,9 +535,9 @@ for (const value of result) {
             { currentAmount: balanceamount }, 
             { new: true }
           );
-          const currentDate = moment().tz("Asia/Kolkata");
+          const currentDate = moment();
           const currentFormatted = currentDate.format('YYYY-MM-DD');
-          const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
+          const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
             type:"reduce",
@@ -2055,9 +2056,9 @@ const todaypendingAmount = data
   }
 const stafftransationlist=async(req,res)=>{
 
-  const currentDate = moment().tz("Asia/Kolkata");
+  const currentDate = moment();
   const currentFormatted = currentDate.format('YYYY-MM-DD');
-  const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
+  const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" }); 
   
     var value = await Stufftranscation.create({
       branchid: req.body.branchid,
@@ -2133,9 +2134,9 @@ const stafftransationlist=async(req,res)=>{
   
 }
 const approveltransationlist=async(req,res)=>{
-  const currentDate = moment().tz("Asia/Kolkata");
+  const currentDate = moment();
   const currentFormatted = currentDate.format('YYYY-MM-DD');
-  const currentFormattedtime = currentDate.format('hh:mm:ss A'); 
+  const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" }); 
  
   const value = await Stufftranscation.findOneAndUpdate(
     { _id: req.body.id }, 
