@@ -3,8 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
-const moment = require('moment');
-const mongoose = require("mongoose")
+const moment = require('moment-timezone')
 const ObjectId = mongoose.Types.ObjectId;
 require('dotenv').config();
 
