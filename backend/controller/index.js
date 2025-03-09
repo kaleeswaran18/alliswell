@@ -67,7 +67,7 @@ const adminaccountSchema = () => {
       { 
         branchid: req.query.id, 
         role: "executeofficer", 
-        executeid: { $ne: req.query.executeid } // Exclude matching executeid
+        _id: { $ne: req.query.executeid } // Exclude matching executeid
       }
     ).select("_id userName");
     
