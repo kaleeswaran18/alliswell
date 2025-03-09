@@ -2052,7 +2052,7 @@ const stafftransationlist=async(req,res)=>{
       isapprove:req.body.role=='Superadmin'?"true":"false"
      
     })
-  
+  console.log(value,'check')
   if(value[0].isapprove=="true"){
     if(value[0].type=="inverest"){
       let check=await Branchschememodel.find({_id: req.body.branchid})
