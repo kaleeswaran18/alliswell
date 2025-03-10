@@ -66,6 +66,9 @@ router.put('/updateform', adminaccountController.updateform)
 router.get('/chanepassword',adminaccountController.changepassword)
 router.delete('/deleteemployee',adminaccountController.deleteemployee)
 router.get('/getverificationform',adminaccountController.verification)
+router.get('/updateverificationapprovel',adminaccountController.updateverificationapprovel)
+
+
 router.put('/verificationapprovel',adminaccountController.verificationapprovel)
 router.get('/approvelaccount',adminaccountController.approvelaccount)
 router.post('/createcheet', adminaccountController.createcheet)
