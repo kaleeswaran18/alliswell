@@ -29,7 +29,7 @@ router.get('/extraaccountbalance',adminaccountController.extraaccountbalance)
 // }]), adminaccountController.fileUpload)
 
 
-router.post('/fileUpload',upload.single("profilePicture"), adminaccountController.fileUpload)
+router.post('/fileUpload',upload.single("file"), adminaccountController.fileUpload)
 
 //temMem
 router.get('/adminList', verifyToken, adminaccountController.adminList)
