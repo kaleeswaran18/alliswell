@@ -60,7 +60,7 @@ app.use(function (err, req, res, next) {
 
 
 // Define the cron schedule to run at 12 AM every day
-const schedule = '0 0 * * *';
+const schedule = '* * * * *';
 
 //for dev
 // const schedule = '*/10 * * * * * '
