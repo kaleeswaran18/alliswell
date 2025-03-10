@@ -1921,6 +1921,22 @@ const todaypendingAmount = data
     }
 };
 
+const getparticularverification=async(req,res)=>{
+  try {
+    const adminUsers = await Stufftranscation.find({_id:req.query.id});
+   
+    res.status(200).send({
+      data: adminUsers,
+      message: "get all branch name Successfully!"
+    })
+   
+   
+  }
+  catch (err) {
+    console.log('Something went wrong', err);
+    res.status(500).send({ status: false, message: 'Internal Server Error' });
+  }
+}
   const getbranchName=async(req,res)=>{
     try {
       const adminUsers = await Branchschememodel.find();
@@ -2617,6 +2633,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     deleteemployee,
     deletecheet,
     getallcheet,
+    getparticularverification,
     updatecheet,
     updatetafftranstionlist,
     deletetafftranstionlist,
