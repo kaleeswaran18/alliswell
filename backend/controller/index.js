@@ -2277,7 +2277,7 @@ const updatetafftranstionlist=async(req,res)=>{
   
     const value = await Stufftranscation.findOneAndUpdate(
       { _id: req.body.id }, 
-      { reason: req.body.reason,amount: req.body.amount,requestdate: currentFormatted,requesttime:currentFormattedtime }, 
+      { reason: req.body.reason,type: req.body.type,branchid:req.body.branchid,amount: req.body.amount,requestdate: currentFormatted,requesttime:currentFormattedtime }, 
       { new: true }
     );
    
