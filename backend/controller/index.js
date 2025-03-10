@@ -2219,11 +2219,27 @@ const getstafftranstionlist=async(req,res)=>{
     let check=await Stufftranscation.find({isapprove:'false'}).populate("authorid")
     return res.status(200).send({
         data:check,  
-      message: `you get all record`
+      message: `you getallrecord`
     })
   }
  else{
   let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'false'}).populate("authorid")
+  return res.status(200).send({
+      data:check,  
+    message: `your currentAmount is ${check[0].currentAmount}`
+  })
+ }
+}
+const getapprovelstafftranstionlist=async(req,res)=>{
+  if(req.query.role=='Superadmin'){
+    let check=await Stufftranscation.find({isapprove:'true'}).populate("authorid")
+    return res.status(200).send({
+        data:check,  
+      message: `you getallrecord`
+    })
+  }
+ else{
+  let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'true'}).populate("authorid")
   return res.status(200).send({
       data:check,  
     message: `your currentAmount is ${check[0].currentAmount}`
@@ -2616,7 +2632,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getstafftranstionlist,
     companyimage,
     getcompanyimage,
-    getbrachbasedonexecuter
+    getbrachbasedonexecuter,
+    getapprovelstafftranstionlist
   }
 }
 module.exports = adminaccountSchema()
