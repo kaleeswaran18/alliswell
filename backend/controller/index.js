@@ -1825,7 +1825,7 @@ const todaypendingAmount = data
       { _id: req.body.id }, 
       { isapprove: "true" }, 
       { new: true }
-  );
+  )
   
   if (!value) {
       return res.status(404).json({ success: false, message: "Record not found" });
@@ -1867,8 +1867,13 @@ const todaypendingAmount = data
            .populate("verficationofficer") // Populating from Adminaccount
            .populate("branchid"); // Populating from Branchschememodel
         }
-        else{
+        else if(req.query.role=="admin") {
            adminUsers = await Formverification.find({branchid:req.query.id,isapprove:'true'})
+           .populate("verficationofficer") // Populating from Adminaccount
+           .populate("branchid"); // Populating from Branchschememodel
+        }
+        else{
+          adminUsers = await Formverification.find({verficationofficer:req.query.id,isapprove:'true'})
            .populate("verficationofficer") // Populating from Adminaccount
            .populate("branchid"); // Populating from Branchschememodel
         }
