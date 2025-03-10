@@ -2215,11 +2215,42 @@ return res.status(200).send({
 })
 }
 const getstafftranstionlist=async(req,res)=>{
-  let check=await Stufftranscation.find({isapprove:'false'}).populate("authorid")
+  if(req.query.role=='Superadmin'){
+    let check=await Stufftranscation.find({isapprove:'false'}).populate("authorid")
+    return res.status(200).send({
+        data:check,  
+      message: `your currentAmount is ${check[0].currentAmount}`
+    })
+  }
+ else{
+  let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'false'}).populate("authorid")
   return res.status(200).send({
       data:check,  
     message: `your currentAmount is ${check[0].currentAmount}`
   })
+ }
+}
+const deletetafftranstionlist=async(req,res)=>{
+  // let check=await Adminaccountmodel.find()
+  const deletedEmployee = await Stufftranscation.deleteOne({ _id:req.query.id });
+  res.status(200).send({
+    // data: adminUsers,
+    message: 'delete Employee  Successfully!'
+  })
+}
+const updatetafftranstionlist=async(req,res)=>{
+  const currentDate = moment();
+  const currentFormatted = currentDate.format('YYYY-MM-DD');
+  const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" }); 
+  
+    const value = await Stufftranscation.findOneAndUpdate(
+      { _id: req.body.id }, 
+      { reason: req.body.reason,amount: req.body.amount,requestdate: currentFormatted,requesttime:currentFormattedtime }, 
+      { new: true }
+    );
+   
+ 
+
 }
 
 
@@ -2571,6 +2602,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     deletecheet,
     getallcheet,
     updatecheet,
+    updatetafftranstionlist,
+    deletetafftranstionlist,
     createcheet,
     verification,
     verificationapprovel,

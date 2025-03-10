@@ -78,8 +78,11 @@ router.delete('/deletecheet',adminaccountController.deletecheet)
 
 
 router.post('/transationhistroy', adminaccountController.transationhistroy)
-router.post('/transationhistroy', adminaccountController.approveltransationlist)
+router.post('/posttransationhistroy', adminaccountController.approveltransationlist)
 router.get('/getstafftranstionlist',adminaccountController.getstafftranstionlist)
+router.put('/updatetafftranstionlist',adminaccountController.updatetafftranstionlist)
+router.delete('/deletetafftranstionlist',adminaccountController.deletetafftranstionlist)
+
 router.get('/getbrachbasedonexecuter',adminaccountController.getbrachbasedonexecuter)
 router.post('/stafftransationlist', adminaccountController.stafftransationlist)
 router.post('/transationcreate',adminaccountController.transationhistroy)
