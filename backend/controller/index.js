@@ -731,19 +731,26 @@ const existingUser3 = await Customeraccountmodel.find({_id: req.query.id});
       console.log(currentFormatted, "currentFormatted")
       req.query.branchid=req.query.branchid==undefined?'':req.query.branchid
 let data=""
+let data1=''
 if(req.query.role=="Superadmin"){
   if(req.query.branchid==''){
     console.log("checkall")
     data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
+    data1=await Customeraccountmodel.find()
+    data1=data1.length
   }
   else{
     data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
+    data1=await Customeraccountmodel.find({branchid:req.query.branchid})
+    data1=data1.length
   }
   
 }
 if(req.query.role=="admin"){
   console.log("admin")
   data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
+   data1=await Customeraccountmodel.find({branchid:req.query.branchid})
+    data1=data1.length
 }
 if(req.query.role=='executeofficer'){
   data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.query.branchid,executeofficerId:req.query.executeofficerId})
@@ -762,7 +769,8 @@ const todaypendingAmount = data
         message: "All customer listed Successfully!",
         todayfullAmount:todayfullAmount,
         todayreceivedAmount:todayreceivedAmount,
-        todaypendingAmount:todaypendingAmount
+        todaypendingAmount:todaypendingAmount,
+        totalcustomer:data1
       })
     }
     catch (err) {
