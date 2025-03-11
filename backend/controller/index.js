@@ -837,6 +837,7 @@ const todaypendingAmount = data
     console.log("*********>>>>>><<<<<<", req.body)
     try {
       const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
+      
       if (existingUsers[0].extraplan == 'true') {
         let findone = await Addextracustomeraccountmodel.find({ _id: req.query.customer_id })
         console.log(findone, "findone")
@@ -895,7 +896,7 @@ const todaypendingAmount = data
 
 
 
-        const existingUser = await Customerpaylist.find({ _id: '67c1bae43c664cabf069bc79' })
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
 
         pendingamount = findone[0].amount - payedamount
         console.log(payedamount, pendingamount, "existingUser")
