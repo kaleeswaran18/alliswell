@@ -2071,26 +2071,33 @@ const getparticularverification=async(req,res)=>{
 
   const transationfind = async (req, res) => {
     try {
-        console.log("Received Query Params:", req.query);
-
+        let { branchid, status, startDate, endDate } = req.query;
+        let filter = {};
         
+        console.log(startDate, endDate);
 
-        // Fetch data with converted ObjectId
-        let data = await Customerpaylist.find({_id:req.body._id,branchid:"67b2cfd91f685ad505c8864f"});
+        if (branchid && branchid !== "all") filter.branchid = branchid;
+        if (status && status !== "all") filter.status = status;
+        if (startDate && endDate && startDate !== "all" && endDate !== "all") {
+            filter["coustomerduedate"] = {
+                $gte: startDate,
+                $lte: endDate,
+            };
+        }
 
-        res.status(200).json({
-            data: data,
-            message: "Filtered customer transactions listed successfully!",
+        console.log(filter, "filter");
+        const customers = await Customerpaylist.find(filter);
+        console.log(customers, "customers");
+
+        res.status(200).send({
+            data: customers,
+            message: "All customers listed successfully!"
         });
-
-    } catch (err) {
-        console.error("Something went wrong!", err);
-        res.status(500).json({
-            message: "Internal Server Error",
-            error: err.message,
-        });
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching data", error });
     }
 };
+
 
 
 
