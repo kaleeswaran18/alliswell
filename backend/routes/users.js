@@ -56,7 +56,7 @@ router.post('/addextracustomerplan',upload.single("profilePicture"),adminaccount
 router.get('/particularcustomerallaccount', adminaccountController.particularcustomerallaccount) //plan api
 router.get('/viewallhistroy', adminaccountController.viewallhistroy)
 router.get('/particularcustomertransaction', adminaccountController.particularcustomertransaction) //plan api
-router.get('/viewcustomertransaction', adminaccountController.particularcustomertransaction) //plan api
+router.get('/viewcustomertransaction', adminaccountController.viewcustomertransaction) //plan api
 
 router.get('/carddetails', adminaccountController.carddetails)
 router.get('/notificationlist', adminaccountController.notificationlist)
