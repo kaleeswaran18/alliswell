@@ -44,6 +44,7 @@ router.post('/companyimage',upload.single("profilePicture"), adminaccountControl
 
 router.get('/getcompanyimage',adminaccountController.getcompanyimage)
 router.get('/customersList',adminaccountController.customersUsersList)
+router.get('/customersactiveList',adminaccountController.customersactiveList)
 
 router.post('/createbranch', adminaccountController.createbranch)
 router.get('/getexecuteofficer', adminaccountController.getexecuteofficer)

@@ -2466,6 +2466,22 @@ const updatetafftranstionlist=async(req,res)=>{
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
+  const customersactiveList = async (req, res) => {
+    try {
+      const adminUsers = await Customeraccountmodel.find({amountclose:"false"}).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
+
+      res.status(200).json({
+        data: adminUsers,
+        message: 'Customers Listed Successfully!'
+      })
+
+    }
+    catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
+    }
+  }
   const changepassword=async(req,res)=>{
     try {
       const { Email, password,phoneNo } = req.body;
@@ -2692,7 +2708,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     viewcustomertransaction,
     getcompanyimage,
     getbrachbasedonexecuter,
-    getapprovelstafftranstionlist
+    getapprovelstafftranstionlist,
+    customersactiveList
   }
 }
 module.exports = adminaccountSchema()
