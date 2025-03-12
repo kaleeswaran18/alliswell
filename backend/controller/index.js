@@ -2474,7 +2474,7 @@ const updatetafftranstionlist=async(req,res)=>{
       let { branch, status } = req.query;
         let filter = {};
         
-        console.log(startDate, endDate);
+       
 
         if (branch && branch !== "All"){
          let check=await Branchschememodel.find({Name:branch})
