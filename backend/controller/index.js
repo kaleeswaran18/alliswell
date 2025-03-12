@@ -833,6 +833,31 @@ const todaypendingAmount = data
       console.log("Something went wrong  post!!!", err)
     }
   }
+  const viewcustomertransaction = async (req, res) => {
+    console.log("1")
+    try {
+     
+      // console.log(currentFormatted, "currentFormatted")
+      // const existingUser = await Customerpaylist.find({duedate: currentFormatted });\
+       
+     
+       let existingUser = await Customerpaylist.find({_id:req.query.id}).populate("executeofficerId") // Populating from Adminaccount
+       .populate("branchid"); // Populating from Branchschememodel;;
+    
+      
+      
+     
+
+
+      res.status(200).send({
+        data: existingUser,
+        message: "all customer listed Successfully!"
+      })
+    }
+    catch (err) {
+      console.log("Something went wrong  post!!!", err)
+    }
+  }
   const customerdetails = async (req, res) => {
     console.log("*********>>>>>><<<<<<", req.body)
     try {
@@ -2664,6 +2689,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     approveltransationlist,
     getstafftranstionlist,
     companyimage,
+    viewcustomertransaction,
     getcompanyimage,
     getbrachbasedonexecuter,
     getapprovelstafftranstionlist
