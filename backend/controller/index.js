@@ -2471,7 +2471,24 @@ const updatetafftranstionlist=async(req,res)=>{
   }
   const customersactiveList = async (req, res) => {
     try {
-      const adminUsers = await Customeraccountmodel.find({amountclose:"false"}).populate("executeofficerId") // Populating from Adminaccount
+      let { branch, status } = req.query;
+        let filter = {};
+        
+        console.log(startDate, endDate);
+
+        if (branch && branch !== "All"){
+         let check=await Branchschememodel.find({Name:branch})
+         filter.branchid = check[0].branchid
+        } 
+        if (status && status !== "all"){
+          let check=await Branchschememodel.find({Name:branch})
+          filter.amountclose = "true"
+         } 
+        
+
+        console.log(filter, "filter");
+        
+      const adminUsers = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
 
       res.status(200).json({
