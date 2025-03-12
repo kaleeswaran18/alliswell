@@ -2480,8 +2480,8 @@ const updatetafftranstionlist=async(req,res)=>{
          let check=await Branchschememodel.find({Name:branch})
          filter.branchid = check[0]._id
         } 
-        if (status && status == "All"||"Active"){
-          let check=await Branchschememodel.find({Name:branch})
+        if (status && status == "Active"){
+          // let check=await Branchschememodel.find({Name:branch})
           filter.amountclose = "false"
          } 
         
