@@ -2321,7 +2321,10 @@ const updatetafftranstionlist=async(req,res)=>{
       { reason: req.body.reason,type: req.body.type,branchid:req.body.branchid,amount: req.body.amount,requestdate: currentFormatted,requesttime:currentFormattedtime }, 
       { new: true }
     );
-   
+    res.status(200).send({
+      // data: adminUsers,
+      message: 'Update Successfully!'
+    })
  
 
 }
