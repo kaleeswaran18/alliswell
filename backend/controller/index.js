@@ -2156,7 +2156,8 @@ const getparticularverification=async(req,res)=>{
           };
       }
         console.log(filter, "filter");
-        const customers = await Customerpaylist.find(filter);
+        const customers = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
+        .populate("branchid"); // Populating from Branchschememodel;;
         // console.log(customers, "customers");
 
         res.status(200).send({
