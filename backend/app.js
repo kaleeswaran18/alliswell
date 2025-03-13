@@ -50,17 +50,17 @@ app.use((err, req, res, next) => {
 
 // Cron Job (Runs Every Minute for Testing)
 const schedule = '* * * * *';
-const task = async () => {
-  try {
-    await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate');
-    console.log('Cron job executed.');
-  } catch (error) {
-    console.error('Cron job error:', error.message);
-  }
-};
+// const task = async () => {
+//   try {
+//     await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate');
+//     console.log('Cron job executed.');
+//   } catch (error) {
+//     console.error('Cron job error:', error.message);
+//   }
+// };
 cron.schedule(schedule, task);
 
-console.log('Cron job scheduled.');
+// console.log('Cron job scheduled.');
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
