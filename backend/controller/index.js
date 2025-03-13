@@ -2157,7 +2157,7 @@ const getparticularverification=async(req,res)=>{
       }
         console.log(filter, "filter");
         const customers = await Customerpaylist.find(filter);
-        console.log(customers, "customers");
+        // console.log(customers, "customers");
 
         res.status(200).send({
             data: customers,
