@@ -817,7 +817,7 @@ const todaypendingAmount = data
       let { id, status } = req.query;
      
      
-      console.log(filter, "filter");
+     
      
        let existingUser = await Customerpaylist.find(
         {customer_id:id,status:status}
