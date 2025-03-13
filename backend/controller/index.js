@@ -1888,26 +1888,30 @@ const todaypendingAmount = data
     })
 
   }
-  const verificationapprovel=async(req,res)=>{
-    const value = await Formverification.findOneAndUpdate(
-      { _id: req.body.id }, 
-      { isapprove: "true" }, 
-      { new: true }
-  )
+  const verificationapprovel = async (req, res) => {
+    try {
+      const value = await Formverification.findOneAndUpdate(
+        { _id: req.body.id },
+        { isapprove: true },
+        { new: true }
+      );
   
-  if (!value) {
-      return res.status(404).json({ success: false, message: "Record not found" });
-  }
-  req.io.emit("approvalUpdated", { id: req.body.id, isapprove: true });
+      if (!value) {
+        return res.status(404).json({ success: false, message: "Record not found" });
+      }
   
-  console.log("Updated record:", value);
-  
-   
-    res.status(200).send({
+      console.log("Updated record:", value);
       
-      message: "update Successfully!"
-    })
-  }
+      // Emit update to ALL connected clients
+      req.app.get("io").emit("approvalUpdated", { id: req.body.id, isapprove: true });
+  
+      res.status(200).json({ message: "Update Successfully!", data: value });
+    } catch (error) {
+      console.error("Error in verificationapprovel:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  };
+  
   const updateverificationapprovel=async(req,res)=>{
     const value = await Formverification.findOneAndUpdate(
       { _id: req.query.id }, 
