@@ -1637,8 +1637,24 @@ const todaypendingAmount = data
   }
   const particularcustomerallaccount = async (req, res) => {
     try {
-      var customerId = req.query.id
-      const checkingvalue = await Customeraccountmodel.find({ _id: customerId }).populate("executeofficerId") // Populating from Adminaccount
+      
+      let { id, status } = req.query;
+      let filter = {};
+      
+     
+      if (id){
+        // let check=await Branchschememodel.find({Name:branch})
+        filter._id = id
+       } 
+       
+      if (status && status == "Active"){
+        // let check=await Branchschememodel.find({Name:branch})
+        filter.amountclose = "false"
+       } 
+      
+
+      console.log(filter, "filter");
+      const checkingvalue = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
       const checking = await Addextracustomeraccountmodel.find({ customer_id: checkingvalue[0]._id })
       let finalvalue = [...checkingvalue, ...checking]
