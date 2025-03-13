@@ -6,8 +6,12 @@ var logger = require('morgan');
 var cors = require('cors');
 const cron = require('node-cron');
 const axios = require('axios')
+var http = require('http'); 
+var { Server } = require('socket.io'); // Import Socket.IO
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const { initializeSocket, userSockets } = require('./socket');
+
 // const formData = require('express-form-data');
 // var superAdminRouter = require('./routes/superAdmin');
 
@@ -15,7 +19,14 @@ var usersRouter = require('./routes/users');
 require('./utills/dbconnection')
 
 var app = express();
+var server = http.createServer(app); // Create HTTP server
+var io = initializeSocket(server); // Initialize Socket.IO with the server
 
+// Attach the Socket.IO instance to requests
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
