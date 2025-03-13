@@ -58,7 +58,7 @@ const schedule = '* * * * *';
 //     console.error('Cron job error:', error.message);
 //   }
 // };
-cron.schedule(schedule, task);
+// cron.schedule(schedule, task);
 
 // console.log('Cron job scheduled.');
 
