@@ -814,9 +814,14 @@ const todaypendingAmount = data
      
       // console.log(currentFormatted, "currentFormatted")
       // const existingUser = await Customerpaylist.find({duedate: currentFormatted });\
-       
+      let { id, status } = req.query;
      
-       let existingUser = await Customerpaylist.find({customer_id:req.query.id}).populate("executeofficerId") // Populating from Adminaccount
+     
+      console.log(filter, "filter");
+     
+       let existingUser = await Customerpaylist.find(
+        {customer_id:id,status:status}
+       ).populate("executeofficerId") // Populating from Adminaccount
        .populate("branchid"); // Populating from Branchschememodel;;
     
       
