@@ -2130,20 +2130,31 @@ const getparticularverification=async(req,res)=>{
 
   const transationfind = async (req, res) => {
     try {
-        let { branchid, status, startDate, endDate } = req.query;
+        let { selectedBranch, selectedStatus, startDate, endDate } = req.query;
         let filter = {};
         
         console.log(startDate, endDate);
 
-        if (branchid && branchid !== "all") filter.branchid = branchid;
-        if (status && status !== "all") filter.status = status;
-        if (startDate && endDate && startDate !== "all" && endDate !== "all") {
+        if (selectedBranch && selectedBranch !== "All"){
+          let check=await Branchschememodel.find({Name:selectedBranch})
+          filter.branchid = check[0]._id;
+        } 
+        if (selectedStatus && selectedStatus !== "All") {
+          filter.status = selectedStatus;
+        }
+          
+        if (startDate && startDate !== null||startDate!="") {
             filter["coustomerduedate"] = {
                 $gte: startDate,
-                $lte: endDate,
+               
             };
         }
-
+        if (endDate &&endDate !== null) {
+          filter["coustomerduedate"] = {
+              $lte: endDate,
+             
+          };
+      }
         console.log(filter, "filter");
         const customers = await Customerpaylist.find(filter);
         console.log(customers, "customers");
