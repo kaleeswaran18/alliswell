@@ -1,13 +1,13 @@
 const { Adminaccountmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
-
+const { userSockets } = require('../socket');
 const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
 const moment = require('moment');
 const mongoose = require("mongoose")
 const ObjectId = mongoose.Types.ObjectId;
 require('dotenv').config();
-
+// verificationapprovel
 const adminaccountSchema = () => {
   const createaccount = async (req, res) => {
     console.log("1")
@@ -1898,6 +1898,7 @@ const todaypendingAmount = data
   if (!value) {
       return res.status(404).json({ success: false, message: "Record not found" });
   }
+  req.io.emit("approvalUpdated", { id: req.body.id, isapprove: true });
   
   console.log("Updated record:", value);
   
