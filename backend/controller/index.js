@@ -1686,7 +1686,40 @@ const todaypendingAmount = data
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
+  const particularcustomerallaccount1 = async (req, res) => {
+    try {
+      
+      let { branchid, status } = req.query;
+      let filter = {};
+      
+     
+      if (branchid&&branchid!='All'){
+        let check=await Branchschememodel.find({Name:branchid})
+        // let check=await Branchschememodel.find({Name:branch})
+        filter.branchid = check[0]._id
+       } 
+       
+      if (status && status != "All"){
+        // let check=await Branchschememodel.find({Name:branch})
+        filter.status = status
+       } 
+      
 
+      console.log(filter, "filter");
+      const checkingvalue = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
+    
+     
+      
+      res.status(200).send({
+        data: checkingvalue,
+        message: "all customer listed Successfully!"
+      })
+    } catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
+    }
+  }
   const viewallhistroy = async (req, res) => {
     try {
       var customerId = req.body.id
@@ -2800,7 +2833,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getcompanyimage,
     getbrachbasedonexecuter,
     getapprovelstafftranstionlist,
-    customersactiveList
+    customersactiveList,
+    particularcustomerallaccount1
   }
 }
 module.exports = adminaccountSchema()
