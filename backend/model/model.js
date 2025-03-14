@@ -8,7 +8,7 @@ const adminaccountmodel = new mongoose.Schema({
     role: { type: String },
     token: { type: String },
     profilePicture: { type: String },
-    branchid:{ type: String },
+    branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" },
     isactive: { type: Boolean, default: true },
     createdAt: {
         type: Date,

@@ -1577,8 +1577,8 @@ const todaypendingAmount = data
      }
     else{
       console.log("check")
-      a=await Adminaccountmodel.find({phoneNo: phoneNo})
-      b=await Customeraccountmodel.find({phoneNo:phoneNo})
+      a=await Adminaccountmodel.find({phoneNo: phoneNo}).populate("branchid")
+      b=await Customeraccountmodel.find({phoneNo:phoneNo}).populate("branchid")
       
       if(a.length==0&&b.length==0){
         return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
