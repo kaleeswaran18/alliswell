@@ -1694,7 +1694,7 @@ const todaypendingAmount = data
       
      
       if (id&&id!='All'){
-        let check=await Branchschememodel.find({Name:branchid})
+        let check=await Branchschememodel.find({Name:id})
         // let check=await Branchschememodel.find({Name:branch})
         filter.branchid = check[0]._id
        } 
