@@ -1933,8 +1933,8 @@ const todaypendingAmount = data
   }
   const updateverificationapprovel1=async(req,res)=>{
     const value = await Formverification.findOneAndUpdate(
-      { _id: req.query.id }, 
-      { verficationofficer: req.query.verficationofficer }, 
+      { _id: req.body.id }, 
+      { verficationofficer: req.body.verficationofficer }, 
       { new: true }
   );
   
