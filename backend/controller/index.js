@@ -1931,6 +1931,25 @@ const todaypendingAmount = data
       message: "update Successfully!"
     })
   }
+  const updateverificationapprovel1=async(req,res)=>{
+    const value = await Formverification.findOneAndUpdate(
+      { _id: req.query.id }, 
+      { verficationofficer: req.query.verficationofficer }, 
+      { new: true }
+  );
+  
+  if (!value) {
+      return res.status(404).json({ success: false, message: "Record not found" });
+  }
+  
+  console.log("Updated record:", value);
+  
+   
+    res.status(200).send({
+      
+      message: "update Successfully!"
+    })
+  }
   const approvelaccount=async(req,res)=>{
     try {
       console.log(req.query.role,"check")
@@ -2725,6 +2744,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
 
     //superAdmin
     updateverificationapprovel,
+    updateverificationapprovel1,
     createaccount,
     // loginaccount,
     notificationlist,

@@ -70,6 +70,7 @@ router.get('/chanepassword',adminaccountController.changepassword)
 router.delete('/deleteemployee',adminaccountController.deleteemployee)
 router.get('/getverificationform',adminaccountController.verification)
 router.put('/updateverificationapprovel',adminaccountController.updateverificationapprovel)
+router.put('/updateverificationapprovel1',adminaccountController.updateverificationapprovel1)
 router.get('/getparticularverification',adminaccountController.getparticularverification)
 
 router.put('/verificationapprovel',adminaccountController.verificationapprovel)
