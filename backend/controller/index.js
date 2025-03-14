@@ -1689,11 +1689,11 @@ const todaypendingAmount = data
   const particularcustomerallaccount1 = async (req, res) => {
     try {
       
-      let { branchid, status } = req.query;
+      let { id, status } = req.query;
       let filter = {};
       
      
-      if (branchid&&branchid!='All'){
+      if (id&&id!='All'){
         let check=await Branchschememodel.find({Name:branchid})
         // let check=await Branchschememodel.find({Name:branch})
         filter.branchid = check[0]._id
@@ -1707,7 +1707,7 @@ const todaypendingAmount = data
        const currentFormatted = currentDate.format('YYYY-MM-DD');
        filter.coustomerduedate=currentFormatted
       console.log(filter, "filter");
-      const checkingvalue = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
+      const checkingvalue = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
     
      
