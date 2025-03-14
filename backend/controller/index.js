@@ -1703,8 +1703,9 @@ const todaypendingAmount = data
         // let check=await Branchschememodel.find({Name:branch})
         filter.status = status
        } 
-      
-
+       const currentDate = moment();
+       const currentFormatted = currentDate.format('YYYY-MM-DD');
+       filter.coustomerduedate=currentFormatted
       console.log(filter, "filter");
       const checkingvalue = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
