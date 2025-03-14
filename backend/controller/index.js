@@ -1939,7 +1939,7 @@ const todaypendingAmount = data
   );
   
   if (!value) {
-      return res.status(404).json({ success: false, message: "Record not found" });
+      return res.status(200).json({ success: false, message: "Record not found" });
   }
   
   console.log("Updated record:", value);
