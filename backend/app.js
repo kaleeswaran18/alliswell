@@ -34,7 +34,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.get('/start', (req, res) => {
   res.status(200).json({
-    msg: 'hi'
+    msg: 'hi--'
   })
 })
 
