@@ -1689,7 +1689,7 @@ const todaypendingAmount = data
   const particularcustomerallaccount1 = async (req, res) => {
     try {
       
-      let { id, status } = req.query;
+      let { id, status,executeofficerId } = req.query;
       let filter = {};
       
      
@@ -1703,6 +1703,9 @@ const todaypendingAmount = data
         // let check=await Branchschememodel.find({Name:branch})
         filter.status = status
        } 
+       if(executeofficerId&&executeofficerId!=''){
+        filter.executeofficerId=executeofficerId
+       }
        const currentDate = moment();
        const currentFormatted = currentDate.format('YYYY-MM-DD');
        filter.coustomerduedate=currentFormatted
