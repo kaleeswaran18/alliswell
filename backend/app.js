@@ -6,13 +6,13 @@ var logger = require('morgan');
 var cors = require('cors');
 const cron = require('node-cron');
 const axios = require('axios')
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index');  
 var usersRouter = require('./routes/users');
 // const formData = require('express-form-data');
 // var superAdminRouter = require('./routes/superAdmin');
 
 //import file in db connection 
-require('./utills/dbconnection')
+require('./utills/dbconnection') 
 
 var app = express();
 
@@ -23,7 +23,7 @@ app.set('view engine', 'jade');
 app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); 
 
 
 
@@ -34,7 +34,7 @@ app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.get('/start', (req, res) => {
   res.status(200).json({
-    msg: 'hi'
+    msg: 'hi--'
   })
 })
 
