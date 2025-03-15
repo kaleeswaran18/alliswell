@@ -92,6 +92,8 @@ router.get('/getapprovelstafftranstionlist',adminaccountController.getapprovelst
 router.delete('/deletetafftranstionlist',adminaccountController.deletetafftranstionlist)
 
 router.get('/getbrachbasedonexecuter',adminaccountController.getbrachbasedonexecuter)
+router.get('/collectionvalue',adminaccountController.collectionvalue)
+router.get('/collectionlistall',adminaccountController.collectionlistall)
 router.post('/stafftransationlist', adminaccountController.stafftransationlist)
 router.post('/transationcreate',adminaccountController.transationhistroy)
 

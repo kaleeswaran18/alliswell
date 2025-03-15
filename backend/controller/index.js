@@ -1,4 +1,4 @@
-const { Adminaccountmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
+const { Adminaccountmodel,collection, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
 const { userSockets } = require('../socket');
 const jwt = require('jsonwebtoken');
@@ -781,8 +781,67 @@ const todaypendingAmount = data
       console.log("Something went wrong  post!!!", err)
     }
   }
+  const collectionvalue = async (req, res) => {
+    const currentDate = moment();
+    const currentFormatted = currentDate.format("YYYY-MM-DD");
   
-
+    let data = await Customerpaylist.find({ coustomerduedate: currentFormatted }).populate("branchid");
+  
+    const branchSummary = {};
+  
+    data.forEach(customer => {
+      const branchId = customer.branchid._id;
+      const branchName = customer.branchid.Name;
+      const customerDueDate = customer.coustomerduedate; // Adding due date
+  
+      if (!branchSummary[branchId]) {
+        branchSummary[branchId] = {
+          branchid: branchId,
+          branchName: branchName,
+          totalAmount: 0,
+          receivedAmount: 0,
+          pendingAmount: 0,
+          customerDueDate: customerDueDate // Storing due date
+        };
+      }
+  
+      // Add total due amount
+      branchSummary[branchId].totalAmount += customer.customerdueamount;
+  
+      // Add received amount if status is 'paid'
+      if (customer.status === "paid") {
+        branchSummary[branchId].receivedAmount += customer.customerpayamount;
+      }
+    });
+  
+    // Calculate pending amount
+    for (const branch in branchSummary) {
+      branchSummary[branch].pendingAmount =
+        branchSummary[branch].totalAmount - branchSummary[branch].receivedAmount;
+    }
+  
+    const result = Object.values(branchSummary);
+  
+    console.log(result);
+    result.forEach(async(value)=>{
+      var value = await collection.create({
+        branchid: value.branchid,
+        
+        branchName:value.branchName,
+        receivedAmount: value.receivedAmount,
+        totalAmount: value.totalAmount,
+        pendingAmount: value.pendingAmount,
+        customerDueDate: value.customerDueDate,
+      })
+    })
+  };
+  const collectionlistall=async(req,res)=>{
+    let data=await collection.find()
+    res.status(200).send({
+      data: data,
+      message: "all customer listed Successfully!"
+    })
+  }
 
 
   const filterbasecustomer = async (req, res) => {
@@ -2807,6 +2866,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     particularcustomerallaccount,
     viewallhistroy,
     transationhistroy,
+    collectionvalue,
     carddetails,
     dailycollectionamountandfilter,
     allduedashboardview,
@@ -2842,7 +2902,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getbrachbasedonexecuter,
     getapprovelstafftranstionlist,
     customersactiveList,
-    particularcustomerallaccount1
+    particularcustomerallaccount1,
+    collectionlistall
   }
 }
 module.exports = adminaccountSchema()

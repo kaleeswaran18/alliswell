@@ -121,6 +121,18 @@ const chitsmodel = new mongoose.Schema({
 
 
 })
+const collectionlist = new mongoose.Schema({
+
+
+    branchid: { type: String },
+    branchName:{ type: String },
+    receivedAmount:{type: Number},
+    totalAmount:{type: Number},
+    pendingAmount:{type: Number},
+    customerDueDate:{ type: String }
+
+
+})
 const customerpaylist = new mongoose.Schema({
     customer_id: { type: String },
     status: { type: String },
@@ -176,6 +188,7 @@ const stufftranscation=new mongoose.Schema({
 })
 
 const Chitsnewmodel = mongoose.model("Chitsmodel", chitsmodel, "Chitsmodel")
+const collection = mongoose.model("Collectionlist", collectionlist, "Collectionlist")
 
 const Adminaccountmodel = mongoose.model("Admin", adminaccountmodel, "Admin")
 const Customerpaylist = mongoose.model("Customerpaylist", customerpaylist, "Customerpaylist")
@@ -187,4 +200,5 @@ const Branchschememodel=mongoose.model("Branchschememodel", branchschememodel, "
 const Rateofinterestschememodel=mongoose.model("Rateofinterestschememodel", rateofinterestschememodel, "Rateofinterestschememodel")
 const Formverification=mongoose.model("Formverification", formverification, "Formverification")
 const Stufftranscation=mongoose.model("Stufftranscation", stufftranscation, "Stufftranscation")
-module.exports = {Formverification,Stufftranscation, Chitsnewmodel,Adminaccountmodel, Customeraccountmodel, Customerschememodel,Companylogomodel, Customerpaylist,Rateofinterestschememodel, Addextracustomeraccountmodel,Branchschememodel }
+
+module.exports = {Formverification,Stufftranscation,collection, Chitsnewmodel,Adminaccountmodel, Customeraccountmodel, Customerschememodel,Companylogomodel, Customerpaylist,Rateofinterestschememodel, Addextracustomeraccountmodel,Branchschememodel }
