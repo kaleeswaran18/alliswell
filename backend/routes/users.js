@@ -34,7 +34,7 @@ router.post('/fileUpload',upload.single("file"), adminaccountController.fileUplo
 //temMem
 router.get('/adminList', verifyToken, adminaccountController.adminList)
 
-router.post('/create', adminaccountController.createaccount)//superadmincreatesadmin
+router.post('/create',upload.single("profilePicture"), adminaccountController.createaccount)//superadmincreatesadmin
 router.post('/edit', verifyToken, adminaccountController.superAdminsEditsAdminUser)
 router.post('/delete', verifyToken, adminaccountController.superAdminsDeletesAdminUser)
 
