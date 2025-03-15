@@ -12,7 +12,7 @@ var usersRouter = require('./routes/users');
 // var superAdminRouter = require('./routes/superAdmin');
 
 //import file in db connection 
-require('./utills/dbconnection')
+require('./utills/dbconnection') 
 
 var app = express();
 
