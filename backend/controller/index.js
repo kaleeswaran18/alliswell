@@ -48,8 +48,7 @@ const adminaccountSchema = () => {
         password: hashedPassword,
         role: req.body.role ? req.body.role : "admin",
         branchid: req.body.branchid,
-        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
-        : null,
+        profilePicture: req.body.profilePicture,
         //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
       })
@@ -100,7 +99,7 @@ const adminaccountSchema = () => {
   })
  }
   const createcustomeraccount = async (req, res) => {
-    console.log(req.file,"find1",req.body)
+    
     try {
       // console.log(req.files,"reqqq")
 
@@ -109,11 +108,11 @@ const adminaccountSchema = () => {
       const currentDate = moment();
       req.body.startdate=moment(req.body.startdate).format('YYYY-MM-DD')
       if(req.body.scheme=='daily'){
-        req.body.enddate= moment(req.body.startdate).add(100, 'days');
+        req.body.enddate= moment(req.body.startdate).add(101, 'days');
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       else{
-        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate= moment(req.body.startdate).add(77, 'days');
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       // Calculate the date after 7 days
@@ -196,8 +195,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
         //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
-        profilePicture: req.file.originalname?`https://alliswell-2.onrender.com/images/${req.file.originalname}`
-  : null,
+        profilePicture: req.body.profilePicture,
         scheme: req.body.scheme,
         amount: req.body.amount,
         password:hashedPassword,
