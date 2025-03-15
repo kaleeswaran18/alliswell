@@ -2410,7 +2410,7 @@ const getapprovelstafftranstionlist=async(req,res)=>{
   let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'true'}).populate("authorid").populate("branchid");
   return res.status(200).send({
       data:check,  
-    message: `your currentAmount is ${check[0].currentAmount}`
+    message:"you getallrecord"
   })
  }
 }
