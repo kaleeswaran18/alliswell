@@ -1944,7 +1944,7 @@ const todaypendingAmount = data
       console.log("Updated record:", value);
       
       // Emit update to ALL connected clients
-      req.app.get("io").emit("approvalUpdated", { id: req.body.id, isapprove: true });
+      // req.app.get("io").emit("approvalUpdated", { id: req.body.id, isapprove: true });
   
       res.status(200).json({ message: "Update Successfully!", data: value });
     } catch (error) {
