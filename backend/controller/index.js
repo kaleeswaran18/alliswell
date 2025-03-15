@@ -2350,7 +2350,7 @@ const approveltransationlist=async(req,res)=>{
  
   const value = await Stufftranscation.findOneAndUpdate(
     { _id: req.body.id }, 
-    { isapprove: req.body.isapprove }, 
+    { isapprove: "true" }, 
 
     { new: true }
 );
