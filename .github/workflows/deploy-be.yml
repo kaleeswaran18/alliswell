@@ -24,7 +24,7 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker buildx build --platform linux/arm64 -f backend/Dockerfile -t harith47/alliswell:latest --output type=docker backend
+        run: docker buildx build --platform linux/amd64 -f backend/Dockerfile -t harith47/alliswell:latest --output type=docker backend
         # Make sure 'backend' is the correct context directory containing your Dockerfile
 
       - name: List Docker images
@@ -44,7 +44,7 @@ jobs:
         run: docker rm -f nodejs-app-container || true  # Use || true to prevent errors if the container doesn't exist
 
       - name: Run Docker container
-        run: docker run --platform linux/arm64 -d -p 5000:5000 --name nodejs-app-container harith47/alliswell:latest
+        run: docker run --platform linux/amd64 -d -p 5000:5000 --name nodejs-app-container harith47/alliswell:latest
 
       - name: Clean up dangling images
         run: docker image prune -f  # Clean up to save disk space
