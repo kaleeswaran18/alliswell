@@ -114,6 +114,7 @@ const chitsmodel = new mongoose.Schema({
 
 
     chitsimage: { type: String },
+    message:{type:string},
     startdate:{ type: String },
     totalmonthcount:{type: Number},
     currentmonthcount:{type: Number}

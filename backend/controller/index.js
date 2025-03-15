@@ -1,4 +1,4 @@
-const { Adminaccountmodel,collection, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
+const { Adminaccountmodel,collection,Chitsnewmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
 const { userSockets } = require('../socket');
 const jwt = require('jsonwebtoken');
@@ -2815,16 +2815,40 @@ const updatetafftranstionlist=async(req,res)=>{
     }
   }
   const deletecheet=async()=>{
-
+    let dele = await Chitsnewmodel.deleteOne({ _id: req.query.id })
+    res.status(200).send({
+        
+    message: "delete sucessfully"
+  })
   }
   const getallcheet=async()=>{
-
+let check=await Chitsnewmodel.find()
+res.status(200).send({
+    data:check,    
+  message: "get all data sucessfully"
+})
   }
   const updatecheet =async()=>{
-
+let a=await Chitsnewmodel.findByIdAndUpdate({_id:value._id},{chitsimage: req.body.profilePicture,
+  message:req.body.message},{new:true})
+  res.status(200).send({
+        
+    message: "updatecheet sucessfully"
+  })
   }
   const createcheet =async()=>{
-   
+    var value = await Chitsnewmodel.create({
+      
+      chitsimage: req.body.profilePicture,
+      message:req.body.message
+     
+      
+     
+    })
+     res.status(200).send({
+        
+      message: "createcheet sucessfully"
+    })
   }
 const dailyupdate=async()=>{
   const currentDate = moment();
