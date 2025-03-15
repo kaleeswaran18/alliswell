@@ -735,12 +735,14 @@ let data1=''
 if(req.query.role=="Superadmin"){
   if(req.query.branchid==''){
     console.log("checkall")
-    data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted }).populate("executeofficerId") // Populating from Adminaccount
+    .populate("branchid");
     data1=await Customeraccountmodel.find()
     data1=data1.length
   }
   else{
-    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
+    data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid}).populate("executeofficerId") // Populating from Adminaccount
+    .populate("branchid");
     data1=await Customeraccountmodel.find({branchid:req.query.branchid})
     data1=data1.length
   }
@@ -749,11 +751,13 @@ if(req.query.role=="Superadmin"){
 if(req.query.role=="admin"){
   console.log("admin")
   data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
-   data1=await Customeraccountmodel.find({branchid:req.query.branchid})
+   data1=await Customeraccountmodel.find({branchid:req.query.branchid}).populate("executeofficerId") // Populating from Adminaccount
+   .populate("branchid");
     data1=data1.length
 }
 if(req.query.role=='executeofficer'){
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.query.branchid,executeofficerId:req.query.executeofficerId})
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted ,branchid:req.query.branchid,executeofficerId:req.query.executeofficerId}).populate("executeofficerId") // Populating from Adminaccount
+  .populate("branchid");
 }
 const todayfullAmount = data.reduce((sum, customer) => sum + customer.customerdueamount, 0);
 const todayreceivedAmount = data
