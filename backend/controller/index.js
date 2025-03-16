@@ -2829,7 +2829,7 @@ res.status(200).send({
 })
   }
   const updatecheet =async(req,res)=>{
-let a=await Chitsnewmodel.findByIdAndUpdate({_id:value._id},{chitsimage: req.body.profilePicture,
+let a=await Chitsnewmodel.findByIdAndUpdate({_id:req.body._id},{chitsimage: req.body.profilePicture,
   message:req.body.message},{new:true})
   res.status(200).send({
         
