@@ -67,7 +67,7 @@ const schedule = '* * * * *';
 
 // const schedule = '* * * * *';
 // Define the task you want to run
-const task = async () => {
+const task = async () => { 
   var a = await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate',
 
   )
