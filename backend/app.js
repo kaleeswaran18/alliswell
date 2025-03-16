@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 // const formData = require('express-form-data');
 // var superAdminRouter = require('./routes/superAdmin');
 //import file in db connection 
-require('./utills/dbconnection') 
+require('./utills/dbconnection')  
 var app = express();
 
 
