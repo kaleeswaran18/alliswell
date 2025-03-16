@@ -44,7 +44,13 @@ jobs:
         run: docker rm -f nodejs-app-container || true  # Use || true to prevent errors if the container doesn't exist
 
       - name: Run Docker container
-        run: docker run --platform linux/amd64 -d -p 5000:5000 --name nodejs-app-container harith47/alliswell:latest
+        run: |
+          docker run --platform linux/amd64 -d -p 5000:5000 \
+            -v $HOME/nginx-config/nginx.conf:/etc/nginx/nginx.conf \
+            -v $HOME/nginx-config/ssl/cert.pem:/etc/nginx/ssl/cert.pem \
+            -v $HOME/nginx-config/ssl/key.pem:/etc/nginx/ssl/key.pem \
+            --name nodejs-app-container harith47/alliswell:latest
+        #  docker run --platform linux/amd64 -d -p 5000:5000 --name nodejs-app-container harith47/alliswell:latest
 
       - name: Show container logs if it fails
         run: docker logs nodejs-app-container || true  # Capture logs if it crashes
