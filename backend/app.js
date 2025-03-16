@@ -75,7 +75,7 @@ const task = async () => {
   // http://localhost:5000/adminaccount/todaycustomerupdate
   // console.log('This task is executed at 12 AM.');
   // Add your task logic here
-};
+}; 
 
 // Schedule the task
 cron.schedule(schedule, task); 
