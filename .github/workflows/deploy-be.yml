@@ -46,5 +46,8 @@ jobs:
       - name: Run Docker container
         run: docker run --platform linux/amd64 -d -p 5000:5000 --name nodejs-app-container harith47/alliswell:latest
 
+      - name: Show container logs if it fails
+        run: docker logs nodejs-app-container || true  # Capture logs if it crashes
+
       - name: Clean up dangling images
         run: docker image prune -f  # Clean up to save disk space
