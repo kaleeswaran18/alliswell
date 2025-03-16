@@ -1,10 +1,5 @@
 var createError = require('http-errors');
 var express = require('express');
-
-const fs = require("fs");
-// var http = require('http');
-var https = require('https');
-
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -21,13 +16,6 @@ require('./utills/dbconnection')
 
 var app = express();
 
-const options = {
-  key: fs.readFileSync("/app/ssl/key.pem"),  // Use "/etc/letsencrypt/live/your_domain.com/privkey.pem" if using Let's Encrypt
-  cert: fs.readFileSync("/app/ssl/cert.pem") // Use "/etc/letsencrypt/live/your_domain.com/fullchain.pem"
-};
-var server = https.createServer(options,app); 
-var io = socketIo(server, { cors: { origin: '*' } }); 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -36,6 +24,7 @@ app.use(cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false })); 
+
 
 
 app.use(cookieParser());
@@ -91,10 +80,13 @@ const task = async () => {
 // Schedule the task
 cron.schedule(schedule, task);
 
+console.log('Cron job scheduled to run at 12 AM.');
+
+const port = process.env.PORT || 5000
+
+app.listen(port, () => console.log(`Server is Running at port ${port}`))
 
 
-// Start server
-const port = process.env.PORT || 5000;
-server.listen(port, () => console.log(`🚀 Server is Running at port ${port}`));
+
 
 module.exports = app;
