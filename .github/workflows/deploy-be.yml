@@ -43,8 +43,8 @@ jobs:
       - name: Delete old container
         run: docker rm -f nodejs-app-container || true  # Use || true to prevent errors if the container doesn't exist
 
-      - name: Run Docker container with HTTPS
-        run: docker run --platform linux/amd64 -d -p 443:5000 --name nodejs-app-container -v /home/ubuntu/ssl:/app/ssl harith47/alliswell:latest
+      - name: Run Docker container
+        run: docker run --platform linux/amd64 -d -p 443:5000 --name nodejs-app-container harith47/alliswell:latest
 
       - name: Show container logs if it fails
         run: docker logs nodejs-app-container || true  # Capture logs if it crashes
