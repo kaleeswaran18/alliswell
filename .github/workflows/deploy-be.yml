@@ -64,12 +64,16 @@ jobs:
 
       - name: Run Nginx Reverse Proxy
         run: |
-          docker run -d --name nginx-proxy \
+           docker run -d --name nginx-proxy \
+            --network mynetwork \
+            --restart unless-stopped \
             -p 80:80 -p 443:443 \
             -v $HOME/nginx-config/nginx.conf:/etc/nginx/nginx.conf \
-            -v /etc/letsencrypt/live/www.sripasumpon.work.gd/fullchain.pem:/etc/nginx/ssl/fullchain.pem \
-            -v /etc/letsencrypt/live/www.sripasumpon.work.gd/privkey.pem:/etc/nginx/ssl/privkey.pem \
+            -v /etc/letsencrypt:/etc/letsencrypt:ro \
+            -v /var/www/certbot:/var/www/certbot \
             nginx
+
+
 
 
       - name: Show logs if Nginx fails
