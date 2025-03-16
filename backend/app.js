@@ -78,7 +78,7 @@ const task = async () => {
 };
 
 // Schedule the task
-cron.schedule(schedule, task);
+cron.schedule(schedule, task); 
 
 console.log('Cron job scheduled to run at 12 AM.');
 
