@@ -44,7 +44,7 @@ jobs:
         run: docker rm -f nodejs-app-container || true  # Use || true to prevent errors if the container doesn't exist
 
       - name: Run Docker container
-        run:  docker run -d --platform linux/amd64 --name nodejs-app-container -p 5000:5000 -v /home/ubuntu/app-images:/app/public/images harith47/alliswell:latest
+        run:  docker run -d --platform linux/amd64 --name nodejs-app-container --network mynetwork -p 5000:5000 -v /home/ubuntu/app-images:/app/public/images harith47/alliswell:latest
 
       - name: Show container logs if it fails
         run: docker logs nodejs-app-container || true 

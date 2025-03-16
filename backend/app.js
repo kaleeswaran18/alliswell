@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 // app.use(formData.parse());
 
-app.get('/start', (req, res) => {
+app.get('/start', (req, res) => { 
   res.status(200).json({
     msg: 'hi--'
   })
