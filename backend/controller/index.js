@@ -2814,21 +2814,21 @@ const updatetafftranstionlist=async(req,res)=>{
       res.status(500).json({ status: false, message: 'Internal Server Error' });
     }
   }
-  const deletecheet=async()=>{
+  const deletecheet=async(req,res)=>{
     let dele = await Chitsnewmodel.deleteOne({ _id: req.query.id })
     res.status(200).send({
         
     message: "delete sucessfully"
   })
   }
-  const getallcheet=async()=>{
+  const getallcheet=async(req,res)=>{
 let check=await Chitsnewmodel.find()
 res.status(200).send({
     data:check,    
   message: "get all data sucessfully"
 })
   }
-  const updatecheet =async()=>{
+  const updatecheet =async(req,res)=>{
 let a=await Chitsnewmodel.findByIdAndUpdate({_id:value._id},{chitsimage: req.body.profilePicture,
   message:req.body.message},{new:true})
   res.status(200).send({
@@ -2836,7 +2836,7 @@ let a=await Chitsnewmodel.findByIdAndUpdate({_id:value._id},{chitsimage: req.bod
     message: "updatecheet sucessfully"
   })
   }
-  const createcheet =async()=>{
+  const createcheet =async(req,res)=>{
     var value = await Chitsnewmodel.create({
       
       chitsimage: req.body.profilePicture,
