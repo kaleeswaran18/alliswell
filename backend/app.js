@@ -1,9 +1,8 @@
-require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 
 const fs = require("fs");
-var http = require('http');
+// var http = require('http');
 var https = require('https');
 
 var path = require('path');
@@ -11,79 +10,91 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 const cron = require('node-cron');
-const axios = require('axios');
-const socketIo = require('socket.io');
-
+const axios = require('axios')
 var indexRouter = require('./routes/index');  
 var usersRouter = require('./routes/users');
+// const formData = require('express-form-data');
+// var superAdminRouter = require('./routes/superAdmin');
 
-require('./utills/dbconnection'); 
+//import file in db connection 
+require('./utills/dbconnection') 
 
 var app = express();
-var server = https.createServer(app); 
-var io = socketIo(server, { cors: { origin: '*' } }); 
-
-// Make `io` available globally
-app.set('socketio', io); 
-
-// Middleware & Routes
-app.use(cors());
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use('/images', express.static(path.join(__dirname, 'public/images')));
-
-app.use('/', indexRouter);
-app.use('/adminaccount', usersRouter);
-
-// Catch 404 and error handling
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-app.use(function (err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-// Socket.IO connection
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-  socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
-  });
-});
-
-// ✅ **Cron Job: Run Task at 12 AM Every Day**
-const schedule = '0 0 * * *';  // Runs at 12 AM every day
-
-const task = async () => {
-    try {
-        console.log("Running cron job at 12 AM...");
-        const response = await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate');
-        
-        // Broadcast update to all connected clients
-        io.emit('dailyUpdate', { message: "Customer data updated!" });
-
-        console.log("Cron job executed successfully:", response.data);
-    } catch (error) {
-        console.error("Error in cron job:", error.message);
-    }
-};
-
-// Schedule the cron job
-cron.schedule(schedule, task);
-console.log('✅ Cron job scheduled to run at 12 AM.');
 
 const options = {
   key: fs.readFileSync("/app/ssl/key.pem"),  // Use "/etc/letsencrypt/live/your_domain.com/privkey.pem" if using Let's Encrypt
   cert: fs.readFileSync("/app/ssl/cert.pem") // Use "/etc/letsencrypt/live/your_domain.com/fullchain.pem"
 };
+var server = https.createServer(options,app); 
+var io = socketIo(server, { cors: { origin: '*' } }); 
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(cors())
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false })); 
+
+
+app.use(cookieParser());
+// app.use(express.static(path.join(__dirname, 'public/images')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+// app.use(formData.parse());
+
+app.get('/start', (req, res) => {
+  res.status(200).json({
+    msg: 'hi--'
+  })
+})
+
+app.use('/', indexRouter);
+app.use('/adminaccount', usersRouter);
+
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+
+// Define the cron schedule to run at 12 AM every day
+const schedule = '* * * * *';
+
+//for dev
+// const schedule = '*/10 * * * * * '
+
+// const schedule = '* * * * *';
+// Define the task you want to run
+const task = async () => {
+  var a = await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate',
+
+  )
+  //  console.log(a,"message.toString()")
+  // http://localhost:5000/adminaccount/todaycustomerupdate
+  // console.log('This task is executed at 12 AM.');
+  // Add your task logic here
+};
+
+// Schedule the task
+cron.schedule(schedule, task);
+
+
 
 // Start server
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`🚀 Server is Running at port ${port}`));
 
-module.exports = { app, io };
+module.exports = app;
