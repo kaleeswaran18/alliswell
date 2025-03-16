@@ -1,7 +1,11 @@
 require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
+
+const fs = require("fs");
 var http = require('http');
+var https = require('https');
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -16,7 +20,7 @@ var usersRouter = require('./routes/users');
 require('./utills/dbconnection'); 
 
 var app = express();
-var server = http.createServer(app); 
+var server = https.createServer(app); 
 var io = socketIo(server, { cors: { origin: '*' } }); 
 
 // Make `io` available globally
@@ -72,6 +76,11 @@ const task = async () => {
 // Schedule the cron job
 cron.schedule(schedule, task);
 console.log('✅ Cron job scheduled to run at 12 AM.');
+
+const options = {
+  key: fs.readFileSync("/app/ssl/key.pem"),  // Use "/etc/letsencrypt/live/your_domain.com/privkey.pem" if using Let's Encrypt
+  cert: fs.readFileSync("/app/ssl/cert.pem") // Use "/etc/letsencrypt/live/your_domain.com/fullchain.pem"
+};
 
 // Start server
 const port = process.env.PORT || 5000;

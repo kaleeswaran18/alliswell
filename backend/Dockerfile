@@ -11,6 +11,9 @@ RUN npm install --quiet
 # Copy the rest of the application files into docker image
 COPY . .
 
+# Copy SSL Certificates (If self-signed)
+COPY ssl /app/ssl
+
 #src file - .env.aws
 #dest file - .env
 #copy all contents from .env.aws -> .env
