@@ -1,9 +1,0 @@
-passphrase.txt
-logs/
-.git
-*.md
-.cache
-Dockerfile
-.dockerignore
-.github/
-deployment/

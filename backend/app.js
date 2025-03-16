@@ -13,7 +13,7 @@ var usersRouter = require('./routes/users');
 
 //import file in db connection 
 require('./utills/dbconnection') 
-
+ 
 var app = express();
 
 // view engine setup
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 
 
 
-app.use(cookieParser());
+app.use(cookieParser()); 
 // app.use(express.static(path.join(__dirname, 'public/images')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 // app.use(formData.parse());
@@ -67,7 +67,7 @@ const schedule = '* * * * *';
 
 // const schedule = '* * * * *';
 // Define the task you want to run
-const task = async () => {
+const task = async () => { 
   var a = await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate',
 
   )
@@ -75,18 +75,18 @@ const task = async () => {
   // http://localhost:5000/adminaccount/todaycustomerupdate
   // console.log('This task is executed at 12 AM.');
   // Add your task logic here
-};
+}; 
 
 // Schedule the task
-cron.schedule(schedule, task);
+cron.schedule(schedule, task); 
 
 console.log('Cron job scheduled to run at 12 AM.');
 
 const port = process.env.PORT || 5000
 
 app.listen(port, () => console.log(`Server is Running at port ${port}`))
+   
 
 
 
-
-module.exports = app;
+module.exports = app; 
