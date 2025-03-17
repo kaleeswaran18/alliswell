@@ -2395,7 +2395,12 @@ const stafftransationlist=async(req,res)=>{
 
 
   }
-  
+  else{
+    return res.status(200).send({
+        
+      message: `your trancation is waiting for superadmin}`
+    })
+  }
   
  
   
