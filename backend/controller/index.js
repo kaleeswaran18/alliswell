@@ -604,6 +604,7 @@ const extraaccountbalance=async (req,res)=>{
         mainamount=0
   
       }
+      
     }
     else{
       console.log("unpaid")
@@ -619,7 +620,7 @@ const extraaccountbalance=async (req,res)=>{
     }
        
     }
-    
+    console.log(givenamount,"check")
    if(existingUser1.length!=0){
     const result1 = await Addextracustomeraccountmodel.aggregate([
       { $match: {customer_id: req.query.id,amountclose:"false"} },
@@ -687,7 +688,7 @@ console.log(givenamount,"after",)
     }
     console.log(existingUser.length,existingUser1.length,"find")
     const customerName = existingUsername[0].customerName;
-   if(existingUser1.length==0&&existingUser1.length==0){
+   if(existingUser.length==0&&existingUser1.length==0){
     const existingUser = await Customeraccountmodel.find({_id: req.query.id});
    return res.status(200).send({
       
