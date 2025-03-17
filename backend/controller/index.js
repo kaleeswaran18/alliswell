@@ -2432,7 +2432,7 @@ const value1 = await Branchschememodel.findOneAndUpdate(
 );
 let updatebalance=await Stufftranscation.findOneAndUpdate(
   { _id:req.body.id }, 
-  { currentAmount: balanceamount, approveldatedate:currentFormatted,
+  { currentAmount: balanceamount, approveldate:currentFormatted,
     approveltime:currentFormattedtime, }, 
   { new: true }
 );
