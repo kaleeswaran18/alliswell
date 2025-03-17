@@ -540,7 +540,7 @@ for (const value of result) {
       console.log("finish")
       if(value.id!=''){
         const adminUsers = await Branchschememodel.find({_id:req.body.branchid}); 
-        let balanceamount=adminUsers[0].currentAmount-req.body.amount
+        let balanceamount=adminUsers[0].currentAmount-givenamount
         if(adminUsers.length!=0){
           const value1 = await Branchschememodel.findOneAndUpdate(
             { _id:req.body.branchid }, 
@@ -554,8 +554,9 @@ for (const value of result) {
             branchid: req.body.branchid,
             type:"reduce",
             authorid:req.body.admin_id,
-            amount:req.body.givenamount,
+            amount:givenamount,
             reason:"addcustomerCreate",
+            currentAmount:balanceamount,
             isapprove:"true",
             approveldate:currentFormatted,
             approveltime:currentFormattedtime,  
