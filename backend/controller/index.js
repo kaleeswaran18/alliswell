@@ -319,31 +319,25 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
               { $match: { customer_id: req.body.id, status: "paid" } },
               { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
             ]);
-            if(result1.length!=0){
-              console.log("paid")
-            mainamount=amount-result1[0].totalPaidAmount
-            finalcheck.push({_id:req.query.id,pendingamount:mainamount})
-            // console.log("result1",result1,mainamount)
+            if(result1!=0){
+              mainamount=amount-result1[0].totalPaidAmount
+              // console.log("result1",result1,mainamount)
+              if(mainamount<=givenamount){
+                givenamount=givenamount-mainamount
+                await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
+                mainamount=0
+          
+              }
+            }
+           else{
+            mainamount=amount
             if(mainamount<=givenamount){
               givenamount=givenamount-mainamount
               await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
               mainamount=0
         
             }
-            
-          }
-          else{
-            console.log("unpaid")
-            mainamount=amount
-            finalcheck.push({_id:req.query.id,pendingamount:mainamount})
-            // console.log("result1",result1,mainamount)
-            if(mainamount<=givenamount){
-              givenamount=givenamount-mainamount
-              //await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
-              mainamount=0
-        
-            }
-          }
+           }
              
           }
           
