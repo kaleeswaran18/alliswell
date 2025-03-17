@@ -7,17 +7,17 @@ var cors = require('cors');
 const cron = require('node-cron');
 const axios = require('axios')
 var indexRouter = require('./routes/index');  
-var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users'); 
 // const formData = require('express-form-data');
 // var superAdminRouter = require('./routes/superAdmin');
-
 //import file in db connection 
-require('./utills/dbconnection') 
- 
-var app = express();
+require('./utills/dbconnection')  
+var app = express(); 
+
+
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views')); 
 app.set('view engine', 'jade');
 
 app.use(cors())
@@ -26,13 +26,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false })); 
 
 
-
-app.use(cookieParser()); 
+ 
+app.use(cookieParser());  
 // app.use(express.static(path.join(__dirname, 'public/images')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 // app.use(formData.parse());
 
-app.get('/start', (req, res) => {
+app.get('/start', (req, res) => {  
   res.status(200).json({
     msg: 'hi--'
   })

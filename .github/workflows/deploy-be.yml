@@ -44,7 +44,7 @@ jobs:
         run: docker rm -f nodejs-app-container || true  # Use || true to prevent errors if the container doesn't exist
 
       - name: Run Docker container
-        run:  docker run -d --platform linux/amd64 --name nodejs-app-container -p 5000:5000 harith47/alliswell:latest
+        run:  docker run -d --platform linux/amd64 --name nodejs-app-container --network mynetwork -p 5000:5000 -v /home/ubuntu/app-images:/app/public/images harith47/alliswell:latest
 
       - name: Show container logs if it fails
         run: docker logs nodejs-app-container || true 
@@ -53,14 +53,28 @@ jobs:
       - name: Delete old Nginx container
         run: docker rm -f nginx-proxy || true
 
+      # - name: Run Nginx Reverse Proxy
+      #   run: |
+      #     docker run -d --name nginx-proxy \
+      #       -p 80:80 -p 443:443 \
+      #       -v $HOME/nginx-config/nginx.conf:/etc/nginx/nginx.conf \
+      #       -v $HOME/nginx-config/ssl/cert.pem:/etc/nginx/ssl/cert.pem \
+      #       -v $HOME/nginx-config/ssl/key.pem:/etc/nginx/ssl/key.pem \
+      #       nginx
+
       - name: Run Nginx Reverse Proxy
         run: |
-          docker run -d --name nginx-proxy \
+           docker run -d --name nginx-proxy \
+            --network mynetwork \
+            --restart unless-stopped \
             -p 80:80 -p 443:443 \
             -v $HOME/nginx-config/nginx.conf:/etc/nginx/nginx.conf \
-            -v $HOME/nginx-config/ssl/cert.pem:/etc/nginx/ssl/cert.pem \
-            -v $HOME/nginx-config/ssl/key.pem:/etc/nginx/ssl/key.pem \
+            -v /etc/letsencrypt:/etc/letsencrypt:ro \
+            -v /var/www/certbot:/var/www/certbot \
             nginx
+
+
+
 
       - name: Show logs if Nginx fails
         run: docker logs nginx-proxy || true  
