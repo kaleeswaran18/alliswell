@@ -2416,7 +2416,7 @@ const approveltransationlist=async(req,res)=>{
 
     { new: true }
 );
-
+console.log(value,"check")
 if (!value) {
     return res.status(200).send({
         
@@ -2424,18 +2424,36 @@ if (!value) {
     })
 }
 let check=await Branchschememodel.find({_id: value.branchid})
-let balanceamount=check[0].currentAmount-value.amount
-const value1 = await Branchschememodel.findOneAndUpdate(
-  { _id:value.branchid }, 
-  { currentAmount: balanceamount }, 
-  { new: true }
-);
-let updatebalance=await Stufftranscation.findOneAndUpdate(
-  { _id:req.body.id }, 
-  { currentAmount: balanceamount, approveldate:currentFormatted,
-    approveltime:currentFormattedtime, }, 
-  { new: true }
-);
+let findall=await Stufftranscation.find({_id: req.body.id})
+if(findall[0].type=="investment"){
+  let balanceamount=check[0].currentAmount+value.amount
+  const value1 = await Branchschememodel.findOneAndUpdate(
+    { _id:value.branchid }, 
+    { currentAmount: balanceamount }, 
+    { new: true }
+  );
+  let updatebalance=await Stufftranscation.findOneAndUpdate(
+    { _id:req.body.id }, 
+    { currentAmount: balanceamount, approveldate:currentFormatted,
+      approveltime:currentFormattedtime, }, 
+    { new: true }
+  );
+}
+else{
+  let balanceamount=check[0].currentAmount-value.amount
+  const value1 = await Branchschememodel.findOneAndUpdate(
+    { _id:value.branchid }, 
+    { currentAmount: balanceamount }, 
+    { new: true }
+  );
+  let updatebalance=await Stufftranscation.findOneAndUpdate(
+    { _id:req.body.id }, 
+    { currentAmount: balanceamount, approveldate:currentFormatted,
+      approveltime:currentFormattedtime, }, 
+    { new: true }
+  );
+}
+
 
 
  
