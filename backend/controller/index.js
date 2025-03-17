@@ -621,7 +621,7 @@ const extraaccountbalance=async (req,res)=>{
     }
        
     }
-    console.log(givenamount,"check")
+    console.log(givenamount,"check",existingUser1)
    if(existingUser1.length!=0){
     const result1 = await Addextracustomeraccountmodel.aggregate([
       { $match: {customer_id: req.query.id,amountclose:"false"} },
@@ -670,9 +670,9 @@ pendingamount: item.totalAmount - totalPaidAmount
 
 });
 
-console.log(givenamount,"before",)
+console.log(givenamount,"before",result)
 for (const value of result) {
-// console.log("fine")
+console.log("fine",value.pendingamount)
 if(givenamount>=value.pendingamount){
   finalcheck.push({_id:value._id,pendingamount:value.pendingamount})
 //let a=await Addextracustomeraccountmodel.findByIdAndUpdate({_id:value._id},{amountclose:"true"},{new:true})
