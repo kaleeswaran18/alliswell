@@ -305,7 +305,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.dueamount = req.body.amount / 100
         givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
         if(req.body.closeoldaccount=="true"){
-          console.log("hello",req.body.givenamount)
+          console.log("hello",givenamount)
           
           // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
           const existingUser = await Customeraccountmodel.find({_id: req.body.id,amountclose:"false"});
@@ -513,7 +513,7 @@ for (const value of result) {
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
-      let valueverify=await Customeraccountmodel.find(req.body.id)
+      let valueverify=await Customeraccountmodel.find({_id:req.body.id})
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
       var value = await Addextracustomeraccountmodel.create({
         customerName: req.body.customerName,
