@@ -593,6 +593,7 @@ const extraaccountbalance=async (req,res)=>{
         { $match: { customer_id: req.query.id, status: "paid" } },
         { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
       ]);
+      if(result1.length!=0){
       mainamount=amount-result1[0].totalPaidAmount
       finalcheck.push({_id:req.query.id,pendingamount:mainamount})
       // console.log("result1",result1,mainamount)
@@ -602,6 +603,18 @@ const extraaccountbalance=async (req,res)=>{
         mainamount=0
   
       }
+    }
+    else{
+      mainamount=amount
+      finalcheck.push({_id:req.query.id,pendingamount:mainamount})
+      // console.log("result1",result1,mainamount)
+      if(mainamount<=givenamount){
+        givenamount=givenamount-mainamount
+        //await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
+        mainamount=0
+  
+      }
+    }
        
     }
     
