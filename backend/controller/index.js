@@ -586,7 +586,7 @@ const extraaccountbalance=async (req,res)=>{
     let mainamount=0
     
     let finalcheck=[]
-    console.log(existingUser.length,existingUser1.length,"find")
+   
     if(existingUser.length!=0){
       let amount=existingUser[0].amount
       const result1 = await Customerpaylist.aggregate([
@@ -594,6 +594,7 @@ const extraaccountbalance=async (req,res)=>{
         { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
       ]);
       if(result1.length!=0){
+        console.log("paid")
       mainamount=amount-result1[0].totalPaidAmount
       finalcheck.push({_id:req.query.id,pendingamount:mainamount})
       // console.log("result1",result1,mainamount)
@@ -605,6 +606,7 @@ const extraaccountbalance=async (req,res)=>{
       }
     }
     else{
+      console.log("unpaid")
       mainamount=amount
       finalcheck.push({_id:req.query.id,pendingamount:mainamount})
       // console.log("result1",result1,mainamount)
@@ -683,6 +685,7 @@ console.log(givenamount,"after",)
   
 
     }
+    console.log(existingUser.length,existingUser1.length,"find")
     const customerName = existingUsername[0].customerName;
    if(existingUser1.length==0&&existingUser1.length==0){
     const existingUser = await Customeraccountmodel.find({_id: req.query.id});
