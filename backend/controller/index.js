@@ -428,6 +428,7 @@ for (const value of result) {
         
         req.body.amount=givenamount-req.body.stillpending
         givenamount=0
+        req.body.dueamount=req.body.amount%100
         }
         // req.body.duedate=
         // req.body.nextduedate=
