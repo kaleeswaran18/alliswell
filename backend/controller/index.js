@@ -475,7 +475,7 @@ const extraaccountbalance=async (req,res)=>{
     if(existingUser1.length!=0){
       for (const user of existingUser1) {
         const result1 = await Customerpaylist.aggregate([
-          { $match: { customer_id: user.customer_id, status: "paid" } },
+          { $match: { customer_id: user._id, status: "paid" } },
           { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
         ]);
       
