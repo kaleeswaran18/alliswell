@@ -304,7 +304,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 100
         givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-        if(req.body.closeoldaccount=="true"){
+        if(req.body.closeoldaccount=="true"&&req.body.level==2){
           console.log("hello",givenamount)
           
           // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
@@ -327,6 +327,9 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
                 await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amountclose:'true' }, { new: true })
                 mainamount=0
           
+              }
+              else{
+
               }
             }
            else{
@@ -412,6 +415,20 @@ for (const value of result) {
          
 
         }
+        if(req.body.closeoldaccount=="true"&&req.body.level==1){
+          await Customeraccountmodel.updateMany(
+            { _id: req.body.id, amountclose: "false" },
+            { $set: { amountclose: "true" } }
+        );
+        
+        await Addextracustomeraccountmodel.updateMany(
+            { customer_id: req.body.id, amountclose: "false" },
+            { $set: { amountclose: "true" } }
+        );
+        
+        req.body.amount=givenamount-req.body.stillpending
+        givenamount=0
+        }
         // req.body.duedate=
         // req.body.nextduedate=
       }
@@ -422,7 +439,7 @@ for (const value of result) {
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 10
         givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-        if(req.body.closeoldaccount=="true"){
+        if(req.body.closeoldaccount=="true"&&req.body.level==2){
           console.log("hello",givenamount)
           
           // req.body.givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
@@ -588,6 +605,7 @@ for (const value of result) {
     }
   }
 const extraaccountbalance=async (req,res)=>{
+  console.log("check")
     console.log(req.query.amount,req.query.interest,req.query.id)
     let givenamount=''
     givenamount= req.query.amount-(req.query.amount*req.query.interest/100)
@@ -605,6 +623,7 @@ const extraaccountbalance=async (req,res)=>{
         { $match: { customer_id: req.query.id, status: "paid" } },
         { $group: { _id: "$customer_id", totalPaidAmount: { $sum: "$customerpayamount" } } }
       ]);
+      console.log(mainamount,"mainaccount")
       if(result1.length!=0){
         console.log("paid")
       mainamount=amount-result1[0].totalPaidAmount
@@ -638,6 +657,7 @@ const extraaccountbalance=async (req,res)=>{
       { $match: {customer_id: req.query.id,amountclose:"false"} },
       { $group: { _id: "$_id", totalAmount: { $sum: "$amount" } } }
     ]);
+    console.log(result1,"resultking")
     let findall=[]
     if(result1.length!=0){
       let index=0
@@ -686,11 +706,13 @@ for (const value of result) {
 console.log("fine",value.pendingamount)
 if(givenamount>=value.pendingamount){
   finalcheck.push({_id:value._id,pendingamount:value.pendingamount})
-//let a=await Addextracustomeraccountmodel.findByIdAndUpdate({_id:value._id},{amountclose:"true"},{new:true})
-// console.log(req.body.givenamount-value.pendingamount,"before",)
+
 givenamount=givenamount-value.pendingamount
 console.log(givenamount,"after",)
 
+}else{
+  finalcheck.push({_id:value._id,pendingamount:value.pendingamount})
+  mainamount=mainamount+value.pendingamount
 }
 
 }
@@ -708,17 +730,31 @@ console.log(givenamount,"after",)
       message:  `${customerName}, you have no pending amounts. Proceeding to the next process.`
     });
    }
+   
+   console.log(finalcheck,mainamount,givenamount,'vaaaaaaaaaaaa')
     const totalPendingAmount = finalcheck.reduce((sum, item) => sum + item.pendingamount, 0);
 const pendingAmounts = finalcheck.map(item => item.pendingamount).join(',');
 // const customerName = existingUser[0].customerName || "Customer";
 const givenAmount = givenamount // assuming givenAmount is defined elsewhere
+let message=''
+let stillpending=''
+let level=0
+if(mainamount>=givenamount){
+   message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${mainamount}. Your remaining given amount is ${givenAmount} but your pending amount is${mainamount}.so still you have pay ${mainamount-givenAmount}  Do you want to proceed to the next process? Yes or No?`;
+   level=1
+   stillpending=mainamount-givenAmount
 
-const message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
+}
+else{
+  message = `${customerName}, you currently have ${finalcheck.length} accounts. Total Pending Amount: ${totalPendingAmount}. Here is the breakdown of pending amounts: wise ${pendingAmounts}. Your remaining given amount is ${givenAmount}. Do you want to proceed to the next process? Yes or No?`;
+level=2
+}
 const existingUser3 = await Customeraccountmodel.find({_id: req.query.id});
     
     res.status(200).send({
       data:existingUser3,
-      
+      level:level,
+      stillpending:stillpending,
       message: message
     });
     
