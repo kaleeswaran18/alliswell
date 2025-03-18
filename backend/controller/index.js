@@ -1688,7 +1688,8 @@ const todaypendingAmount = data
   const fileUpload = async (req, res) => {
     try {
       console.log(req.file, "requst file upload")
-      let base_url = 'http://51.20.66.59:5000'
+      // let base_url = 'http://51.20.66.59:5000'
+      let base_url='https://alliswell-2.onrender.com'
       console.log(req.file.path, "req.file.path")
        console.log(base_url + req.file['path'].replaceAll('public', ''))
       res.status(200).json({
