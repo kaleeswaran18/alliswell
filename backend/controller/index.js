@@ -112,7 +112,7 @@ const adminaccountSchema = () => {
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       else{
-        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate= moment(req.body.startdate).add(77, 'days');
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       // Calculate the date after 7 days
@@ -266,7 +266,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       else{
-        req.body.enddate= moment(req.body.startdate).add(70, 'days');
+        req.body.enddate= moment(req.body.startdate).add(77, 'days');
         req.body.enddate = moment(req.body.enddate).format('YYYY-MM-DD');
       }
       // Calculate the date after 7 days
@@ -329,7 +329,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         
         req.body.amount=req.body.amount+req.body.balanceamount
         givenamount=0
-        req.body.dueamount=req.body.amount%100
+        req.body.dueamount=req.body.amount/100
         }
         // req.body.duedate=
         // req.body.nextduedate=
@@ -366,7 +366,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         
         req.body.amount=req.body.amount+req.body.balanceamount
         givenamount=0
-        req.body.dueamount=req.body.amount%7
+        req.body.dueamount=req.body.amount/10
         }
        
       }
