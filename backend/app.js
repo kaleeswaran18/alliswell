@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());  
 // app.use(express.static(path.join(__dirname, 'public/images')));
 // app.use('/images', express.static(path.join(__dirname, 'public/images')));
-app.use('/images', express.static('images'));
+app.use('/images', express.static('public/images'));
 // app.use(formData.parse());
 
 app.get('/start', (req, res) => {  
