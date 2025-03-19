@@ -730,9 +730,9 @@ const todaypendingAmount = data
   }
   const collectionlistparticullar=async(req,res)=>{
     
-    let { status,branchid,date } = req.query;
-   
-    let existingUser = await Customerpaylist.find({  status: status,branchid:branchid,customerdueamount:date});
+    let { status,id,date } = req.query;
+  console.log(date,typeof(date),"checj")
+    let existingUser = await Customerpaylist.find({status:status,branchid:id,coustomerduedate:date});
     
     
     res.status(200).send({
