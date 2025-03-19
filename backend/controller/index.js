@@ -697,12 +697,14 @@ const todaypendingAmount = data
      
    
         
-     if (startDate && startDate != 'null'||startDate!="") {
+     if (startDate && startDate != 'null') {
+      if(startDate&&startDate!=""){
       console.log("null1")
       filter["customerDueDate"] = {
           $gte: startDate,
          
       };
+    }
   }
   if (endDate &&endDate != 'null') {
     console.log("null2")
