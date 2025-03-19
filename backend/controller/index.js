@@ -690,7 +690,7 @@ const todaypendingAmount = data
       let check=await collection.find({branchName:selectedBranch})
       
       
-      filter.branchid = check[0]._id
+      filter.branchid = check[0].branchid
      
      } 
     
