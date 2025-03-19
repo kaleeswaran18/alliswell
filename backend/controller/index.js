@@ -684,6 +684,7 @@ const todaypendingAmount = data
   const collectionlistall=async(req,res)=>{
     
     let { selectedBranch, startDate,endDate } = req.query;
+    console.log(selectedBranch,startDate,endDate)
     let filter = {};
     if (selectedBranch&&selectedBranch!='All'){
       let check=await collection.find({branchName:selectedBranch})
@@ -696,13 +697,15 @@ const todaypendingAmount = data
      
    
         
-     if (startDate && startDate !== null||startDate!="") {
+     if (startDate && startDate != 'null'||startDate!="") {
+      console.log("null1")
       filter["customerDueDate"] = {
           $gte: startDate,
          
       };
   }
-  if (endDate &&endDate !== null) {
+  if (endDate &&endDate != 'null') {
+    console.log("null2")
     filter["coustomerduedate"] = {
         $lte: endDate,
        
@@ -2179,13 +2182,13 @@ const getparticularverification=async(req,res)=>{
           filter.status = selectedStatus;
         }
           
-        if (startDate && startDate !== null||startDate!="") {
+        if (startDate && startDate != 'null'||startDate!="") {
             filter["coustomerduedate"] = {
                 $gte: startDate,
                
             };
         }
-        if (endDate &&endDate !== null) {
+        if (endDate &&endDate != "null") {
           filter["coustomerduedate"] = {
               $lte: endDate,
              
