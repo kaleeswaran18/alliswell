@@ -2824,7 +2824,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getapprovelstafftranstionlist,
     customersactiveList,
     particularcustomerallaccount1,
-    collectionlistall
+    collectionlistall,
+    getparticularcheet
   }
 }
 module.exports = adminaccountSchema()
