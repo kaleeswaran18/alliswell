@@ -692,6 +692,9 @@ const todaypendingAmount = data
       if(check.length!=0){
         filter.branchid = check[0].branchid
       }
+      else{
+        filter.branchid="null"
+      }
       
      
      } 
@@ -1659,6 +1662,10 @@ const todaypendingAmount = data
           filter.branchid = check[0]._id
           filter1.branchid = check[0]._id
         }
+        else{
+          filter.branchid = "null"
+          filter1.branchid = "null"
+        }
        
        } 
        else{
@@ -2187,6 +2194,9 @@ const getparticularverification=async(req,res)=>{
           if(check.length!=0){
             filter.branchid = check[0]._id;
           }
+          else{
+            filter.branchid = "null"
+          }
           
         } 
         if (selectedStatus && selectedStatus !== "All") {
@@ -2599,6 +2609,9 @@ const updatetafftranstionlist=async(req,res)=>{
          let check=await Branchschememodel.find({Name:branch})
          if(check.length!=0){
           filter.branchid = check[0]._id
+         }
+         else{
+          filter.branchid = "null"
          }
       
         } 
