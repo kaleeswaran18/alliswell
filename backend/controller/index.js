@@ -1626,6 +1626,7 @@ const todaypendingAmount = data
        const currentDate = moment();
        const currentFormatted = currentDate.format('YYYY-MM-DD');
        filter.coustomerduedate=currentFormatted
+       filter1.coustomerduedate=currentFormatted
       console.log(filter, "filter");
       const checkingvalue = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
