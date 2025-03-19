@@ -94,6 +94,7 @@ router.delete('/deletetafftranstionlist',adminaccountController.deletetafftranst
 router.get('/getbrachbasedonexecuter',adminaccountController.getbrachbasedonexecuter)
 router.get('/collectionvalue',adminaccountController.collectionvalue)
 router.get('/collectionlistall',adminaccountController.collectionlistall)
+router.get('/collectionlistparticullar',adminaccountController.collectionlistparticullar)
 router.post('/stafftransationlist', adminaccountController.stafftransationlist)
 router.post('/transationcreate',adminaccountController.transationhistroy)
 

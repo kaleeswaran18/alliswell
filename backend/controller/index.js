@@ -682,13 +682,53 @@ const todaypendingAmount = data
     })
   };
   const collectionlistall=async(req,res)=>{
-    let data=await collection.find()
+    
+    let { selectedBranch, startDate,endDate } = req.query;
+    let filter = {};
+    if (selectedBranch&&selectedBranch!='All'){
+      let check=await collection.find({branchName:selectedBranch})
+      
+      
+      filter.branchid = check[0]._id
+     
+     } 
+    
+     
+   
+        
+     if (startDate && startDate !== null||startDate!="") {
+      filter["customerDueDate"] = {
+          $gte: startDate,
+         
+      };
+  }
+  if (endDate &&endDate !== null) {
+    filter["coustomerduedate"] = {
+        $lte: endDate,
+       
+    };
+}
+    
+
+    console.log(filter, "filter");
+    let data=await collection.find(filter)
     res.status(200).send({
       data: data,
       message: "all customer listed Successfully!"
     })
   }
-
+  const collectionlistparticullar=async(req,res)=>{
+    
+    let { status,branchid,date } = req.query;
+   
+    let existingUser = await Customerpaylist.find({  status: status,branchid:branchid,customerdueamount:date});
+    
+    
+    res.status(200).send({
+      data: existingUser,
+      message: "all customer listed Successfully!"
+    })
+  }
 
   const filterbasecustomer = async (req, res) => {
     console.log("1")
@@ -2830,7 +2870,9 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     customersactiveList,
     particularcustomerallaccount1,
     collectionlistall,
+    collectionlistparticullar,
     getparticularcheet
+    
   }
 }
 module.exports = adminaccountSchema()
