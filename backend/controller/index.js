@@ -689,8 +689,10 @@ const todaypendingAmount = data
     if (selectedBranch&&selectedBranch!='All'){
       let check=await collection.find({branchName:selectedBranch})
       
+      if(check.length!=0){
+        filter.branchid = check[0].branchid
+      }
       
-      filter.branchid = check[0].branchid
      
      } 
     
@@ -1650,11 +1652,14 @@ const todaypendingAmount = data
      let totalcount=0
       if (id&&id!='All'){
         let check=await Branchschememodel.find({Name:id})
-        totalcount=await Customeraccountmodel.find({branchid:check[0]._id})
-        totalcount=totalcount.length
-        // let check=await Branchschememodel.find({Name:branch})
-        filter.branchid = check[0]._id
-        filter1.branchid = check[0]._id
+        if(check.length!=0){
+          totalcount=await Customeraccountmodel.find({branchid:check[0]._id})
+          totalcount=totalcount.length
+          // let check=await Branchschememodel.find({Name:branch})
+          filter.branchid = check[0]._id
+          filter1.branchid = check[0]._id
+        }
+       
        } 
        else{
         totalcount=await Customeraccountmodel.find()
@@ -2179,7 +2184,10 @@ const getparticularverification=async(req,res)=>{
 
         if (selectedBranch && selectedBranch !== "All"){
           let check=await Branchschememodel.find({Name:selectedBranch})
-          filter.branchid = check[0]._id;
+          if(check.length!=0){
+            filter.branchid = check[0]._id;
+          }
+          
         } 
         if (selectedStatus && selectedStatus !== "All") {
           filter.status = selectedStatus;
@@ -2589,7 +2597,10 @@ const updatetafftranstionlist=async(req,res)=>{
 
         if (branch && branch !== "All"){
          let check=await Branchschememodel.find({Name:branch})
-         filter.branchid = check[0]._id
+         if(check.length!=0){
+          filter.branchid = check[0]._id
+         }
+      
         } 
         if (status && status == "Active"){
           // let check=await Branchschememodel.find({Name:branch})
