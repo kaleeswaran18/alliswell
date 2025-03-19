@@ -707,10 +707,11 @@ const todaypendingAmount = data
     }
   }
   if (endDate &&endDate != 'null') {
+    if(endDate&&sendDatetartDate!=""){
     console.log("null2")
     filter["coustomerduedate"] = {
         $lte: endDate,
-       
+    }
     };
 }
     
