@@ -1600,7 +1600,7 @@ const todaypendingAmount = data
       
       let { id, status,executeofficerId } = req.query;
       let filter = {};
-      
+      let filter1 = {};
      let totalcount=0
       if (id&&id!='All'){
         let check=await Branchschememodel.find({Name:id})
@@ -1608,6 +1608,7 @@ const todaypendingAmount = data
         totalcount=totalcount.length
         // let check=await Branchschememodel.find({Name:branch})
         filter.branchid = check[0]._id
+        filter1.branchid = check[0]._id
        } 
        else{
         totalcount=await Customeraccountmodel.find()
@@ -1620,6 +1621,7 @@ const todaypendingAmount = data
        } 
        if(executeofficerId&&executeofficerId!=''){
         filter.executeofficerId=executeofficerId
+        filter1.executeofficerId=executeofficerId
        }
        const currentDate = moment();
        const currentFormatted = currentDate.format('YYYY-MM-DD');
@@ -1627,12 +1629,13 @@ const todaypendingAmount = data
       console.log(filter, "filter");
       const checkingvalue = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
-    
-      const todayfullAmount = checkingvalue.reduce((sum, customer) => sum + customer.customerdueamount, 0);
-      const todayreceivedAmount = checkingvalue
+      const checkingvalue1 = await Customerpaylist.find(filter1).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid");
+      const todayfullAmount = checkingvalue1.reduce((sum, customer) => sum + customer.customerdueamount, 0);
+      const todayreceivedAmount = checkingvalue1
           .filter(customer => customer.status === "paid")
           .reduce((sum, customer) => sum + customer.customerpayamount, 0);
-      const todaypendingAmount = checkingvalue
+      const todaypendingAmount = checkingvalue1
           .filter(customer => customer.status === "unpaid")
           .reduce((sum, customer) => sum + customer.customerdueamount, 0);
             
@@ -1713,7 +1716,8 @@ const todaypendingAmount = data
        console.log(base_url + req.file['path'].replaceAll('public', ''))
       res.status(200).json({
         // url: base_url + req.file['path'].replaceAll('public', '')
-        url: `${base_url}/images/${req.file.filename}`
+        url: `${base_url}/images/${req.file.filename}`,
+        message:"fileUpload upload Successfully"
       })
 
     }
