@@ -2203,17 +2203,21 @@ const getparticularverification=async(req,res)=>{
           filter.status = selectedStatus;
         }
           
-        if (startDate && startDate != 'null'||startDate!="") {
+        if (startDate && startDate != 'null') {
+          if (startDate && startDate!="") {
             filter["coustomerduedate"] = {
                 $gte: startDate,
                
             };
+          }
         }
         if (endDate &&endDate != "null") {
+          if (endDate && endDate!="") {
           filter["coustomerduedate"] = {
               $lte: endDate,
              
           };
+        }
       }
         console.log(filter, "filter");
         const customers = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
