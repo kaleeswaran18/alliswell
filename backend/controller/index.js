@@ -1601,12 +1601,18 @@ const todaypendingAmount = data
       let { id, status,executeofficerId } = req.query;
       let filter = {};
       
-     
+     let totalcount=0
       if (id&&id!='All'){
         let check=await Branchschememodel.find({Name:id})
+        totalcount=await Customeraccountmodel.find({branchid:check[0]._id})
+        totalcount=totalcount.length
         // let check=await Branchschememodel.find({Name:branch})
         filter.branchid = check[0]._id
        } 
+       else{
+        totalcount=await Customeraccountmodel.find()
+        totalcount=totalcount.length
+       }
        
       if (status && status != "All"){
         // let check=await Branchschememodel.find({Name:branch})
@@ -1622,12 +1628,25 @@ const todaypendingAmount = data
       const checkingvalue = await Customerpaylist.find(filter).populate("executeofficerId") // Populating from Adminaccount
       .populate("branchid"); // Populating from Branchschememodel;
     
-     
+      const todayfullAmount = checkingvalue.reduce((sum, customer) => sum + customer.customerdueamount, 0);
+      const todayreceivedAmount = checkingvalue
+          .filter(customer => customer.status === "paid")
+          .reduce((sum, customer) => sum + customer.customerpayamount, 0);
+      const todaypendingAmount = checkingvalue
+          .filter(customer => customer.status === "unpaid")
+          .reduce((sum, customer) => sum + customer.customerdueamount, 0);
+            
+            res.status(200).send({
+              data: checkingvalue,
+             
+              message: "All customer listed Successfully!",
+              todayfullAmount:todayfullAmount,
+              todayreceivedAmount:todayreceivedAmount,
+              todaypendingAmount:todaypendingAmount,
+              totalcustomer:totalcount
+            })
       
-      res.status(200).send({
-        data: checkingvalue,
-        message: "all customer listed Successfully!"
-      })
+     
     } catch (err) {
       console.log('Something went wrong', err);
       res.status(500).send({ status: false, message: 'Internal Server Error' });
@@ -2701,6 +2720,13 @@ res.status(200).send({
   message: "get all data sucessfully"
 })
   }
+  getparticularcheet=async(req,res)=>{
+    let check=await Chitsnewmodel.find({_id:req.query.id})
+    res.status(200).send({
+        data:check,    
+      message: "get data sucessfully"
+    })
+      }
   const updatecheet =async(req,res)=>{
 let a=await Chitsnewmodel.findByIdAndUpdate({_id:req.body._id},{chitsimage: req.body.profilePicture,
   message:req.body.message},{new:true})

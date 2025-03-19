@@ -61,7 +61,7 @@ app.use(function (err, req, res, next) {
 
 
 // Define the cron schedule to run at 12 AM every day
-const schedule = '0 0 * * *';
+const schedule = '* * * * *';
 
 //for dev
 // const schedule = '*/10 * * * * * '
@@ -69,7 +69,7 @@ const schedule = '0 0 * * *';
 // const schedule = '* * * * *';
 // Define the task you want to run
 const task = async () => { 
-  var a = await axios.put('http://localhost:5000/adminaccount/todaycustomerupdate',
+  var a = await axios.put('https://alliswell-1-cxjg.onrender.com/adminaccount/todaycustomerupdate',
 
   )
   //  console.log(a,"message.toString()")

@@ -81,7 +81,7 @@ router.post('/createcheet', adminaccountController.createcheet)
 router.put('/updatecheet', adminaccountController.updatecheet)
 router.get('/getallcheet',adminaccountController.getallcheet)
 router.delete('/deletecheet',adminaccountController.deletecheet)
-
+router.get('/getparticularcheet',adminaccountController.getparticularcheet)
 
 router.post('/transationhistroy', adminaccountController.transationhistroy)
 router.post('/posttransationhistroy', adminaccountController.approveltransationlist)
