@@ -927,6 +927,108 @@ const todaypendingAmount = data
       console.log("Something went wrong  post!!!", err)
     }
   }
+  const customerdetails1 = async (req, res) => {
+    console.log("*********>>>>>><<<<<<", req.body)
+    try {
+      const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
+      
+      if (existingUsers[0].extraplan == 'true') {
+        let findone = await Addextracustomeraccountmodel.find({ _id: req.query.customer_id })
+        console.log(findone, "findone")
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
+        let payedamount = 0;
+        let pendingamount = 0;
+        existingUsers.forEach(val => {
+          if (val.customerpayamount) {
+            payedamount = payedamount + parseInt(val.customerpayamount)
+          }
+        })
+
+
+        const existingUser = await Customerpaylist.find({ _id: req.query.id })
+        console.log(existingUser, "customr paylist .....*******&&&&&&")
+
+        pendingamount = findone[0].amount - payedamount
+        console.log(findone[0].amount, payedamount, pendingamount, "existingUser")
+        let result = {}
+
+        let goodresult = []
+        result["_id"] = existingUsers[0]._id
+        result["customer_id"] = existingUsers[0].customer_id
+        
+        
+        result["customername"] = existingUsers[0].customername
+        result["customerphonenumber"] = existingUsers[0].customerphonenumber
+        result["customerscheme"] = existingUsers[0].customerscheme
+        result["customerdueamount"] = existingUsers[0].customerdueamount
+       
+        // result[]
+
+        result["payedamount"] = payedamount
+        result["pendingamount"] = pendingamount
+        result["Dueamount"] = payedamount + pendingamount;
+        result["Landmark"] = existingUsers[0].LandMark;
+        result["profilePicture"] = existingUsers[0].profilePicture;
+        goodresult.push(result)
+
+        res.status(200).send({
+          data: goodresult,
+          message: "****** customer listed Successfully!"
+        })
+      }
+      else {
+        let findone = await Customeraccountmodel.find({ _id: req.query.customer_id })
+        const existingUsers = await Customerpaylist.find({ customer_id: req.query.customer_id });
+        let payedamount = 0;
+        let pendingamount = 0;
+        existingUsers.forEach(val => {
+          if (val.customerpayamount) {
+            payedamount = payedamount + parseInt(val.customerpayamount)
+          }
+        })
+
+
+
+        //const existingUser = await Customerpaylist.find({ _id: req.query.id })
+
+        pendingamount = findone[0].amount - payedamount
+        console.log(payedamount, pendingamount, "existingUser")
+        let result = {}
+
+        let goodresult = []
+        result["_id"] = existingUsers[0]._id
+        result["customer_id"] = existingUsers[0].customer_id
+       
+        result["customername"] = existingUsers[0].customername
+        result["customerphonenumber"] = existingUsers[0].customerphonenumber
+        result["customerscheme"] = existingUsers[0].customerscheme
+        result["customerdueamount"] = existingUsers[0].customerdueamount
+        
+       
+        result["payedamount"] = payedamount
+        result["pendingamount"] = pendingamount
+        result["Dueamount"] = payedamount + pendingamount
+        result["Landmark"] = existingUsers[0].LandMark
+       result["profilePicture"] = existingUsers[0].profilePicture;
+
+        goodresult.push(result)
+
+
+        res.status(200).send({
+          data: goodresult,
+          message: "<<<<<<<<all customer listed Successfully!"
+        })
+      }
+
+
+
+
+
+    }
+    catch (err) {
+      console.log("Something went wrong  post!!!", err)
+    }
+  }
   const todaycustomerupdate = async (req, res) => {
     console.log("1")
     try {
@@ -2857,6 +2959,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     todaycustomerupdate,
     todayindividualcustomerupdate,
     customerdetails,
+    customerdetails1,
     fileUpload,
     adminList,
     superAdminsEditsAdminUser,

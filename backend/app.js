@@ -59,29 +59,23 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+// Define the cron schedule to run at 12:00 AM (midnight) every day
+const schedule = '0 0 * * *'; // Runs at 12:00 AM (server time)
 
-// Define the cron schedule to run at 12 AM every day
-const schedule = '* * * * *';
-
-//for dev
-// const schedule = '*/10 * * * * * '
-
-// const schedule = '* * * * *';
-// Define the task you want to run
+// Define the task
 const task = async () => { 
-  var a = await axios.put('https://alliswell-1-cxjg.onrender.com/adminaccount/todaycustomerupdate',
-
-  )
-  //  console.log(a,"message.toString()")
-  // http://localhost:5000/adminaccount/todaycustomerupdate
-  // console.log('This task is executed at 12 AM.');
-  // Add your task logic here
-}; 
+  try {
+    const response = await axios.put('https://alliswell-1-cxjg.onrender.com/adminaccount/todaycustomerupdate');
+    console.log('Cron job executed successfully at 12 AM:', response.data);
+  } catch (error) {
+    console.error('Error executing cron job:', error.message);
+  }
+};
 
 // Schedule the task
-cron.schedule(schedule, task); 
+cron.schedule(schedule, task);
 
-console.log('Cron job scheduled to run at 12 AM.');
+console.log('Cron job scheduled to run every day at 12 AM.');
 
 const port = process.env.PORT || 5000
 
