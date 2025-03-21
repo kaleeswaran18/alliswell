@@ -253,6 +253,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
   }
   const addextracustomerplan = async (req, res) => {
     console.log("1hello")
+    console.log(req.body,"checkalll")
     try {
 
 
