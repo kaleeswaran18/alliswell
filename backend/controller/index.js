@@ -305,7 +305,8 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 100
         givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-        if(req.body.closeoldaccount=="true"&&req.body.level==2){
+        if(req.body.closeoldaccount==true&&req.body.level==2){
+      console.log("closeoldaccount",typeof(req.body.closeoldaccount))
           await Customeraccountmodel.updateMany(
             { _id: req.body.id, amountclose: "false" },
             { $set: { amountclose: "true" } }
@@ -317,7 +318,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         );
         givenamount=req.body.balanceamount
         }
-        if(req.body.closeoldaccount=="true"&&req.body.level==1){
+        if(req.body.closeoldaccount==true&&req.body.level==1){
           await Customeraccountmodel.updateMany(
             { _id: req.body.id, amountclose: "false" },
             { $set: { amountclose: "true" } }
@@ -342,7 +343,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 10
         givenamount= req.body.amount-(req.body.amount*req.body.interest/100)
-        if(req.body.closeoldaccount=="true"&&req.body.level==2){
+        if(req.body.closeoldaccount==true&&req.body.level==2){
           await Customeraccountmodel.updateMany(
             { _id: req.body.id, amountclose: "false" },
             { $set: { amountclose: "true" } }
@@ -354,7 +355,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         );
         givenamount=req.body.balanceamount
         }
-        if(req.body.closeoldaccount=="true"&&req.body.level==1){
+        if(req.body.closeoldaccount==true&&req.body.level==1){
           await Customeraccountmodel.updateMany(
             { _id: req.body.id, amountclose: "false" },
             { $set: { amountclose: "true" } }
