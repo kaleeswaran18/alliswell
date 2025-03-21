@@ -1665,7 +1665,7 @@ const todaypendingAmount = data
         res.status(200).json({
          "status": true,
     "responsecode": 201,
-    "message": "OTP generated successfully",
+    "message": "Loginsuccessfully",
     "data": {
       a,
         "phone": a[0].phoneNo,
@@ -1678,16 +1678,19 @@ const todaypendingAmount = data
       else{
         const expiresInMinutes = 30
         const token = jwt.sign({ b }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
-  
+        a=b
         res.status(200).json({
-          status:true,
-          userId: b[0]['_id'],
-          username: b[0]['customerName'],
-          role: b[0]['role'],
-          profilePicture: b[0]['profilePicture'] ? b['profilePicture'] : null,
-          message: 'logged In Successfully!',
-          token
-        });
+          "status": true,
+     "responsecode": 201,
+     "message": "Loginsuccessfully",
+     "data": {
+       a,
+         "phone": a[0].phoneNo,
+         "email": a[0].Email,
+          "phoneOtp": "234176"
+     }
+           
+         });
       }
     }
 
