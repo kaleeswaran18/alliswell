@@ -1035,9 +1035,14 @@ const todaypendingAmount = data
   const todaycustomerupdate = async (req, res) => {
     console.log("1")
     try {
-      const currentDate = moment();
-      const currentFormatted = currentDate.format('YYYY-MM-DD');
-      console.log(currentFormatted,"checkfull")
+      // const currentDate = moment();
+      // const currentFormatted = currentDate.format('YYYY-MM-DD');
+      // console.log(currentFormatted,"checkfull")
+      const now = new Date();
+const utcDate = now.toISOString().split('T')[0]; // UTC date
+const currentFormatted = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[0]; // IST date
+
+
       const existingUser = await Customeraccountmodel.find({ duedate: currentFormatted });
       const existingextraUser = await Addextracustomeraccountmodel.find({ duedate: currentFormatted });
       console.log(existingUser, "existingUser")
