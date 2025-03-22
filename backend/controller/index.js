@@ -598,7 +598,8 @@ if(req.query.role=="Superadmin"){
 }
 if(req.query.role=="admin"){
   console.log("admin")
-  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid})
+  data = await Customerpaylist.find({ coustomerduedate: currentFormatted,branchid:req.query.branchid}).populate("executeofficerId") // Populating from Adminaccount
+  .populate("branchid");
    data1=await Customeraccountmodel.find({branchid:req.query.branchid}).populate("executeofficerId") // Populating from Adminaccount
    .populate("branchid");
     data1=data1.length
