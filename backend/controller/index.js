@@ -1037,6 +1037,7 @@ const todaypendingAmount = data
     try {
       const currentDate = moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
+      console.log(currentFormatted,"checkfull")
       const existingUser = await Customeraccountmodel.find({ duedate: currentFormatted });
       const existingextraUser = await Addextracustomeraccountmodel.find({ duedate: currentFormatted });
       console.log(existingUser, "existingUser")
