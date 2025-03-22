@@ -574,9 +574,12 @@ const extraaccountbalance=async (req,res)=>{
     try {
       console.log("12")
       console.log(req.query.branchid,req.query.role, "body")
-      const currentDate = moment();
-      const currentFormatted = currentDate.format('YYYY-MM-DD');
-      console.log(currentFormatted, "currentFormatted")
+      // const currentDate = moment();
+      // const currentFormatted = currentDate.format('YYYY-MM-DD');
+      // console.log(currentFormatted, "currentFormatted")
+      const now = new Date();
+      const utcDate = now.toISOString().split('T')[0]; // UTC date
+      const currentFormatted = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[0]; // IST date
       req.query.branchid=req.query.branchid==undefined?'':req.query.branchid
 let data=""
 let data1=''
