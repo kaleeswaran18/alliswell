@@ -61,7 +61,7 @@ app.use(function (err, req, res, next) {
 
 // Define the cron schedule to run at 12:00 AM (midnight) every day
 const schedule = '30 18 * * *'; // Runs at 12:00 AM (server time)
-
+const schedule1 = '15 18 * * *';
 // Define the task
 const task = async () => { 
   try {
@@ -71,9 +71,19 @@ const task = async () => {
     console.error('Error executing cron job:', error.message);
   }
 };
+const collectionvalue = async () => { 
+  try {
+    const response = await axios.get('https://alliswell-1-cxjg.onrender.com/adminaccount/collectionvalue');
+    console.log('Cron job executed successfully at 12 AM:', response.data);
+  } catch (error) {
+    console.error('Error executing cron job:', error.message);
+  }
+};
+
 
 // Schedule the task
 cron.schedule(schedule, task);
+cron.schedule(schedule1, collectionvalue);
 
 console.log('Cron job scheduled to run every day at 12 AM.');
 
