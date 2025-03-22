@@ -378,7 +378,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       let valueverify=await Customeraccountmodel.find({_id:req.body.id})
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
       var value = await Addextracustomeraccountmodel.create({
-        customerName: req.body.customerName,
+        customerName: existingUser[0].customerName,
 
         customer_id: req.body.id,
         givenamount:givenamount,
@@ -574,12 +574,9 @@ const extraaccountbalance=async (req,res)=>{
     try {
       console.log("12")
       console.log(req.query.branchid,req.query.role, "body")
-      // const currentDate = moment();
-      // const currentFormatted = currentDate.format('YYYY-MM-DD');
-      // console.log(currentFormatted, "currentFormatted")
-      const now = new Date();
-      const utcDate = now.toISOString().split('T')[0]; // UTC date
-      const currentFormatted = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[0]; // IST date
+      const currentDate = moment();
+      const currentFormatted = currentDate.format('YYYY-MM-DD');
+      console.log(currentFormatted, "currentFormatted")
       req.query.branchid=req.query.branchid==undefined?'':req.query.branchid
 let data=""
 let data1=''
@@ -1038,14 +1035,10 @@ const todaypendingAmount = data
   const todaycustomerupdate = async (req, res) => {
     console.log("1")
     try {
-      // const currentDate = moment();
-      // const currentFormatted = currentDate.format('YYYY-MM-DD');
-      // console.log(currentFormatted,"checkfull")
-      const now = new Date();
-const utcDate = now.toISOString().split('T')[0]; // UTC date
-const currentFormatted = new Date(now.getTime() + 5.5 * 60 * 60 * 1000).toISOString().split('T')[0]; // IST date
-
-
+      const currentDate = moment();
+      const currentFormatted = currentDate.format('YYYY-MM-DD');
+      console.log(currentFormatted,"checkfull")
+      
       const existingUser = await Customeraccountmodel.find({ duedate: currentFormatted });
       const existingextraUser = await Addextracustomeraccountmodel.find({ duedate: currentFormatted });
       console.log(existingUser, "existingUser")
