@@ -70,7 +70,6 @@ router.post('/dailycollectionamountandfilter', adminaccountController.dailycolle
 router.post('/allduedashboardview', adminaccountController.allduedashboardview)
 router.post('/createform', adminaccountController.createform)
 router.put('/updateform', adminaccountController.updateform)
-router.get('/chanepassword',adminaccountController.changepassword)
 router.delete('/deleteemployee',adminaccountController.deleteemployee)
 router.get('/getverificationform',adminaccountController.verification)
 router.put('/updateverificationapprovel',adminaccountController.updateverificationapprovel)

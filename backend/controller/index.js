@@ -2839,7 +2839,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getexecuteofficer,
     createform,
     updateform,
-    changepassword,
+   
     extraaccountbalance,
     deleteemployee,
     deletecheet,
