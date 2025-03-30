@@ -10,57 +10,54 @@ require('dotenv').config();
 // verificationapprovel
 const adminaccountSchema = () => {
   const createaccount = async (req, res) => {
-    console.log("1")
+    console.log("1");
     try {
-      console.log("12")
-      console.log(req.body, "body")
-
-
-      const existingUser = await Adminaccountmodel.findOne({ userName: req.body.userName });
+      console.log("12");
+      console.log(req.body, "body");
+  
+      // Check if username, email, or phone number already exists
+      const existingUser = await Adminaccountmodel.findOne({
+        $or: [
+          { userName: req.body.userName },
+         
+          { phoneNo: req.body.phoneNo }
+        ]
+      });
+  
       if (existingUser) {
-        return res.status(200).send({
+        let message = "";
+        if (existingUser.userName === req.body.userName) message = "Username already exists";
         
-          message: "name already exists"
-        })
-        
+        else if (existingUser.phoneNo === req.body.phoneNo) message = "Phone number already exists";
+  
+        return res.status(400).send({ message });
       }
-      const existingEmail = await Adminaccountmodel.findOne({ Email: req.body.Email });
-      if (existingEmail) {
-        return res.status(200).send({
-        
-          message: "email already exists"
-        })
-      }
-      const existingphone = await Adminaccountmodel.findOne({ phoneNo: req.body.phoneNo });
-      if (existingphone) {
-        return res.status(200).send({
-        
-          message: "phonenumber already exists"
-        })
-        
-      }
-      
+  
+      // Hash password
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      var value = await Adminaccountmodel.create({
+  
+      // Create user
+      const newUser = await Adminaccountmodel.create({
         userName: req.body.userName,
-        Email: req.body.Email == "" ? null : req.body.Email,
+        Email: req.body.Email || null,
         phoneNo: req.body.phoneNo,
         password: hashedPassword,
-        role: req.body.role ? req.body.role : "admin",
+        role: req.body.role || "admin",
         branchid: req.body.branchid,
         profilePicture: req.body.profilePicture,
-        //profilePicture:req.file.originalname?`https://alliswell-2.onrender.com/${req.file.originalname}`:null,
         isactive: true
-      })
-      res.status(200).send({
-        data: value,
-        message: `${req.body.userName}promted a ${req.body.role} Adminaccount created Successfully!`
-      })
+      });
+  
+      res.status(201).send({
+        data: newUser,
+        message: `${req.body.userName} promoted to ${req.body.role || "admin"}! Admin account created successfully.`
+      });
+    } catch (err) {
+      console.error("Something went wrong!", err);
+      res.status(500).send({ error: "Internal Server Error" });
     }
-    catch (err) {
-      console.log("Something went wrong  post!!!", err)
-    }
-  }
+  };
+  
   const getbrachbasedonexecuter=async(req,res)=>{
     const existingUser = await Adminaccountmodel.find(
       { 
@@ -150,10 +147,10 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       if (existingphone) {
         return res.status(200).send({ message: 'phonenumber already exists' });
       }
-      const existingemail = await Customeraccountmodel.findOne({ Email: req.body.Email });
-      if (existingemail) {
-        return res.status(200).send({ message: 'Email already exists' });
-      }
+      // const existingemail = await Customeraccountmodel.findOne({ Email: req.body.Email });
+      // if (existingemail) {
+      //   return res.status(200).send({ message: 'Email already exists' });
+      // }
       //   dueamount:{type:String},
       //   duedate:{type:Date},
       //   nextduedate:{type:Date},
@@ -1588,128 +1585,60 @@ const todaypendingAmount = data
   }
   const Login = async (req, res) => {
     try {
-      const { Email, password } = req.body;
-      const phoneNo= req.body.phone
-      console.log(phoneNo,"find")
-      let a=""
-      let b=""
-     if(req.body.Email){
-      
-      a=await Adminaccountmodel.find({Email: Email})
-      b=await Customeraccountmodel.find({Email:Email})
-      
-      if(a.length==0&&b.length==0){
-        return res.status(201).send({ status: false, message: 'Invalid Email please check your gmail' })
-      }
-      // if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-      //  const passwordMatch= await bcrypt.compare(password, b[0].password);
-      //   if (!passwordMatch) {
-      //   return res.status(401).json({ status: false, msg: 'Invalid password' })
-      // }
-      // }
-      // else{
-      //   const passwordMatch= await bcrypt.compare(password, a[0].password);
-      //   if (!passwordMatch) {
-      //     return res.status(401).json({ status: false, msg: 'Invalid password' })
-      //   }
-      // }
-      if(a.length>0){
-        const expiresInMinutes = 30
-        const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
-  console.log(a,"checkalll")
-        res.status(200).json({
-          userId: a[0]['_id'],
-          username: a[0]['userName'],
-          role: a[0]['role'],
-          profilePicture: a[0]['profilePicture'] ? a[0]['profilePicture'] : null,
-          message: 'logged In Successfully!',
-          token
-        });
-      }
-      else{
-        const expiresInMinutes = 30
-        const token = jwt.sign({ b }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
+      const { password } = req.body;
+      const phoneNo = req.body.phone;
+      console.log(phoneNo, "find");
   
-        res.status(200).json({
-          status:true,
-          userId: b[0]['_id'].toString(),
-          username: b[0]['customerName'],
-          role: b[0]['role'],
-          profilePicture: b[0]['profilePicture'] ? b[0]['profilePicture'] : null,
-          message: 'logged In Successfully!',
-          token
-        });
-      }
-       
-     }
-    else{
-      console.log("check")
-      a=await Adminaccountmodel.find({phoneNo: phoneNo}).populate("branchid")
-      b=await Customeraccountmodel.find({phoneNo:phoneNo}).populate("branchid")
+      let user = await Adminaccountmodel.findOne({ phoneNo }).populate("branchid");
       
-      if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
+  
+      if (!user) {
+        user = await Customeraccountmodel.findOne({ phoneNo }).populate("branchid");
+        
       }
-      if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-       const passwordMatch= await bcrypt.compare(password, b[0].password);
-        if (!passwordMatch) {
-        return res.status(201).json({ status: false, message: 'Invalid password' })
+  
+      if (!user) {
+        return res.status(400).json({ status: false, message: "Invalid phone number, please check." });
       }
+     console.log(user,"check")
+      // Validate password
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        console.log("passwordmatch")
+        return res.status(401).json({ status: false, message: "Invalid password." });
       }
-      else{
-        const passwordMatch= await bcrypt.compare(password, a[0].password);
-        if (!passwordMatch) {
-          return res.status(201).json({ status: false, message: 'Invalid password' })
-        }
-      }
-      if(a.length>0){
-        const expiresInMinutes = 30
-        const token = jwt.sign({ a }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
-       
+  
+      // Generate JWT token
+      const expiresInMinutes = 30;
+      const token = jwt.sign(
+        { id: user._id, role: user.role, phoneNo: user.phoneNo },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: `${expiresInMinutes}m` }
+      );
+      let a = await Adminaccountmodel.find({ _id:user._id }).populate("branchid");
 
-        res.status(200).json({
-         "status": true,
-    "responsecode": 201,
-    "message": "Loginsuccessfully",
-    "data": {
-      a,
-        "phone": a[0].phoneNo,
-        "email": a[0].Email,
-         "phoneOtp": "234176"
-    }
-          
-        });
-      }
-      else{
-        const expiresInMinutes = 30
-        const token = jwt.sign({ b }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${expiresInMinutes}m` });
-        a=b
-        res.status(200).json({
-          "status": true,
-     "responsecode": 201,
-     "message": "Loginsuccessfully",
-     "data": {
-       a,
-         "phone": a[0].phoneNo,
-         "email": a[0].Email,
-          "phoneOtp": "234176"
-     }
-           
-         });
-      }
-    }
-
-      // const passwordMatch = await bcrypt.compare(password, existingUser.password);
-      // if (!passwordMatch) {
-      //   return res.status(401).json({ status: false, msg: 'Invalid password' })
-      // }
-
-      
+      res.status(200).json({
+        status: true,
+        responsecode: 200,
+        message: "Login successful",
+        data: {
+          a,
+          id: user._id,
+          role: user.role,
+          phone: user.phoneNo,
+          email: user.Email || null,
+          branch: user.branchid,
+          token,
+          phoneOtp: "234176", // Consider replacing with an actual OTP generation mechanism
+        },
+      });
+  
     } catch (err) {
-      console.log('Something went wrong', err);
-      res.status(500).send({ status: false, message: 'Internal Server Error' });
+      console.error("Something went wrong:", err);
+      res.status(500).json({ status: false, message: "Internal Server Error" });
     }
-  }
+  };
+  
   const particularcustomerallaccount = async (req, res) => {
     try {
       
@@ -1987,13 +1916,10 @@ const todaypendingAmount = data
   }
   const createform=async(req,res)=>{
     const adminUsers = await Customeraccountmodel.find({phoneNo:req.body.phoneNo});
-    const adminUsers1 = await Customeraccountmodel.find({Email:req.body.Email});
       if(adminUsers.length!=0){
         return res.status(200).send({ message: 'phoneNo already here' });
       }
-      if(adminUsers1.length!=0){
-        return res.status(200).send({ message: 'Email already here' });
-      }
+      
       var value = await Formverification.create({
         Name: req.body.Name,
         location:req.body.location,
@@ -2640,12 +2566,7 @@ const updatetafftranstionlist=async(req,res)=>{
         return res.status(200).send({ message: 'name already exists' });
       }
 
-      if (Email) {
-        const existingEmail = await Adminaccountmodel.findOne({ _id: { $ne: id }, Email, isactive: true });
-        if (existingEmail) {
-          return res.status(200).send({ message: 'email already exists' });
-        }
-      }
+      
 
       const existingphone = await Adminaccountmodel.findOne({ _id: { $ne: id }, phoneNo, isactive: true });
       if (existingphone) {
@@ -2751,77 +2672,7 @@ const updatetafftranstionlist=async(req,res)=>{
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
-  const changepassword=async(req,res)=>{
-    try {
-      const { Email, password,phoneNo } = req.body;
-      let a=""
-      let b=""
-     if(req.body.Email){
-      
-      a=await Adminaccountmodel.find({Email: Email})
-      b=await Customeraccountmodel.find({Email:Email})
-      
-      if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, message: 'Invalid Email please check your gmail' })
-      }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-        const value = await Customeraccountmodel.findOneAndUpdate(
-          { Email: req.body.Email }, 
-          { password: hashedPassword }, 
-          { new: true }
-      );
-      }
-      else{
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const value = await Adminaccountmodel.findOneAndUpdate(
-          { Email: req.body.Email }, 
-          { password: hashedPassword }, 
-          { new: true }
-      );
-      }
-      
-       
-     }
-    else{
-      a=await Adminaccountmodel.find({phoneNo: phoneNo})
-      b=await Customeraccountmodel.find({phoneNo:phoneNo})
-      
-      if(a.length==0&&b.length==0){
-        return res.status(201).json({ status: false, message: 'Invalid Phoneno please check ' })
-      }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      if(a[0]?.role=="customer"||b[0]?.role=="customer"){
-        const value = await Customeraccountmodel.findOneAndUpdate(
-          { phoneNo: req.body.phoneNo }, 
-          { password: hashedPassword }, 
-          { new: true }
-      );
-      }
-      else{
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const value = await Adminaccountmodel.findOneAndUpdate(
-          { phoneNo: req.body.phoneNo }, 
-          { password: hashedPassword }, 
-          { new: true }
-      );
-      }
-
-      
-    }
-
-    res.status(200).json({
-      data: adminUsers,
-      message: 'change password Successfully!'
-    })
-
-      
-    } catch (err) {
-      console.log('Something went wrong', err);
-      res.status(500).send({ status: false, message: 'Internal Server Error' });
-    }
-
-  }
+ 
 
   const dailycollectionamountandfilter = async (req, res) => {
 
