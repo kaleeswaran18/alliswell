@@ -7,7 +7,7 @@ var cors = require('cors');
 const cron = require('node-cron');
 const axios = require('axios') 
 var indexRouter = require('./routes/index');  
-var usersRouter = require('./routes/users'); 
+var usersRouter = require('./routes/users');  
 // const formData = require('express-form-data'); 
 // var superAdminRouter = require('./routes/superAdmin'); 
 //import file in db connection  
