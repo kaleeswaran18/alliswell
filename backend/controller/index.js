@@ -1852,7 +1852,8 @@ const todaypendingAmount = data
   }
   const deletebranch=async(req,res)=>{
     // let check=await Adminaccountmodel.find()
-    const deletedEmployee = await Branchschememodel.deleteOne({ _id:req.body.id });
+
+    const deletedEmployee = await Branchschememodel.deleteOne({ _id:req.query.id });
     res.status(200).send({
       // data: adminUsers,
       message: 'delete Branch  Successfully!'
