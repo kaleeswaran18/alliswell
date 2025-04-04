@@ -140,6 +140,7 @@ const customerpaylist = new mongoose.Schema({
     status: { type: String },
     alreadypayment: { type: String },
     customername: { type: String },
+    customerNametamil: { type: String },
     profilePicture:{ type: String },
     branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
     executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
