@@ -1850,6 +1850,14 @@ const todaypendingAmount = data
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
+  const deletebranch=async(req,res)=>{
+    // let check=await Adminaccountmodel.find()
+    const deletedEmployee = await Branchschememodel.deleteOne({ _id:req.body.id });
+    res.status(200).send({
+      // data: adminUsers,
+      message: 'delete Branch  Successfully!'
+    })
+  }
   const notificationlist = async (req, res) => {
     try {
       const moment = require("moment");
@@ -2807,6 +2815,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     updateverificationapprovel,
     updateverificationapprovel1,
     createaccount,
+    deletebranch,
     // loginaccount,
     notificationlist,
     createcustomeraccount,

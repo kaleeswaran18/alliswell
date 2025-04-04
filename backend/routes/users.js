@@ -49,6 +49,7 @@ router.get('/customersList',adminaccountController.customersUsersList)
 router.get('/customersactiveList',adminaccountController.customersactiveList)
 
 router.post('/createbranch', adminaccountController.createbranch)
+router.delete('/deletebranch',adminaccountController.deletebranch)
 router.get('/getexecuteofficer', adminaccountController.getexecuteofficer)
 router.post('/createrateofinterest', adminaccountController.createrateofinterest)
 router.get('/getrateofinterest', adminaccountController.getrateofinterest)
