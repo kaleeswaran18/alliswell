@@ -186,7 +186,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
-      req.body.customerNametamil= translateText(req.body.customerName);
+      req.body.customerNametamil= await translateText(req.body.customerName);
       console.log(req.body.duedate, req.body.nextduedate,req.body.customerNametamil, 'add')
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       var value = await Customeraccountmodel.create({
@@ -378,7 +378,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       }
       let valueverify=await Customeraccountmodel.find({_id:req.body.id})
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
-      req.body.customerNametamil= translateText( existingUser[0].customerName);
+      req.body.customerNametamil=await translateText( existingUser[0].customerName);
       var value = await Addextracustomeraccountmodel.create({
         customerName: existingUser[0].customerName,
         customerNametamil:req.body.customerNametamil,
