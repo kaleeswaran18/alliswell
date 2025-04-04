@@ -19,6 +19,7 @@ const adminaccountmodel = new mongoose.Schema({
 })
 const customeraccountmodel = new mongoose.Schema({
     customerName: { type: String },
+    customerNametamil: { type: String },
     password:{type:String},
     Email:{type:String},
     role:{type:String},
@@ -52,7 +53,7 @@ const customeraccountmodel = new mongoose.Schema({
 })
 const addextracustomeraccountmodel = new mongoose.Schema({
     customerName: { type: String },
-
+    customerNametamil: { type: String },
     customer_id: { type: String },
     branchid: { type: mongoose.Schema.Types.ObjectId, ref: "Branchschememodel" }, // Reference to Branchschememodel
     executeofficerId: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },

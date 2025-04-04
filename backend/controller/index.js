@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const { HelperService } = require('../services/index')
 const moment = require('moment');
 const mongoose = require("mongoose")
+const fetch = require('node-fetch');
+const translate = require('google-translate-api-x');
 const ObjectId = mongoose.Types.ObjectId;
 require('dotenv').config();
 // verificationapprovel
@@ -184,10 +186,12 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
-      console.log(req.body.duedate, req.body.nextduedate, 'add')
+      req.body.customerNametamil= translateText(req.body.customerName);
+      console.log(req.body.duedate, req.body.nextduedate,req.body.customerNametamil, 'add')
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       var value = await Customeraccountmodel.create({
         customerName: req.body.customerName,
+       customerNametamil: req.body.customerNametamil,
         Landmark: req.body.Landmark,
         Email:req.body.Email,
         phoneNo: req.body.phoneNo,
@@ -374,9 +378,10 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       }
       let valueverify=await Customeraccountmodel.find({_id:req.body.id})
       console.log(req.body.duedate,givenamount,req.body.nextduedate, 'add')
+      req.body.customerNametamil= translateText( existingUser[0].customerName);
       var value = await Addextracustomeraccountmodel.create({
         customerName: existingUser[0].customerName,
-
+        customerNametamil:req.body.customerNametamil,
         customer_id: req.body.id,
         givenamount:givenamount,
         // Email: req.body.Email,
@@ -435,6 +440,20 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       console.log("Something went wrong  post!!!", err)
     }
   }
+  async function translateText(text) {
+    try {
+        const res = await translate(text, { from: 'en', to: 'ta' });
+        console.log("Translated Text:", res.text);
+        return res.text;
+    } catch (error) {
+        console.error("Translation Error:", error);
+        return "Translation failed";
+    }
+}
+
+
+
+
 const extraaccountbalance=async (req,res)=>{
   console.log("check")
     console.log(req.query.amount,req.query.interest,req.query.id)
@@ -612,7 +631,7 @@ const todayreceivedAmount = data
 const todaypendingAmount = data
     .filter(customer => customer.status === "unpaid")
     .reduce((sum, customer) => sum + customer.customerdueamount, 0);
-      
+     
       res.status(200).send({
         data: data,
        
@@ -627,6 +646,10 @@ const todaypendingAmount = data
       console.log("Something went wrong  post!!!", err)
     }
   }
+
+
+
+
   const collectionvalue = async (req, res) => {
     const currentDate = moment();
     const currentFormatted = currentDate.format("YYYY-MM-DD");
