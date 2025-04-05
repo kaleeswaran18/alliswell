@@ -2838,6 +2838,25 @@ const updatetafftranstionlist=async(req,res)=>{
     message: "delete sucessfully"
   })
   }
+  const deletecustomer = async (req, res) => {
+    try {
+      const { id } = req.query;
+  
+      const dele = await Customeraccountmodel.deleteOne({ _id: id });
+      const delete1 = await Addextracustomeraccountmodel.deleteOne({ _id: id });
+  
+      // Check if both delete operations deleted any document
+      if (dele.deletedCount === 0 && delete1.deletedCount === 0) {
+        return res.status(404).send({ message: "Record not found" });
+      }
+  
+      res.status(200).send({ message: "Delete successfully" });
+  
+    } catch (error) {
+      res.status(500).send({ message: "Server error", error: error.message });
+    }
+  };
+  
   const getallcheet=async(req,res)=>{
 let check=await Chitsnewmodel.find()
 res.status(200).send({
@@ -2925,7 +2944,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getexecuteofficer,
     createform,
     updateform,
-   
+    deletecustomer,
     extraaccountbalance,
     deleteemployee,
     deletecheet,
