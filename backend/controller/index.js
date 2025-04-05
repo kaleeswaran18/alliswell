@@ -392,7 +392,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         req.body.duedate = dueDate.format('YYYY-MM-DD');
         req.body.nextduedate = nextDueDate.format('YYYY-MM-DD');
         req.body.dueamount = req.body.amount / 10;
-        req.body.givenamount = req.body.amount - (req.body.amount * req.body.interest / 100);
+        givenamount = req.body.amount - (req.body.amount * req.body.interest / 100);
         if(req.body.closeoldaccount==true&&req.body.level==2){
           await Customeraccountmodel.updateMany(
             { _id: req.body.id, amountclose: "false" },
