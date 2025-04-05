@@ -88,6 +88,7 @@ const branchschememodel = new mongoose.Schema({
     Name: { type: String },
     totalinvestmentamount:{ type: Number },
     currentAmount:{ type: Number},
+    Day: { type: String },
     collectionlist:{type:Array},
     stuffamountlist:{type:Array},
     collectionamount:{type:Number},

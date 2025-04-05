@@ -176,13 +176,38 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         // req.body.nextduedate=
       }
       if (req.body.scheme == "weekly") {
-        let dueDate = moment(req.body.startdate).add(7, 'days');
-        let nextdueDate = moment(req.body.startdate).add(14, 'days');
+        let check=await Branchschememodel.find({_id:req.body.branchid})
+        req.body.day=check[0].Day
+        const start = moment(req.body.startdate);
+        const targetDay = req.body.day.toLowerCase(); // like 'sunday'
+      
+        // Convert day string to day number (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+        const dayMap = {
+          sunday: 0,
+          monday: 1,
+          tuesday: 2,
+          wednesday: 3,
+          thursday: 4,
+          friday: 5,
+          saturday: 6,
+        };
+      
+        const targetDayNum = dayMap[targetDay];
+      
+        // Find the next target day from start date
+        const currentDayNum = start.day();
+        let daysToAdd = (targetDayNum - currentDayNum + 7) % 7;
+        if (daysToAdd === 0) daysToAdd = 7; // if it's the same day, move to next week's same day
+      
+        const dueDate = moment(start).add(daysToAdd, 'days');
+        const nextDueDate = moment(dueDate).add(7, 'days');
+      
         req.body.duedate = dueDate.format('YYYY-MM-DD');
-        req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
-        req.body.dueamount = req.body.amount / 10
-        req.body.givenamount=  req.body.amount-(req.body.amount*req.body.interest/100)
+        req.body.nextduedate = nextDueDate.format('YYYY-MM-DD');
+        req.body.dueamount = req.body.amount / 10;
+        req.body.givenamount = req.body.amount - (req.body.amount * req.body.interest / 100);
       }
+      
       if (req.body.scheme == "monthly") {
         // req.body.dueamount=req.body.amount/100
       }
@@ -1862,8 +1887,8 @@ const todaypendingAmount = data
       var value = await Branchschememodel.create({
         Name: req.body.name,
         totalinvestmentamount:req.body.totalInvestmentAmount,
-        currentAmount:req.body.totalInvestmentAmount
-       
+        currentAmount:req.body.totalInvestmentAmount,
+        Day:req.body.day
       })
       res.status(200).send({
         data: value,
