@@ -103,7 +103,7 @@ const adminaccountSchema = () => {
     // req.body.dueamount = req.body.amount / 100  existingUser[0].amount-(existingUser[0].amount*req.body.interest/100)
 
   req.body.amount= existingUser[0].amount-req.body.amount
-  req.body.dueamount =req.body.amount*req.body.interest/100)
+  req.body.dueamount =req.body.amount*req.body.interest/100
   await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: req.body.amount, dueamount: req.body.dueamount }, { new: true })
   return res.status(200).send({
     
