@@ -1596,8 +1596,10 @@ if (existingUser[0].extraplan === "false") {
     }
   };
   const getoneuser=async(req,res)=>{
-    let find=await Customeraccountmodel.find({_id:req.query.id})
-    let findone=await Addextracustomeraccountmodel.find({_id:req.query.id})
+    let find=await Customeraccountmodel.find({_id:req.query.id}).populate("executeofficerId") // Populating from Adminaccount
+    .populate("branchid"); // Populating from Branchschememodel;
+    let findone=await Addextracustomeraccountmodel.find({_id:req.query.id}).populate("executeofficerId") // Populating from Adminaccount
+    .populate("branchid"); // Populating from Branchschememodel;
     if(find.length==0&&findone.length==0){
       return res.status(200).json({
         message: 'Not Found',
