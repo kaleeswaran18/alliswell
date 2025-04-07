@@ -222,7 +222,9 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       
         req.body.duedate = dueDate.format('YYYY-MM-DD');
         req.body.nextduedate = nextDueDate.format('YYYY-MM-DD');
-        req.body.dueamount ={req.body.scheme == "weekly" ? req.body.amount / 10:req.body.amount * req.body.interest / 100} ;
+        req.body.dueamount =req.body.dueamount = req.body.scheme === "weekly"
+        ? req.body.amount / 10
+        : (req.body.amount * req.body.interest) / 100;
         req.body.givenamount = req.body.amount - (req.body.amount * req.body.interest / 100);
       }
       
@@ -407,7 +409,10 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
       
         req.body.duedate = dueDate.format('YYYY-MM-DD');
         req.body.nextduedate = nextDueDate.format('YYYY-MM-DD');
-        req.body.dueamount ={req.body.scheme == "weekly" ? req.body.amount / 10:req.body.amount * req.body.interest / 100};
+        req.body.dueamount = req.body.scheme === "weekly"
+        ? req.body.amount / 10
+        : (req.body.amount * req.body.interest) / 100;
+        
         givenamount = req.body.amount - (req.body.amount * req.body.interest / 100);
         if(req.body.closeoldaccount==true&&req.body.level==2){
           await Customeraccountmodel.updateMany(
@@ -434,7 +439,9 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
         
         req.body.amount=req.body.amount+req.body.balanceamount
         givenamount=0
-        req.body.dueamount={req.body.scheme == "weekly" ? req.body.amount / 10:req.body.amount * req.body.interest / 100}
+        req.body.dueamount = req.body.scheme === "weekly"
+        ? req.body.amount / 10
+        : (req.body.amount * req.body.interest) / 100;
         }
        
       }
@@ -950,9 +957,9 @@ const todaypendingAmount = data
         result["extraplan"] = existingUser[0].extraplan
         // result[]
 
-        result["payedamount"] ={findone[0].scheme=='interest'?"0":payedamount} 
-        result["pendingamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount} 
-        result["Dueamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount} ;
+        result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUser[0].LandMark;
         result["profilePicture"] = existingUser[0].profilePicture;
         goodresult.push(result)
@@ -992,9 +999,9 @@ const todaypendingAmount = data
         result["customerdueamount"] = existingUser[0].customerdueamount
         result["coustomerduedate"] = existingUser[0].coustomerduedate
         result["extraplan"] = "false"
-        result["payedamount"] ={findone[0].scheme=='interest'?"0":payedamount} 
-        result["pendingamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount} 
-        result["Dueamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount} ;
+        result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUser[0].LandMark
        result["profilePicture"] = existingUser[0].profilePicture;
 
@@ -1053,9 +1060,9 @@ const todaypendingAmount = data
        
         // result[]
 
-        result["payedamount"] ={findone[0].scheme=='interest'?"0":payedamount} 
-        result["pendingamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount} 
-        result["Dueamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount} ;
+        result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount 
+        result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount;
         result["Landmark"] = existingUsers[0].LandMark;
         result["profilePicture"] = existingUsers[0].profilePicture;
         goodresult.push(result)
@@ -1094,9 +1101,9 @@ const todaypendingAmount = data
         result["customerdueamount"] = existingUsers[0].customerdueamount
         
        
-        result["payedamount"] ={findone[0].scheme=='interest'?"0":payedamount} 
-        result["pendingamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount} 
-        result["Dueamount"] = {findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount} ;
+        result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
+        result["pendingamount"] =findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUsers[0].LandMark
        result["profilePicture"] = existingUsers[0].profilePicture;
 
@@ -1256,34 +1263,9 @@ const todaypendingAmount = data
       const currentFormatted = currentDate.format('YYYY-MM-DD');
       const existingUser = await Customerpaylist.find({ _id: req.body.id });
       console.log(existingUser, "exist---")
-      // if(req.body.scheme=='interest'){
-        
-
-      //   let finalcheck = await Customeraccountmodel.find({ _id: existingUser[0].customer_id })
-      //   let dueDate = moment(finalcheck[0].nextduedate).add(7, 'days');
-      //   let final = dueDate.format('YYYY-MM-DD');
-
-      //   let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser[0].customer_id }, { previousduedate: finalcheck[0].duedate, duedate: finalcheck[0].nextduedate, nextduedate: final }, { new: true })
-      //   var value = await Customerpaylist.create({
-      //     customer_id: existingUser[0].customer_id,
-      //     status: 'paid',
-      //     alreadypayment: 'true',
-      //     customername: finalcheck[0].customerName,
-      //     customerphonenumber: finalcheck[0].phoneNo,
-      //     customerscheme: finalcheck[0].scheme,
-      //     coustomerduedate: v.previousduedate,
-      //     customerdueamount: finalcheck[0].dueamount,
-      //     customerpayamount: finalcheck[0].amount,
-      //     admin_id: req.body.admin_id,
-      //     adminname: req.body.adminname
-      //   })
-      //   return res.status(200).send({
-
-      //     message: "update Successfully!"
-      //   })
-      // }
       
-      }
+      
+      
       if (existingUser[0].extraplan == 'true') {
         if (existingUser[0].alreadypayment == 'true') {
 
