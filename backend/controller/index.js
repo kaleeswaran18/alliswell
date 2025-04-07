@@ -1266,7 +1266,7 @@ const todaypendingAmount = data
       
       
       
-      if (existingUser[0].extraplan == 'true') {
+      
         if (existingUser[0].alreadypayment == 'true') {
 
           let User = await Customerpaylist.find({ customer_id: existingUser[0].customer_id, coustomerduedate: { $gte: currentFormatted } });
@@ -1284,405 +1284,159 @@ const todaypendingAmount = data
 
           })
         }
-
-
-        const existingUser1 = await Customerpaylist.find({ _id: req.body.id });
-        console.log("existingUser1", existingUser1)
-
-        let extrapayment = 2 * existingUser1[0].customerdueamount
+    
+        let extrapayment = 2 * existingUser[0].customerdueamount
+        console.log(req.body.payamount,extrapayment,"check1")
         if (req.body.payamount < extrapayment) {
-          if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true" }, { new: true })
-            let dueDate = moment(existingUser1[0].coustomerduedate).add(2, 'days');
-            let final = dueDate.format('YYYY-MM-DD');
-            let nextdueDate = moment(existingUser1[0].coustomerduedate).add(1, 'days');
-            let nextfinal = nextdueDate.format('YYYY-MM-DD');
-            let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: existingUser1[0].coustomerduedate, duedate: nextfinal, nextduedate: final }, { new: true })
+          await Customerpaylist.findOneAndUpdate({ _id: existingUser[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true" }, { new: true })
+          const lastRecord = existingUser[existingUser.length - 1];
+          const lastDueDate = moment(existingUser[0].coustomerduedate, "YYYY-MM-DD");
+          
+          // Add days based on scheme
+          let addDays = 1;
+          if (
+            existingUser[0].customerscheme === "weekly" ||
+            existingUser[0].customerscheme === "interest"
+          ) {
+            addDays = 7;
           }
-          else if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'weekly'||existingUser1[0].customerscheme == 'interest') {
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true" }, { new: true })
-            let dueDate = moment(existingUser1[0].coustomerduedate).add(14, 'days');
-            let final = dueDate.format('YYYY-MM-DD');
-            let nextdueDate = moment(existingUser1[0].coustomerduedate).add(7, 'days');
-            let nextfinal = nextdueDate.format('YYYY-MM-DD');
-            let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: existingUser1[0].coustomerduedate, duedate: nextfinal, nextduedate: final }, { new: true })
+          
+          const duedate = lastDueDate.clone().add(addDays, "days").format("YYYY-MM-DD");
+          const nextduedate = lastDueDate.clone().add(addDays * 2, "days").format("YYYY-MM-DD");
+          
+          // Update based on extraplan
+          let accountUpdate;
+          
+          if (existingUser[0].extraplan === "false") {
+            accountUpdate = await Customeraccountmodel.findOneAndUpdate(
+              { _id: existingUser[0].customer_id },
+              {
+                previousduedate: lastDueDate.format("YYYY-MM-DD"),
+                duedate: duedate,
+                nextduedate: nextduedate,
+              },
+              { new: true }
+            );
+          } else if (existingUser[0].extraplan === "true") {
+            accountUpdate = await Addextracustomeraccountmodel.findOneAndUpdate(
+              { _id: existingUser[0].customer_id },
+              {
+                previousduedate: lastDueDate.format("YYYY-MM-DD"),
+                duedate: duedate,
+                nextduedate: nextduedate,
+              },
+              { new: true }
+            );
           }
-          else {
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true" }, { new: true })
-            await Customerpaylist.find();
-          }
+         return res.status(200).send({
 
-        }
-        else {
-          console.log("3")
-          let extraamount = req.body.payamount - existingUser1[0].customerdueamount
-          console.log("extraamount", extraamount, existingUser1[0].customerdueamount, "existingUser[0].customerdueamount")
-          await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: existingUser1[0].customerdueamount, status: "paid", alreadypayment: "true" }, { new: true })
-          let remaining = extraamount / existingUser1[0].customerdueamount;
-
-          let countremaining = parseInt(remaining)
-
-          for (i = 0; i < countremaining; i++) {
-            let corretremaining = extraamount
-
-            if (existingUser1[0].customerscheme == 'daily') {
-              let paymentvalue = ''
-              if (corretremaining < extrapayment) {
-                console.log("4")
-                paymentvalue = corretremaining
-              }
-              else {
-                console.log("5")
-                extraamount = corretremaining - existingUser1[0].customerdueamount
-
-                paymentvalue = existingUser1[0].customerdueamount
-              }
-
-              if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-                const existingUser = await Customerpaylist.find({ customer_id: existingUser1[0].customer_id });
-                const userfinal = existingUser[existingUser.length - 1];
-                console.log(userfinal, "userfinal")
-                let dueDate = moment(userfinal.coustomerduedate).add(2, 'days');
-                let nextdueDate = moment(userfinal.coustomerduedate).add(3, 'days');
-                req.body.duedate = dueDate.format('YYYY-MM-DD');
-                req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
-                console.log(userfinal, "userfinal")
-                let previousdueDate = moment(userfinal.coustomerduedate).add(1, 'days');
-                req.body.preduedate = previousdueDate.format('YYYY-MM-DD');
-                let finalcheck = await Addextracustomeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: userfinal.customer_id }, { previousduedate: req.body.preduedate, duedate: req.body.duedate, nextduedate: req.body.nextduedate }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue
-                })
-              }
-              else {
-                let finalcheck = await Addextracustomeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let dueDate = moment(finalcheck[0].nextduedate).add(1, 'days');
-                let final = dueDate.format('YYYY-MM-DD');
-
-                let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: finalcheck[0].duedate, duedate: finalcheck[0].nextduedate, nextduedate: final }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue
-                })
-              }
-
-
-
-            }
-            if (existingUser1[0].customerscheme == 'weekly'||existingUser1[0].customerscheme == 'interest') {
-              let paymentvalue = ''
-              if (corretremaining < extrapayment) {
-                console.log("4")
-                paymentvalue = corretremaining
-              }
-              else {
-                console.log("5")
-                extraamount = corretremaining - existingUser1[0].customerdueamount
-
-                paymentvalue = existingUser1[0].customerdueamount
-              }
-
-              if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-                const existingUser = await Customerpaylist.find({ customer_id: existingUser1[0].customer_id });
-                const userfinal = existingUser[existingUser.length - 1];
-                console.log(userfinal, "userfinal")
-                let dueDate = moment(userfinal.coustomerduedate).add(8, 'days');
-                let nextdueDate = moment(userfinal.coustomerduedate).add(9, 'days');
-                req.body.duedate = dueDate.format('YYYY-MM-DD');
-                req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
-                console.log(userfinal, "userfinal")
-                let previousdueDate = moment(userfinal.coustomerduedate).add(7, 'days');
-                req.body.preduedate = previousdueDate.format('YYYY-MM-DD');
-                let finalcheck = await Addextracustomeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: userfinal.customer_id }, { previousduedate: req.body.preduedate, duedate: req.body.duedate, nextduedate: req.body.nextduedate }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue
-                })
-              }
-              else {
-                let finalcheck = await Addextracustomeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let dueDate = moment(finalcheck[0].nextduedate).add(7, 'days');
-                let final = dueDate.format('YYYY-MM-DD');
-
-                let v = await Addextracustomeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: finalcheck[0].duedate, duedate: finalcheck[0].nextduedate, nextduedate: final }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue
-                })
-              }
-
-
-
-            }
-          }
-        }
-        const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
-        const checkingvalue = await Addextracustomeraccountmodel.find({ _id: checkingstatus[0].customer_id })
-        console.log(checkingvalue, "checkingvalue")
-        const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
-        let totolpayedamount = 0
-        checkingfind.forEach(val => {
-          if (val.customerpayamount) {
-            totolpayedamount = totolpayedamount + val.customerpayamount
-          }
-        })
-        console.log(totolpayedamount, checkingvalue[0].amount, 'total')
-
-        if (totolpayedamount == checkingvalue[0].amount) {
-          await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
-        }
-        else {
-          await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
-        }
-      }
-      else {
-        console.log("all are welcome")
-        if (existingUser[0].alreadypayment == 'true') {
-
-          let User = await Customerpaylist.find({ customer_id: existingUser[0].customer_id, coustomerduedate: { $gte: currentFormatted } });
-          console.log(User.length, "length")
-          User.forEach(async (val, i) => {
-            if (i == 0) {
-
-            }
-            else {
-              console.log("delete")
-              let dele = await Customerpaylist.deleteOne({ _id: val._id })
-              await Customerpaylist.find();
-              console.log(dele, "delete")
-            }
-
+            message: "paid Successfully!"
           })
         }
-
-
-        const existingUser1 = await Customerpaylist.find({ _id: req.body.id });
-        console.log("existingUser1", existingUser1)
-
-        let extrapayment = 2 * existingUser1[0].customerdueamount
-        if (req.body.payamount < extrapayment) {
-          if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-            console.log()
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
-            let dueDate = moment(existingUser1[0].coustomerduedate).add(2, 'days');
-            let final = dueDate.format('YYYY-MM-DD');
-            let nextdueDate = moment(existingUser1[0].coustomerduedate).add(1, 'days');
-            let nextfinal = nextdueDate.format('YYYY-MM-DD');
-            let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: existingUser1[0].coustomerduedate, duedate: nextfinal, nextduedate: final }, { new: true })
+        else{
+          console.log("hellocheck")
+          await Customerpaylist.findOneAndUpdate({ _id: existingUser[0]._id }, { customerpayamount: existingUser[0].customerdueamount, status: "paid", alreadypayment: "true" }, { new: true })
+          req.body.payamount=req.body.payamount-existingUser[0].customerdueamount
+          console.log(req.body.payamount,'req.body.payamount')
+          const paidAmount = Number(req.body.payamount); // ex: 1199
+          const dueAmount = Number(existingUser[0].customerdueamount); // ex: 400
+          const customerId = existingUser[0].customer_id;
+          const fullCount = Math.floor(paidAmount / dueAmount);
+          const remaining = paidAmount % dueAmount;
+          const schemeGap = (existingUser[0].customerscheme === "weekly" || existingUser[0].customerscheme === "interest") ? 7 : 1;
+          
+          let records = [];
+          
+          for (let i = 0; i < fullCount; i++) {
+            records.push({
+              customer_id: customerId,
+              status: 'paid',
+              alreadypayment: 'true',
+              customername: existingUser[0].customername,
+              customerphonenumber: existingUser[0].customerphonenumber,
+              customerscheme: existingUser[0].customerscheme,
+              coustomerduedate: moment().add((i + 1) * schemeGap, 'days').format('YYYY-MM-DD'),
+              customerdueamount: existingUser[0].customerdueamount,
+              customerpayamount: dueAmount
+            });
           }
-          else if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'weekly'||existingUser1[0].customerscheme == 'interest') {
-            console.log("hello",existingUser1[0].customerscheme)
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
-            let dueDate = moment(existingUser1[0].coustomerduedate).add(14, 'days');
-            let final = dueDate.format('YYYY-MM-DD');
-            let nextdueDate = moment(existingUser1[0].coustomerduedate).add(7, 'days');
-            let nextfinal = nextdueDate.format('YYYY-MM-DD');
-            let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: existingUser1[0].coustomerduedate, duedate: nextfinal, nextduedate: final }, { new: true })
+          
+          if (remaining > 0 && records.length > 0) {
+            records[records.length - 1].customerpayamount += remaining;
+          } else if (remaining > 0) {
+            records.push({
+              customer_id: customerId,
+              status: 'paid',
+              alreadypayment: 'true',
+              customername: existingUser[0].customername,
+              customerphonenumber: existingUser[0].customerphonenumber,
+              customerscheme: existingUser[0].customerscheme,
+              coustomerduedate: moment().add(records.length * schemeGap, 'days').format('YYYY-MM-DD'),
+              customerdueamount: existingUser[0].customerdueamount,
+              customerpayamount: remaining
+            });
           }
-          else {
-            await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
-            await Customerpaylist.find();
-          }
+          
+          await Customerpaylist.insertMany(records);
+          const lastRecord = records[records.length - 1];
+const lastDueDate = moment(lastRecord.coustomerduedate, "YYYY-MM-DD");
 
+// Add days based on scheme
+let addDays = 1;
+if (
+  existingUser[0].customerscheme === "weekly" ||
+  existingUser[0].customerscheme === "interest"
+) {
+  addDays = 7;
+}
+
+const duedate = lastDueDate.clone().add(addDays, "days").format("YYYY-MM-DD");
+const nextduedate = lastDueDate.clone().add(addDays * 2, "days").format("YYYY-MM-DD");
+
+// Update based on extraplan
+let accountUpdate;
+
+if (existingUser[0].extraplan === "false") {
+  accountUpdate = await Customeraccountmodel.findOneAndUpdate(
+    { _id: existingUser[0].customer_id },
+    {
+      previousduedate: lastDueDate.format("YYYY-MM-DD"),
+      duedate: duedate,
+      nextduedate: nextduedate,
+    },
+    { new: true }
+  );
+} else if (existingUser[0].extraplan === "true") {
+  accountUpdate = await Addextracustomeraccountmodel.findOneAndUpdate(
+    { _id: existingUser[0].customer_id },
+    {
+      previousduedate: lastDueDate.format("YYYY-MM-DD"),
+      duedate: duedate,
+      nextduedate: nextduedate,
+    },
+    { new: true }
+  );
+}
+
+          return res.status(200).json({
+            message: 'Payment split and saved successfully!',
+            data: records,
+          });
         }
-        else {
-          console.log("3")
-          let extraamount = req.body.payamount - existingUser1[0].customerdueamount
-          console.log("extraamount", extraamount, existingUser1[0].customerdueamount, "existingUser[0].customerdueamount")
-          await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: existingUser1[0].customerdueamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
-          let remaining = extraamount / existingUser1[0].customerdueamount;
+     
+       
 
-          let countremaining = parseInt(remaining)
-
-          for (i = 0; i < countremaining; i++) {
-            let corretremaining = extraamount
-
-            if (existingUser1[0].customerscheme == 'daily') {
-              let paymentvalue = ''
-              if (corretremaining < extrapayment) {
-                console.log("4")
-                paymentvalue = corretremaining
-              }
-              else {
-                console.log("5")
-                extraamount = corretremaining - existingUser1[0].customerdueamount
-
-                paymentvalue = existingUser1[0].customerdueamount
-              }
-
-              if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-                const existingUser = await Customerpaylist.find({ customer_id: existingUser1[0].customer_id });
-                const userfinal = existingUser[existingUser.length - 1];
-                console.log(userfinal, "userfinal")
-                let dueDate = moment(userfinal.coustomerduedate).add(2, 'days');
-                let nextdueDate = moment(userfinal.coustomerduedate).add(3, 'days');
-                req.body.duedate = dueDate.format('YYYY-MM-DD');
-                req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
-                console.log(userfinal, "userfinal")
-                let previousdueDate = moment(userfinal.coustomerduedate).add(1, 'days');
-                req.body.preduedate = previousdueDate.format('YYYY-MM-DD');
-                let finalcheck = await Customeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let v = await Customeraccountmodel.findOneAndUpdate({ _id: userfinal.customer_id }, { previousduedate: req.body.preduedate, duedate: req.body.duedate, nextduedate: req.body.nextduedate }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue,
-                  admin_id: req.body.admin_id,
-                  adminname: req.body.adminname
-                })
-              }
-              else {
-                let finalcheck = await Customeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let dueDate = moment(finalcheck[0].nextduedate).add(1, 'days');
-                let final = dueDate.format('YYYY-MM-DD');
-
-                let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: finalcheck[0].duedate, duedate: finalcheck[0].nextduedate, nextduedate: final }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue,
-                  admin_id: req.body.admin_id,
-                  adminname: req.body.adminname
-                })
-              }
-
-
-
-            }
-            if (existingUser1[0].customerscheme == 'weekly'||existingUser1[0].customerscheme == 'interest') {
-              let paymentvalue = ''
-              if (corretremaining < extrapayment) {
-                console.log("4")
-                paymentvalue = corretremaining
-              }
-              else {
-                console.log("5")
-                extraamount = corretremaining - existingUser1[0].customerdueamount
-
-                paymentvalue = existingUser1[0].customerdueamount
-              }
-
-              if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
-                const existingUser = await Customerpaylist.find({ customer_id: existingUser1[0].customer_id });
-                const userfinal = existingUser[existingUser.length - 1];
-                console.log(userfinal, "userfinal")
-                let dueDate = moment(userfinal.coustomerduedate).add(8, 'days');
-                let nextdueDate = moment(userfinal.coustomerduedate).add(9, 'days');
-                req.body.duedate = dueDate.format('YYYY-MM-DD');
-                req.body.nextduedate = nextdueDate.format('YYYY-MM-DD');
-                console.log(userfinal, "userfinal")
-                let previousdueDate = moment(userfinal.coustomerduedate).add(7, 'days');
-                req.body.preduedate = previousdueDate.format('YYYY-MM-DD');
-                let finalcheck = await Customeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let v = await Customeraccountmodel.findOneAndUpdate({ _id: userfinal.customer_id }, { previousduedate: req.body.preduedate, duedate: req.body.duedate, nextduedate: req.body.nextduedate }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue,
-                  admin_id: req.body.admin_id, adminname: req.body.adminname
-                })
-              }
-              else {
-                let finalcheck = await Customeraccountmodel.find({ _id: existingUser1[0].customer_id })
-                let dueDate = moment(finalcheck[0].nextduedate).add(7, 'days');
-                let final = dueDate.format('YYYY-MM-DD');
-
-                let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: finalcheck[0].duedate, duedate: finalcheck[0].nextduedate, nextduedate: final }, { new: true })
-                var value = await Customerpaylist.create({
-                  customer_id: existingUser1[0].customer_id,
-                  status: 'paid',
-                  alreadypayment: 'true',
-                  customername: finalcheck[0].customerName,
-                  customerphonenumber: finalcheck[0].phoneNo,
-                  customerscheme: finalcheck[0].scheme,
-                  coustomerduedate: v.previousduedate,
-                  customerdueamount: finalcheck[0].dueamount,
-                  customerpayamount: paymentvalue,
-                  admin_id: req.body.admin_id, adminname: req.body.adminname
-                })
-              }
-
-
-
-            }
-          }
-        }
-        const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
-        const checkingvalue = await Customeraccountmodel.find({ _id: checkingstatus[0].customer_id })
-        console.log(checkingvalue, "checkingvalue")
-        const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
-        let totolpayedamount = 0
-        checkingfind.forEach(val => {
-          if (val.customerpayamount) {
-            totolpayedamount = totolpayedamount + val.customerpayamount
-          }
-        })
-        console.log(totolpayedamount, checkingvalue[0].amount, 'total')
-        if (totolpayedamount == checkingvalue[0].amount) {
-          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
-        }
-        else {
-          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
-        }
-
-      }
+      
+       
+  
+        
+       
+     
 
 
 
 
-      res.status(200).send({
-
-        message: "all customer listed Successfully!"
-      })
+     
     }
     catch (err) {
       console.log("Something went wrong  post!!!", err)
