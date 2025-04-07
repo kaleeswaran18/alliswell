@@ -99,12 +99,38 @@ const adminaccountSchema = () => {
  }
  const updateinterestvalue=async(req,res)=>{
   try{
-    const existingUser = await Customeraccountmodel.findOne({ _id: req.body.id });
+    const existingUser = await Customeraccountmodel.find({ _id: req.body.id });
+    const existingUser2=await Addextracustomeraccountmodel.find({ _id: req.body.id });
     // req.body.dueamount = req.body.amount / 100  existingUser[0].amount-(existingUser[0].amount*req.body.interest/100)
+if(existingUser.length==0&&existingUser2.length==0){
+  return res.status(200).send({
+    
+    message: "No match Record"
+    })
+}
+  let amount= existingUser[0].amount-req.body.amount
+  req.body.dueamount =amount*req.body.interest/100
+  let amount1= existingUser2[0].amount-req.body.amount
+  req.body.dueamount1 =amount1*req.body.interest/100
+ if(existingUser.length!=0){
+  if(existingUser[0].amount==req.body.amount){
+    await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
 
-  req.body.amount= existingUser[0].amount-req.body.amount
-  req.body.dueamount =req.body.amount*req.body.interest/100
-  await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: req.body.amount, dueamount: req.body.dueamount }, { new: true })
+  }
+  else{
+    await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount, dueamount: req.body.dueamount }, { new: true })
+
+  }
+  
+ }
+ else{
+  if(existingUser2[0].amount==req.body.amount){
+    await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser2[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
+
+  }
+  await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount1, dueamount: req.body.dueamount1 }, { new: true })
+
+ }
   return res.status(200).send({
     
 message: "update sucessfully"
@@ -1569,7 +1595,28 @@ if (existingUser[0].extraplan === "false") {
       res.status(500).json({ status: false, message: "Internal Server Error" });
     }
   };
-  
+  const getoneuser=async(req,res)=>{
+    let find=await Customeraccountmodel.find({_id:req.body.id})
+    let findone=await Addextracustomeraccountmodel.find({_id:req.body.id})
+    if(find.length==0&&findone.length==0){
+      return res.status(200).json({
+        message: 'Not Found',
+       
+      });
+    }
+    if(find.length!=0){
+      return res.status(200).json({
+        message: 'getoneuser successfully!',
+       data:find
+      });
+    }
+    else{
+      return res.status(200).json({
+        message: 'getoneuser successfully!',
+       data:findone
+      });
+    }
+  }
   const particularcustomerallaccount = async (req, res) => {
     try {
       
@@ -2862,7 +2909,9 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     collectionlistall,
     collectionlistparticullar,
     getparticularcheet,
-    getallinterestcustomer
+    getallinterestcustomer,
+    getoneuser,
+    updateinterestvalue
     
   }
 }

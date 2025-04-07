@@ -25,7 +25,7 @@ router.get('/customerdetails', adminaccountController.customerdetails)
 router.get('/customerdetails1', adminaccountController.customerdetails1)
 router.get('/getallinterestcustomer',adminaccountController.getallinterestcustomer)
 router.get('/extraaccountbalance',adminaccountController.extraaccountbalance)
-
+router.get('/getoneuser',adminaccountController.getoneuser)
 // router.post('/fileUpload', verifyToken, upload.fields([{
 //   name: 'image', maxCount: 1
 // }]), adminaccountController.fileUpload)
@@ -73,6 +73,8 @@ router.post('/createform', adminaccountController.createform)
 router.put('/updateform', adminaccountController.updateform)
 router.delete('/deleteemployee',adminaccountController.deleteemployee)
 router.get('/getverificationform',adminaccountController.verification)
+router.put('/updateinterestvalue',adminaccountController.updateinterestvalue)
+
 router.put('/updateverificationapprovel',adminaccountController.updateverificationapprovel)
 router.put('/updateverificationapprovel1',adminaccountController.updateverificationapprovel1)
 router.get('/getparticularverification',adminaccountController.getparticularverification)
