@@ -23,7 +23,7 @@ router.put('/todaycustomerupdate', adminaccountController.todaycustomerupdate)
 router.put('/todayindividualcustomerupdate', adminaccountController.todayindividualcustomerupdate)
 router.get('/customerdetails', adminaccountController.customerdetails)
 router.get('/customerdetails1', adminaccountController.customerdetails1)
-
+router.get('/getallinterestcustomer',adminaccountController.getallinterestcustomer)
 router.get('/extraaccountbalance',adminaccountController.extraaccountbalance)
 
 // router.post('/fileUpload', verifyToken, upload.fields([{

@@ -1317,6 +1317,24 @@ const todaypendingAmount = data
               },
               { new: true }
             );
+            const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
+        const checkingvalue = await Customeraccountmodel.find({ _id: checkingstatus[0].customer_id })
+        console.log(checkingvalue, "checkingvalue")
+        const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
+        let totolpayedamount = 0
+        checkingfind.forEach(val => {
+          if (val.customerpayamount) {
+            totolpayedamount = totolpayedamount + val.customerpayamount
+          }
+        })
+        console.log(totolpayedamount, checkingvalue[0].amount, 'total')
+        if (totolpayedamount == checkingvalue[0].amount) {
+          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
+        }
+        else {
+          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
+        }
+
           } else if (existingUser[0].extraplan === "true") {
             accountUpdate = await Addextracustomeraccountmodel.findOneAndUpdate(
               { _id: existingUser[0].customer_id },
@@ -1327,6 +1345,24 @@ const todaypendingAmount = data
               },
               { new: true }
             );
+            const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
+            const checkingvalue = await Addextracustomeraccountmodel.find({ _id: checkingstatus[0].customer_id })
+            console.log(checkingvalue, "checkingvalue")
+            const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
+            let totolpayedamount = 0
+            checkingfind.forEach(val => {
+              if (val.customerpayamount) {
+                totolpayedamount = totolpayedamount + val.customerpayamount
+              }
+            })
+            console.log(totolpayedamount, checkingvalue[0].amount, 'total')
+    
+            if (totolpayedamount == checkingvalue[0].amount) {
+              await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
+            }
+            else {
+              await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
+            }
           }
          return res.status(200).send({
 
@@ -1406,6 +1442,24 @@ if (existingUser[0].extraplan === "false") {
     },
     { new: true }
   );
+  const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
+        const checkingvalue = await Customeraccountmodel.find({ _id: checkingstatus[0].customer_id })
+        console.log(checkingvalue, "checkingvalue")
+        const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
+        let totolpayedamount = 0
+        checkingfind.forEach(val => {
+          if (val.customerpayamount) {
+            totolpayedamount = totolpayedamount + val.customerpayamount
+          }
+        })
+        console.log(totolpayedamount, checkingvalue[0].amount, 'total')
+        if (totolpayedamount == checkingvalue[0].amount) {
+          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
+        }
+        else {
+          await Customeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
+        }
+
 } else if (existingUser[0].extraplan === "true") {
   accountUpdate = await Addextracustomeraccountmodel.findOneAndUpdate(
     { _id: existingUser[0].customer_id },
@@ -1416,6 +1470,24 @@ if (existingUser[0].extraplan === "false") {
     },
     { new: true }
   );
+  const checkingstatus = await Customerpaylist.find({ _id: req.body.id });
+  const checkingvalue = await Addextracustomeraccountmodel.find({ _id: checkingstatus[0].customer_id })
+  console.log(checkingvalue, "checkingvalue")
+  const checkingfind = await Customerpaylist.find({ customer_id: checkingstatus[0].customer_id });
+  let totolpayedamount = 0
+  checkingfind.forEach(val => {
+    if (val.customerpayamount) {
+      totolpayedamount = totolpayedamount + val.customerpayamount
+    }
+  })
+  console.log(totolpayedamount, checkingvalue[0].amount, 'total')
+
+  if (totolpayedamount == checkingvalue[0].amount) {
+    await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "true" }, { new: true })
+  }
+  else {
+    await Addextracustomeraccountmodel.findOneAndUpdate({ _id: checkingvalue[0]._id }, { amountclose: "false" }, { new: true })
+  }
 }
 
           return res.status(200).json({
@@ -2501,6 +2573,40 @@ const updatetafftranstionlist=async(req,res)=>{
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
+  const getallinterestcustomer = async (req, res) => {
+    try {
+      let { status } = req.query;
+        let filter = {};
+        
+       
+
+        
+      
+         
+        if (status && status != "Active"){
+          // let check=await Branchschememodel.find({Name:branch})
+          filter.amountclose = status
+         } 
+        
+         filter.amountclose = 'interest'
+        console.log(filter, "filter");
+        
+      const adminUsers = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); // Populating from Branchschememodel;
+      const adminUsers1 = await Addextracustomeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
+      .populate("branchid"); 
+      const allUsers = [...adminUsers, ...adminUsers1];
+      res.status(200).json({
+        data: allUsers,
+        message: 'Customers Listed Successfully!'
+      })
+
+    }
+    catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
+    }
+  }
   const customersactiveList = async (req, res) => {
     try {
       let { branch, status } = req.query;
@@ -2755,7 +2861,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     particularcustomerallaccount1,
     collectionlistall,
     collectionlistparticullar,
-    getparticularcheet
+    getparticularcheet,
+    getallinterestcustomer
     
   }
 }
