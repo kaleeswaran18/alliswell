@@ -958,7 +958,7 @@ const todaypendingAmount = data
         // result[]
 
         result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
-        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:pendingamount
         result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUser[0].LandMark;
         result["profilePicture"] = existingUser[0].profilePicture;
@@ -1000,7 +1000,7 @@ const todaypendingAmount = data
         result["coustomerduedate"] = existingUser[0].coustomerduedate
         result["extraplan"] = "false"
         result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
-        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:pendingamount
         result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUser[0].LandMark
        result["profilePicture"] = existingUser[0].profilePicture;
@@ -1061,7 +1061,7 @@ const todaypendingAmount = data
         // result[]
 
         result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
-        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount 
+        result["pendingamount"] = findone[0].scheme=='interest'?findone[0].amount:pendingamount 
         result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount;
         result["Landmark"] = existingUsers[0].LandMark;
         result["profilePicture"] = existingUsers[0].profilePicture;
@@ -1102,7 +1102,7 @@ const todaypendingAmount = data
         
        
         result["payedamount"] =findone[0].scheme=='interest'?"0":payedamount
-        result["pendingamount"] =findone[0].scheme=='interest'?findone[0].amount:payedamount
+        result["pendingamount"] =findone[0].scheme=='interest'?findone[0].amount:pendingamount
         result["Dueamount"] = findone[0].scheme=='interest'?findone[0].amount:payedamount + pendingamount ;
         result["Landmark"] = existingUsers[0].LandMark
        result["profilePicture"] = existingUsers[0].profilePicture;
@@ -1493,6 +1493,7 @@ const todaypendingAmount = data
         let extrapayment = 2 * existingUser1[0].customerdueamount
         if (req.body.payamount < extrapayment) {
           if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'daily') {
+            console.log()
             await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
             let dueDate = moment(existingUser1[0].coustomerduedate).add(2, 'days');
             let final = dueDate.format('YYYY-MM-DD');
@@ -1501,6 +1502,7 @@ const todaypendingAmount = data
             let v = await Customeraccountmodel.findOneAndUpdate({ _id: existingUser1[0].customer_id }, { previousduedate: existingUser1[0].coustomerduedate, duedate: nextfinal, nextduedate: final }, { new: true })
           }
           else if (existingUser1[0].alreadypayment == 'true' && existingUser1[0].customerscheme == 'weekly'||existingUser1[0].customerscheme == 'interest') {
+            console.log("hello",existingUser1[0].customerscheme)
             await Customerpaylist.findOneAndUpdate({ _id: existingUser1[0]._id }, { customerpayamount: req.body.payamount, status: "paid", alreadypayment: "true", admin_id: req.body.admin_id, adminname: req.body.adminname }, { new: true })
             let dueDate = moment(existingUser1[0].coustomerduedate).add(14, 'days');
             let final = dueDate.format('YYYY-MM-DD');
