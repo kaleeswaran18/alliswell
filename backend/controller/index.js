@@ -100,7 +100,9 @@ const adminaccountSchema = () => {
  const updateinterestvalue=async(req,res)=>{
   try{
     const existingUser = await Customeraccountmodel.find({ _id: req.body.id });
+    
     const existingUser2=await Addextracustomeraccountmodel.find({ _id: req.body.id });
+    
     // req.body.dueamount = req.body.amount / 100  existingUser[0].amount-(existingUser[0].amount*req.body.interest/100)
 if(existingUser.length==0&&existingUser2.length==0){
   return res.status(200).send({
@@ -108,17 +110,17 @@ if(existingUser.length==0&&existingUser2.length==0){
     message: "No match Record"
     })
 }
-  let amount= existingUser[0].amount-req.body.amount
-  req.body.dueamount =amount*req.body.interest/100
-  let amount1= existingUser2[0].amount-req.body.amount
-  req.body.dueamount1 =amount1*req.body.interest/100
+  
+  
  if(existingUser.length!=0){
   if(existingUser[0].amount==req.body.amount){
     await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
 
   }
   else{
-    await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount, dueamount: req.body.dueamount }, { new: true })
+    let amount= existingUser[0].amount-req.body.amount
+  req.body.dueamount =amount*req.body.interest/100
+    await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount+req.body.dueamount, dueamount: req.body.dueamount }, { new: true })
 
   }
   
@@ -128,7 +130,12 @@ if(existingUser.length==0&&existingUser2.length==0){
     await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser2[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
 
   }
-  await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount1, dueamount: req.body.dueamount1 }, { new: true })
+  else{
+    let amount1= existingUser2[0].amount-req.body.amount
+  req.body.dueamount1 =amount1*req.body.interest/100
+  await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount1+ req.body.dueamount1, dueamount: req.body.dueamount1 }, { new: true })
+
+  }
 
  }
   return res.status(200).send({
@@ -138,7 +145,7 @@ message: "update sucessfully"
 
   }
   catch(err){
-    
+    console.log(err,"error")
   }
  }
   const createcustomeraccount = async (req, res) => {
