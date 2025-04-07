@@ -2588,7 +2588,7 @@ const updatetafftranstionlist=async(req,res)=>{
           filter.amountclose = status
          } 
         
-         filter.amountclose = 'interest'
+         filter.scheme = 'interest'
         console.log(filter, "filter");
         
       const adminUsers = await Customeraccountmodel.find(filter).populate("executeofficerId") // Populating from Adminaccount
