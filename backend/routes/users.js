@@ -104,7 +104,7 @@ router.get('/collectionlistall',adminaccountController.collectionlistall)
 router.get('/collectionlistparticullar',adminaccountController.collectionlistparticullar)
 router.post('/stafftransationlist', adminaccountController.stafftransationlist)
 router.post('/transationcreate',adminaccountController.transationhistroy)
-
+router.get('/getcategory',adminaccountController.getcategory)
 module.exports = router;
 
 

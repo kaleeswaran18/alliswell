@@ -1738,6 +1738,16 @@ if (existingUser[0].extraplan === "false") {
       });
     }
   }
+  const getcategory=async(req,res)=>{
+    let find=await Transcationlist.find({})
+   
+   
+      return res.status(200).json({
+        message: 'getoneuser successfully!',
+       data:find
+      });
+   
+  }
   const particularcustomerallaccount = async (req, res) => {
     try {
       
@@ -3048,6 +3058,7 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     verification,
     verificationapprovel,
     dailyupdate,
+    getcategory,
     approvelaccount,
     transationfind,
     stafftransationlist,
