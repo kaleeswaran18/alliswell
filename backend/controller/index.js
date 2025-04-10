@@ -1,4 +1,4 @@
-const { Adminaccountmodel,collection,Chitsnewmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
+const { Adminaccountmodel,Transcationlist,collection,Chitsnewmodel, Customeraccountmodel,Companylogomodel,Stufftranscation,Formverification, Customerschememodel, Customerpaylist, Addextracustomeraccountmodel,Branchschememodel,Rateofinterestschememodel } = require('../model/model')
 const bcrypt = require('bcryptjs');
 const { userSockets } = require('../socket');
 const jwt = require('jsonwebtoken');
@@ -115,26 +115,114 @@ if(existingUser.length==0&&existingUser2.length==0){
  if(existingUser.length!=0){
   if(existingUser[0].amount==req.body.amount){
     await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
-
+    var check=await Branchschememodel.find({_id:existingUser[0].branchid})
+    let balance=check[0].currentAmount+req.body.amount
+    const value1 = await Branchschememodel.findOneAndUpdate(
+      { _id:existingUser[0].branchid }, 
+      { currentAmount:balance }, 
+      { new: true }
+    );
+    const currentDate =moment();
+    const currentFormatted = currentDate.format('YYYY-MM-DD');
+    const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+    var value = await Stufftranscation.create({
+      branchid: req.body.branchid,
+      type:"interestcheat",
+      authorid:req.body.admin_id,
+      amount:req.body.givenamount,
+      reason:"recivedmoney",
+      isapprove:"true",
+       currentAmount:balanceamount,
+approveldate:currentFormatted,
+  approveltime:currentFormattedtime,  
+  requestdate:currentFormatted,
+  requesttime:currentFormattedtime
+    })
   }
   else{
     let amount= existingUser[0].amount-req.body.amount
   req.body.dueamount =amount*req.body.interest/100
     await Customeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount+req.body.dueamount, dueamount: req.body.dueamount }, { new: true })
-
+    var check=await Branchschememodel.find({_id:existingUser[0].branchid})
+    let balance=check[0].currentAmount+req.body.amount
+    const value1 = await Branchschememodel.findOneAndUpdate(
+      { _id:existingUser[0].branchid }, 
+      { currentAmount:balance }, 
+      { new: true }
+    );
+    const currentDate =moment();
+    const currentFormatted = currentDate.format('YYYY-MM-DD');
+    const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+    var value = await Stufftranscation.create({
+      branchid: req.body.branchid,
+      type:"interestcheat",
+      authorid:req.body.admin_id,
+      amount:req.body.givenamount,
+      reason:"recivedmoney",
+      isapprove:"true",
+       currentAmount:balanceamount,
+approveldate:currentFormatted,
+  approveltime:currentFormattedtime,  
+  requestdate:currentFormatted,
+  requesttime:currentFormattedtime
+    })
   }
   
  }
  else{
   if(existingUser2[0].amount==req.body.amount){
     await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: existingUser2[0].amount, dueamount: req.body.dueamount,amountclose:"true" }, { new: true })
-
+    var check=await Branchschememodel.find({_id:existingUser2[0].branchid})
+    let balance=check[0].currentAmount+req.body.amount
+    const value1 = await Branchschememodel.findOneAndUpdate(
+      { _id:existingUser2[0].branchid }, 
+      { currentAmount:balance }, 
+      { new: true }
+    );
+    const currentDate =moment();
+    const currentFormatted = currentDate.format('YYYY-MM-DD');
+    const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+    var value = await Stufftranscation.create({
+      branchid: req.body.branchid,
+      type:"interestcheat",
+      authorid:req.body.admin_id,
+      amount:req.body.givenamount,
+      reason:"recivedmoney",
+      isapprove:"true",
+       currentAmount:balanceamount,
+approveldate:currentFormatted,
+  approveltime:currentFormattedtime,  
+  requestdate:currentFormatted,
+  requesttime:currentFormattedtime
+    })
   }
   else{
     let amount1= existingUser2[0].amount-req.body.amount
   req.body.dueamount1 =amount1*req.body.interest/100
   await Addextracustomeraccountmodel.findOneAndUpdate({ _id: req.body.id }, { amount: amount1+ req.body.dueamount1, dueamount: req.body.dueamount1 }, { new: true })
-
+  var check=await Branchschememodel.find({_id:existingUser2[0].branchid})
+  let balance=check[0].currentAmount+req.body.amount
+  const value1 = await Branchschememodel.findOneAndUpdate(
+    { _id:existingUser2[0].branchid }, 
+    { currentAmount:balance }, 
+    { new: true }
+  );
+  const currentDate =moment();
+  const currentFormatted = currentDate.format('YYYY-MM-DD');
+  const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+  var value = await Stufftranscation.create({
+    branchid: req.body.branchid,
+    type:"interestcheat",
+    authorid:req.body.admin_id,
+    amount:req.body.givenamount,
+    reason:"recivedmoney",
+    isapprove:"true",
+     currentAmount:balanceamount,
+approveldate:currentFormatted,
+approveltime:currentFormattedtime,  
+requestdate:currentFormatted,
+requesttime:currentFormattedtime
+  })
   }
 
  }
@@ -304,7 +392,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
           const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
-            type:"reduce",
+            type:"customercreate",
             authorid:req.body.admin_id,
             amount:req.body.givenamount,
             reason:"newcustomerCreate",
@@ -521,7 +609,7 @@ console.log(currentFormatted,req.body.startdate,req.body.enddate,"req.body.endda
           const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });
           var value = await Stufftranscation.create({
             branchid: req.body.branchid,
-            type:"reduce",
+            type:"customercreate",
             authorid:req.body.admin_id,
             amount:givenamount,
             reason:"addcustomerCreate",
@@ -808,6 +896,13 @@ const todaypendingAmount = data
         pendingAmount: value.pendingAmount,
         customerDueDate: value.customerDueDate,
       })
+      var check=await Branchschememodel.find({_id:value.branchid})
+      let balance=check[0].currentAmount+value.receivedAmount
+      const value1 = await Branchschememodel.findOneAndUpdate(
+        { _id:value.branchid }, 
+        { currentAmount:balance }, 
+        { new: true }
+      );
     })
   };
   const collectionlistall=async(req,res)=>{
@@ -2304,6 +2399,7 @@ const stafftransationlist=async(req,res)=>{
     var value = await Stufftranscation.create({
       branchid: req.body.branchid,
       type:req.body.type,
+       reason:req.body.reason,
       authorid:req.body.authorid,
       amount:req.body.amount,
       reason:req.body.reason,
@@ -2326,6 +2422,7 @@ const stafftransationlist=async(req,res)=>{
       let updatebalance=await Stufftranscation.findOneAndUpdate(
         { _id:value._id }, 
         { currentAmount: balanceamount,approveldate:currentFormatted,
+         
         approveltime:currentFormattedtime }, 
         { new: true }
       );
@@ -2354,6 +2451,7 @@ const stafftransationlist=async(req,res)=>{
       let updatebalance=await Stufftranscation.findOneAndUpdate(
         { _id:value._id }, 
         { currentAmount: balanceamount,approveldate:currentFormatted,
+          
           approveltime:currentFormattedtime }, 
         { new: true }
       );
@@ -2402,8 +2500,8 @@ let findall=await Stufftranscation.find({_id: req.body.id})
 if(findall[0].type=="investment"){
   let balanceamount=check[0].currentAmount+value.amount
   const value1 = await Branchschememodel.findOneAndUpdate(
-    { _id:value.branchid }, 
-    { currentAmount: balanceamount }, 
+    { _id:value.branchid },
+    
     { new: true }
   );
   let updatebalance=await Stufftranscation.findOneAndUpdate(
@@ -2663,6 +2761,37 @@ const updatetafftranstionlist=async(req,res)=>{
       res.status(500).send({ status: false, message: 'Internal Server Error' });
     }
   }
+  const  transcationlist = async (req, res) => {
+    try {
+      let { type } = req.query;
+        let filter = {};
+        
+       
+
+        
+      
+         
+        if (type && type != "All"){
+          // let check=await Branchschememodel.find({Name:branch})
+          filter.type =type
+         } 
+        
+       
+        console.log(filter, "filter");
+        
+        const adminUsers = await Stufftranscation.find({filter});
+      res.status(200).json({
+        data: adminUsers,
+        message: 'Customers Listed Successfully!'
+      })
+
+    }
+    catch (err) {
+      console.log('Something went wrong', err);
+      res.status(500).send({ status: false, message: 'Internal Server Error' });
+    }
+  }
+ 
   const customersactiveList = async (req, res) => {
     try {
       let { branch, status } = req.query;
@@ -2920,7 +3049,8 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
     getparticularcheet,
     getallinterestcustomer,
     getoneuser,
-    updateinterestvalue
+    updateinterestvalue,
+    transcationlist
     
   }
 }

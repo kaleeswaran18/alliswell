@@ -112,6 +112,14 @@ const companylogo = new mongoose.Schema({
 
 
 })
+const transcationlist = new mongoose.Schema({
+
+
+    category: { type: String },
+
+
+
+})
 const chitsmodel = new mongoose.Schema({
 
 
@@ -204,5 +212,6 @@ const Branchschememodel=mongoose.model("Branchschememodel", branchschememodel, "
 const Rateofinterestschememodel=mongoose.model("Rateofinterestschememodel", rateofinterestschememodel, "Rateofinterestschememodel")
 const Formverification=mongoose.model("Formverification", formverification, "Formverification")
 const Stufftranscation=mongoose.model("Stufftranscation", stufftranscation, "Stufftranscation")
+const Transcationlist=mongoose.model("Transcationlist", transcationlist, "Transcationlist")
 
-module.exports = {Formverification,Stufftranscation,collection, Chitsnewmodel,Adminaccountmodel, Customeraccountmodel, Customerschememodel,Companylogomodel, Customerpaylist,Rateofinterestschememodel, Addextracustomeraccountmodel,Branchschememodel }
+module.exports = {Formverification,Stufftranscation,collection,Transcationlist, Chitsnewmodel,Adminaccountmodel, Customeraccountmodel, Customerschememodel,Companylogomodel, Customerpaylist,Rateofinterestschememodel, Addextracustomeraccountmodel,Branchschememodel }
