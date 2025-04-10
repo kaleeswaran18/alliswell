@@ -2578,15 +2578,33 @@ const getstafftranstionlist=async(req,res)=>{
  }
 }
 const getapprovelstafftranstionlist=async(req,res)=>{
+  let { type } = req.query;
+  let filter = {};
+  
+ 
+
+  
+
+   
+  if (type && type != "All"){
+    // let check=await Branchschememodel.find({Name:branch})
+    filter.type =type
+   } 
+  
+ 
+  console.log(filter, "filter");
   if(req.query.role=='Superadmin'){
-    let check=await Stufftranscation.find({isapprove:'true'}).populate("authorid").populate("branchid");
+    filter.isapprove ="true"
+    let check=await Stufftranscation.find(filter).populate("authorid").populate("branchid");
     return res.status(200).send({
         data:check,  
       message: `you getallrecord`
     })
   }
  else{
-  let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'true'}).populate("authorid").populate("branchid");
+  filter.isapprove ="true"
+  filter.authorid =req.query.id
+  let check=await Stufftranscation.find(filter).populate("authorid").populate("branchid");
   return res.status(200).send({
       data:check,  
     message:"you getallrecord"
