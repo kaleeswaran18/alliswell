@@ -903,6 +903,23 @@ const todaypendingAmount = data
         { currentAmount:balance }, 
         { new: true }
       );
+      const currentDate =moment();
+      const currentFormatted = currentDate.format('YYYY-MM-DD');
+      const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+      var value = await Stufftranscation.create({
+        branchid: value.branchid,
+        type:"dailycollection",
+       
+        amount:value.receivedAmount,
+        reason:"recivedmoney",
+        isapprove:"true",
+         currentAmount:balance,
+  approveldate:currentFormatted,
+    approveltime:currentFormattedtime,  
+    requestdate:currentFormatted,
+    requesttime:currentFormattedtime
+      })
+
     })
   };
   const collectionlistall=async(req,res)=>{
