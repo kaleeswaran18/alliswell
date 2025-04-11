@@ -905,11 +905,12 @@ const todaypendingAmount = data
       );
       const currentDate =moment();
       const currentFormatted = currentDate.format('YYYY-MM-DD');
-      const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });; 
+      const currentFormattedtime = new Date().toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata" });;
+      let a=await Addextracustomeraccountmodel.find({role:'admin',branchid:value.branchid}) 
       var value = await Stufftranscation.create({
         branchid: value.branchid,
         type:"dailycollection",
-       
+        authorid:a[0].userName,
         amount:value.receivedAmount,
         reason:"recivedmoney",
         isapprove:"true",
@@ -2562,15 +2563,30 @@ return res.status(200).send({
 })
 }
 const getstafftranstionlist=async(req,res)=>{
+  let { type } = req.query;
+  let filter = {};
+  
+ 
+
+  
+
+   
+  if (type && type != "All"){
+    // let check=await Branchschememodel.find({Name:branch})
+    filter.type =type
+   } 
   if(req.query.role=='Superadmin'){
-    let check=await Stufftranscation.find({isapprove:'false'}).populate("authorid").populate("branchid");
+    filter.isapprove ='false'
+    let check=await Stufftranscation.find(filter).populate("authorid").populate("branchid");
     return res.status(200).send({
         data:check,  
       message: `you getallrecord`
     })
   }
  else{
-  let check=await Stufftranscation.find({authorid:req.query.id,isapprove:'false'}).populate("authorid").populate("branchid");
+  filter.authorid =req.query.id
+  filter.isapprove ='false'
+  let check=await Stufftranscation.find(filter).populate("authorid").populate("branchid");
   return res.status(200).send({
       data:check,  
     message: `you getallrecord`
