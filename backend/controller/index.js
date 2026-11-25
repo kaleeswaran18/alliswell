@@ -3039,6 +3039,13 @@ data = await Customerpaylist.find({ coustomerduedate: currentFormatted })
 
 }
 }
+const sampleone=async(req,res)=>{
+  let a=await Customerpaylist.find()
+  return res.status(200).send({
+    data:a,
+    message:"sucessfully get all data"
+  })
+}
 
   return {
 
