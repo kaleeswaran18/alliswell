@@ -3119,7 +3119,8 @@ const sampleone=async(req,res)=>{
     getallinterestcustomer,
     getoneuser,
     updateinterestvalue,
-    transcationlist
+    transcationlist,
+    sampleone
     
   }
 }
